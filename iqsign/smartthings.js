@@ -572,3 +572,4 @@ exports.handleSmartInteraction = handleSmartInteraction;
 
 
 /* end of module smartthings */
+

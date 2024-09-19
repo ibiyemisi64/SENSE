@@ -402,7 +402,7 @@ private double getRelativeHeight(SignMakerComponent ... cset)
       int lvl = c.getSizeLevel();
       if (Math.abs(lvl) > 5) v = 1;
       else if (lvl >= 0) v = SCALE_VALUES[lvl];
-      else v = 1.0 / SCALE_VALUES[lvl];
+      else v = 1.0 / SCALE_VALUES[-lvl];
       level = Math.max(v,level);
     }
    return level;
