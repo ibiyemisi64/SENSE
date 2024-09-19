@@ -42,10 +42,12 @@ class SherpaChangePasswordWidget extends StatefulWidget {
   const SherpaChangePasswordWidget(this._theUniverse, {super.key});
 
   @override
-  State<SherpaChangePasswordWidget> createState() => _SherpaChangePasswordWidgetState();
+  State<SherpaChangePasswordWidget> createState() =>
+      _SherpaChangePasswordWidgetState();
 }
 
-class _SherpaChangePasswordWidgetState extends State<SherpaChangePasswordWidget> {
+class _SherpaChangePasswordWidgetState
+    extends State<SherpaChangePasswordWidget> {
   late CatreUniverse _theUniverse;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? _curPassword;
@@ -122,9 +124,11 @@ class _SherpaChangePasswordWidgetState extends State<SherpaChangePasswordWidget>
                   widgets.fieldSeparator(),
                   widgets.errorField(_changePasswordError),
                   Container(
-                    constraints: const BoxConstraints(minWidth: 150, maxWidth: 350),
+                    constraints:
+                        const BoxConstraints(minWidth: 150, maxWidth: 350),
                     width: MediaQuery.of(context).size.width * 0.4,
-                    child: widgets.submitButton("Submit", _handleChangePassword),
+                    child:
+                        widgets.submitButton("Submit", _handleChangePassword),
                   ),
                 ],
               ),
@@ -172,3 +176,4 @@ class _SherpaChangePasswordWidgetState extends State<SherpaChangePasswordWidget>
     widgets.goto(context, const SplashPage());
   }
 }
+

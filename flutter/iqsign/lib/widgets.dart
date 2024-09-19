@@ -114,7 +114,8 @@ TextField textField({
   label ??= hint;
   hint ??= label;
   maxLines ??= 1;
-  keyboardType ??= (maxLines == 1 ? TextInputType.text : TextInputType.multiline);
+  keyboardType ??=
+      (maxLines == 1 ? TextInputType.text : TextInputType.multiline);
 
   return TextField(
     controller: controller,
@@ -186,7 +187,8 @@ Widget textButton(String label, void Function()? action) {
 Widget topMenu(void Function(String)? handler, List labels) {
   return PopupMenuButton(
     icon: const Icon(Icons.menu_sharp),
-    itemBuilder: (context) => labels.map<PopupMenuItem<String>>(menuItem).toList(),
+    itemBuilder: (context) =>
+        labels.map<PopupMenuItem<String>>(menuItem).toList(),
     onSelected: handler,
   );
 }
@@ -194,7 +196,8 @@ Widget topMenu(void Function(String)? handler, List labels) {
 Widget topMenuAction(List labels) {
   return PopupMenuButton(
       icon: const Icon(Icons.menu_sharp),
-      itemBuilder: (context) => labels.map<PopupMenuItem<MenuAction>>(menuItemAction).toList(),
+      itemBuilder: (context) =>
+          labels.map<PopupMenuItem<MenuAction>>(menuItemAction).toList(),
       onSelected: (dynamic act) => act.action());
 }
 
@@ -372,22 +375,25 @@ Widget listBox<T>(
   //	   return itemBuilder(data[idx]);
   //	 });
   String label = "${what}s";
-  return Column(mainAxisAlignment: MainAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: <Widget>[
-    Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
-      Text(label, style: getLabelStyle()),
-    ]),
-    view,
-    Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+  return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        IconButton(
-          icon: const Icon(Icons.add_box_outlined),
-          tooltip: 'Add New $what',
-          onPressed: add,
+        Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+          Text(label, style: getLabelStyle()),
+        ]),
+        view,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.add_box_outlined),
+              tooltip: 'Add New $what',
+              onPressed: add,
+            ),
+          ],
         ),
-      ],
-    ),
-  ]);
+      ]);
 }
 
 ///******************************************************************************/
@@ -396,7 +402,8 @@ Widget listBox<T>(
 ///										*/
 ///******************************************************************************/
 
-Future<void> displayDialog(BuildContext context, String title, String description) async {
+Future<void> displayDialog(
+    BuildContext context, String title, String description) async {
   return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -443,7 +450,9 @@ Future<bool> getValidation(BuildContext context, String title) async {
 
 PreferredSizeWidget appBar(String title) {
   return AppBar(
-    title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+    title: Text(title,
+        style:
+            const TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
   );
 }
 
@@ -461,11 +470,13 @@ Widget circularProgressIndicator() {
 
 Widget iqsignPage(BuildContext context, Widget child) {
   return LayoutBuilder(
-    builder: (BuildContext context, BoxConstraints cnst) => _iqsignPageBuilder(context, cnst, child),
+    builder: (BuildContext context, BoxConstraints cnst) =>
+        _iqsignPageBuilder(context, cnst, child),
   );
 }
 
-Widget _iqsignPageBuilder(BuildContext context, BoxConstraints constraints, Widget child) {
+Widget _iqsignPageBuilder(
+    BuildContext context, BoxConstraints constraints, Widget child) {
   return Container(
     decoration: BoxDecoration(
       border: Border.all(
@@ -570,5 +581,7 @@ InputDecoration getDecoration({
 }
 
 TextStyle getLabelStyle() {
-  return const TextStyle(color: globals.labelColor, fontWeight: FontWeight.bold);
+  return const TextStyle(
+      color: globals.labelColor, fontWeight: FontWeight.bold);
 }
+
