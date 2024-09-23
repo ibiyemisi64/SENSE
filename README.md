@@ -1,4 +1,11 @@
-# IOT
+# SENSE - Smart Environment Network for Sensor-Based Events
+
+Project Goal Statement: 
+Our project aims to develop a sophisticated, rule-based smart sign system 
+integrated with various IoT devices and platforms, with a focus on user 
+personalization and automated status updates. The current project focus 
+includes the improving user interface, implementing ALDS, and expanding 
+multi-user support.
 
 This repository contains a set of projects designed to make controlling IoT
 devices easier.
@@ -35,7 +42,7 @@ web site that updates automatically and an image that it updates as requested fo
 each sign.  Users can register and control their signs.  iQsign is currently
 available at `https://sherpa.cs.brown.edu:3336`
 
-## signmaker
+## Signmaker
 
 This is the utility that creates the sign images for iQsign from descriptions.
 
@@ -43,7 +50,6 @@ This is the utility that creates the sign images for iQsign from descriptions.
 
 Back end rule engine for controlling IoT devices based on intervals rather than
 (or in addition to) triggers.
-
 
 ## Cedes: Catre External Device Environment Server
 
