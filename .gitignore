@@ -30,7 +30,6 @@ eclipsepath
 tags
 *~
 .*~
-*.pdf
 *.ps
 *.log
 *.out.xml
