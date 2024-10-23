@@ -206,7 +206,9 @@ class LocationData {
         accuracy: max(gpos.accuracy, pos.accuracy),
         timestamp: gpos.timestamp,
         altitude: (gpos.altitude * _count + pos.altitude) / (_count + 1),
+        altitudeAccuracy: 20,  // FIXME: Added after upgrading packages, adjust later
         heading: gpos.heading,
+        headingAccuracy: 20,  // FIXME: Added after upgrading packages, adjust later
         speed: max(gpos.speed, pos.speed),
         speedAccuracy: max(gpos.speedAccuracy, pos.speedAccuracy),
       );
@@ -324,7 +326,9 @@ class KnownLocation {
         accuracy: max(p0.accuracy, p1.accuracy),
         timestamp: p0.timestamp,
         altitude: (p0.altitude * ct + p1.altitude * kct) / tct,
+        altitudeAccuracy: 20,  // FIXME: Added after upgrading packages, adjust later
         heading: p0.heading,
+        headingAccuracy: 20,  // FIXME: Added after upgrading packages, adjust later
         speed: max(p0.speed, p1.speed),
         speedAccuracy: max(p0.speedAccuracy, p1.speedAccuracy),
       );
