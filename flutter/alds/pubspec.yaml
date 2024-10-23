@@ -38,14 +38,14 @@ dependencies:
   cupertino_icons: ^1.0.2
   crypto: ^3.0.2
   shared_preferences: ^2.0.15
-  localstorage: ^4.0.0+1
+  localstorage: ^5.0.0
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  geolocator: ^9.0.2
+  geolocator: ^13.0.1
   flutter_blue: ^0.8.0
   mutex: ^3.0.1
   flutter_logs: ^2.1.10
-  http: ^0.13.5
+  http: ^1.2.2
   phone_state: ^1.0.2
 
 dev_dependencies:
@@ -57,7 +57,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^5.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
