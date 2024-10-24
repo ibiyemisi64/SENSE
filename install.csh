@@ -1,10 +1,10 @@
 #! /bin/csh -f
 
-git commit -a --dry-run >&! /dev/null
-if ($status == 0) then
-   git commit -a
-   if ($status > 0) exit;
-endif
+# git commit -a --dry-run >&! /dev/null
+# if ($status == 0) then
+#    git commit -a
+#    if ($status > 0) exit;
+# endif
 
 cd ~/SENSE
 git pull
@@ -19,7 +19,7 @@ if ($status > 0) exit;
 # scp flutter/iqsign/assets/images/*.png sherpa.cs.brown.edu:/vol/web/html/iqsign/images
 
 pushd secret
-update.csh
+./update.csh
 popd
 
 pushd devices
@@ -53,25 +53,25 @@ echo npm status $status
 
 # ssh sherpa.cs.brown.edu '(cd /vol/iot/iqsign; start.csh)'
 cd ~/SENSE/iqsign
-start.csh
+./start.csh
 echo iqsign start status $status
 # ssh sherpa.cs.brown.edu '(cd /vol/iot/cedes; start.csh)'
 cd ~/SENSE/cedes
-start.csh
+./start.csh
 echo cedes start status $status
 # ssh sherpa.cs.brown.edu '(cd /vol/iot/signmaker; start.csh)'
 cd ~/SENSE/signmaker
-start.csh
+./start.csh
 echo signmaker start status $status
 # ssh sherpa.cs.brown.edu '(cd /vol/iot/iqsign; starto.csh)'
 cd ~/SENSE/iqsign
-starto.csh
+./starto.csh
 echo oauth start status $status
 # ssh sherpa.cs.brown.edu '(cd /vol/iot/catre; start.csh)'
 cd ~/SENSE/catre
-start.csh
+./start.csh
 echo catre start status $status
 
 pushd devices
-start.csh
+./start.csh
 popd
