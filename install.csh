@@ -6,21 +6,17 @@ if ($status == 0) then
    if ($status > 0) exit;
 endif
 
-git push
-
-
-ssh sherpa.cs.brown.edu '(cd /vol/iot; git pull)'
+cd ~/SENSE
+git pull
 if ($status > 0) exit;
 
-pushd savedimages
+# pushd svgimagelib
 # copy any images that you want to maintain here
 # scp baby.jpg sherpa.cs.brown.edu:/vol/iot/images
-popd
+# popd
 
-scp flutter/iqsign/assets/*.html sherpa.cs.brown.edu:/vol/web/html/iqsign
-scp flutter/iqsign/assets/images/*.png sherpa.cs.brown.edu:/vol/web/html/iqsign/images
-
-
+# scp flutter/iqsign/assets/*.html sherpa.cs.brown.edu:/vol/web/html/iqsign
+# scp flutter/iqsign/assets/images/*.png sherpa.cs.brown.edu:/vol/web/html/iqsign/images
 
 pushd secret
 update.csh
@@ -34,27 +30,46 @@ pushd catre
 ant
 popd
 
-ssh sherpa.cs.brown.edu '(cd /vol/iot/iqsign; npm update)'
+# ssh sherpa.cs.brown.edu '(cd /vol/iot/iqsign; npm update)'
+cd ~/SENSE/iqsign
+npm update
 echo npm status $status
-ssh sherpa.cs.brown.edu '(cd /vol/iot/signmaker; ant)'
+# ssh sherpa.cs.brown.edu '(cd /vol/iot/signmaker; ant)'
+cd ~/SENSE/signmaker
+ant
 echo signmaker ant status $status
-ssh sherpa.cs.brown.edu '(cd /vol/iot/catre; ant)'
+# ssh sherpa.cs.brown.edu '(cd /vol/iot/catre; ant)'
+cd ~/SENSE/catre
+ant
 echo catre ant status $status
-ssh sherpa.cs.brown.edu '(cd /vol/iot/devices; ant)'
+# ssh sherpa.cs.brown.edu '(cd /vol/iot/devices; ant)'
+cd ~/SENSE/devices
+ant
 echo devices ant status $status
-ssh sherpa.cs.brown.edu '(cd /vol/iot/cedes; npm update)'
+# ssh sherpa.cs.brown.edu '(cd /vol/iot/cedes; npm update)'
+cd ~/SENSE/cedes
+npm update
 echo npm status $status
 
-
-ssh sherpa.cs.brown.edu '(cd /vol/iot/iqsign; start.csh)'
+# ssh sherpa.cs.brown.edu '(cd /vol/iot/iqsign; start.csh)'
+cd ~/SENSE/iqsign
+start.csh
 echo iqsign start status $status
-ssh sherpa.cs.brown.edu '(cd /vol/iot/cedes; start.csh)'
+# ssh sherpa.cs.brown.edu '(cd /vol/iot/cedes; start.csh)'
+cd ~/SENSE/cedes
+start.csh
 echo cedes start status $status
-ssh sherpa.cs.brown.edu '(cd /vol/iot/signmaker; start.csh)'
+# ssh sherpa.cs.brown.edu '(cd /vol/iot/signmaker; start.csh)'
+cd ~/SENSE/signmaker
+start.csh
 echo signmaker start status $status
-ssh sherpa.cs.brown.edu '(cd /vol/iot/iqsign; starto.csh)'
+# ssh sherpa.cs.brown.edu '(cd /vol/iot/iqsign; starto.csh)'
+cd ~/SENSE/iqsign
+starto.csh
 echo oauth start status $status
-ssh sherpa.cs.brown.edu '(cd /vol/iot/catre; start.csh)'
+# ssh sherpa.cs.brown.edu '(cd /vol/iot/catre; start.csh)'
+cd ~/SENSE/catre
+start.csh
 echo catre start status $status
 
 pushd devices
