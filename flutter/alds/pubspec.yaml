@@ -42,11 +42,11 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   geolocator: ^13.0.1
-  flutter_blue: ^0.8.0
+  flutter_blue_plus: ^1.33.5
   mutex: ^3.0.1
   flutter_logs: ^2.1.10
   http: ^1.2.2
-  phone_state: ^1.0.2
+  phone_state: ^1.0.4
 
 dev_dependencies:
   flutter_test:

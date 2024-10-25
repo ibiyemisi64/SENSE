@@ -14,8 +14,8 @@ For Android development, make note of the following things:
 
 - Since the Flutter project was created with an older version of Flutter, the Android setup was outdated. I had to delete the Android folder (or move it somewhere else), and run `flutter create .` in the command line to recreate the Android folder. ([Fix](https://medium.com/@paulsean5/flutter-re-create-351eecf44e46))
   - Flutter has made a ton of breaking changes. For example, this issue was caused by a [breaking change](https://docs.flutter.dev/release/breaking-changes/flutter-gradle-plugin-apply). Other breaking changes can be found [here](https://docs.flutter.dev/release/breaking-changes).
-- Error: Namespace not specified
-- Error: A problem occurred configuring project [flutter_blue](https://pub.dev/packages/flutter_blue/versions/0.8.0) (Fix (?): Switch to [flutter_blue_plus](https://pub.dev/packages/flutter_blue_plus))
+- Error: A problem occurred configuring project [flutter_blue](https://pub.dev/packages/flutter_blue/versions/0.8.0) (Fix: Switch to [flutter_blue_plus](https://pub.dev/packages/flutter_blue_plus))
+- All subsequent errors were caused by incompatibility of Gradle and Android Gradle Plugin (AGP). Using the AGP updater in Android Studio, I was able to find a combination that worked (AGP 8.3.2 and Gradle 8.9).
 
 ### Windows Setup Troubleshooting
 

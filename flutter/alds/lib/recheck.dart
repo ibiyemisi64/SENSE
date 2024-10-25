@@ -35,16 +35,54 @@ library alds.recheck;
 
 import 'dart:async';
 import 'package:geolocator/geolocator.dart';
-import 'package:flutter_blue/flutter_blue.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'locator.dart';
 import 'package:mutex/mutex.dart';
 import 'util.dart' as util;
 
-FlutterBlue _flutterBlue = FlutterBlue.instance;
+// FlutterBlue _flutterBlue = FlutterBlue.instance;
 bool _checkLocation = false;
 bool _checkBluetooth = false;
 Locator _locator = Locator();
 final _doingRecheck = Mutex();
+
+// Extension function
+// Source: https://github.com/chipweinberger/flutter_blue_plus/blob/master/MIGRATION.md#1150
+extension Scan on FlutterBluePlus {
+  static Stream<ScanResult> scan({
+    List<Guid> withServices = const [],
+    Duration? timeout,
+    bool androidUsesFineLocation = false,
+  }) {
+    if (FlutterBluePlus.isScanningNow) {
+        throw Exception("Another scan is already in progress");
+    }
+
+    final controller = StreamController<ScanResult>();
+
+    var subscription = FlutterBluePlus.scanResults.listen(
+      (r){if(r.isNotEmpty){controller.add(r.first);}},
+      onError: (e, stackTrace) => controller.addError(e, stackTrace),
+    );
+
+    Future scanComplete = FlutterBluePlus.isScanning.skip(1).where((e) => e == false).first;
+
+    FlutterBluePlus.startScan(
+      withServices: withServices,
+      timeout: timeout,
+      removeIfGone: null,
+      oneByOne: true,
+      androidUsesFineLocation: androidUsesFineLocation,
+    );
+
+    scanComplete.whenComplete(() {
+      subscription.cancel();
+      controller.close();
+    });
+
+    return controller.stream;
+  }
+}
 
 Future<void> initialize() async {
   LocationPermission perm = await Geolocator.checkPermission();
@@ -53,10 +91,10 @@ Future<void> initialize() async {
   }
   if (perm != LocationPermission.denied) _checkLocation = true;
   util.log("CHECK GEOLOCATION $perm $_checkLocation");
-  _flutterBlue.setLogLevel(LogLevel.debug);
-  _checkBluetooth = await _flutterBlue.isAvailable;
-  bool ison = await _flutterBlue.isOn;
-  util.log("CHECK BT $_checkBluetooth $ison ${_flutterBlue.state}");
+  FlutterBluePlus.setLogLevel(LogLevel.debug);
+  _checkBluetooth = await FlutterBluePlus.isAvailable;
+  bool ison = await FlutterBluePlus.isOn;
+  util.log("CHECK BT $_checkBluetooth $ison ${FlutterBluePlus.state}");
 }
 
 Future<LocationData> recheck() async {
@@ -80,8 +118,7 @@ Future<LocationData> recheck() async {
       }
     }
 
-    Stream<ScanResult> st =
-        _flutterBlue.scan(timeout: const Duration(seconds: 6));
+    Stream<ScanResult> st = Scan.scan(timeout: const Duration(seconds: 6));
     List<BluetoothData> btdata = await st.fold([], _btscan2);
 
     // no way to scan wifi access points on ios
@@ -97,19 +134,19 @@ Future<LocationData> recheck() async {
 
 void _btscan1(ScanResult r) async {
   int rssi = r.rssi;
-  String name = r.device.name;
-  String mac = r.device.id.id;
-  String typ = r.device.type.name;
+  String name = r.device.platformName;
+  String mac = r.device.remoteId.str;
+  // String typ = r.device.type.name;
   String svd = r.advertisementData.serviceData.toString();
   String mfd = r.advertisementData.manufacturerData.toString();
   bool conn = r.advertisementData.connectable;
-  String lname = r.advertisementData.localName;
-  util.log("BT FOUND $mac $conn $rssi $typ $svd $mfd $name $lname");
+  String lname = r.advertisementData.advName;
+  util.log("BT FOUND $mac $conn $rssi $svd $mfd $name $lname");
 }
 
 List<BluetoothData> _btscan2(List<BluetoothData> bl, ScanResult r) {
   _btscan1(r);
-  BluetoothData btd = BluetoothData(r.device.id.id, r.rssi, r.device.name);
+  BluetoothData btd = BluetoothData(r.device.remoteId.str, r.rssi, r.device.platformName);
   bl.add(btd);
   return bl;
 }
