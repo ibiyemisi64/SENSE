@@ -19,6 +19,7 @@ For Android development, make note of the following things:
 
 ### Windows Setup Troubleshooting
 
+- You must run VSCode in Administrator mode to build on Windows.
 - Error: The current VSCode installation is incomplete ([Fix](https://medium.com/flutter-community/fixing-issues-with-flutter-on-windows-9a4bb40eb54))
 - Error: Nuget is not installed ([Fix](https://stackoverflow.com/questions/71734042/flutter-windows-build-nuget-is-not-installed))
 - Error: win32 library was outdated (Fix: I upgraded all libraries to the latest version)
