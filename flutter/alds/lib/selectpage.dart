@@ -121,8 +121,10 @@ class _AldsSelectWidgetState extends State<AldsSelectWidget> {
   void _handleCommand(String cmd) async {
     switch (cmd) {
       case "ShowLoginData":
+        // FIXME: Dropdown options don't lead anywhere
         break;
       case 'EditLocations':
+        // FIXME: Dropdown options don't lead anywhere
         break;
     }
   }

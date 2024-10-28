@@ -6,9 +6,26 @@ Phone app to report location and other information to Catre
 
 Follow these [directions](https://docs.flutter.dev/get-started/install) for configure your environment for Flutter development based on your OS and application needs.
 
-For Android development, make note of the following things:
+- For Android development, make note of the following things:
+  - Set up the Android Emulator for Flutter using these [instructions](https://docs.flutter.dev/get-started/install/windows/mobile#set-up-the-android-emulator)
+- You must run VSCode in Administrator mode to build on Windows.
 
-- Set up the Android Emulator for Flutter using these [instructions](https://docs.flutter.dev/get-started/install/windows/mobile#set-up-the-android-emulator)
+If you run into issues during setup, see [troubleshooting tips](#setup-troubleshooting) below.
+
+## Functionality
+
+The main page is implemented in `selectpage.dart`. Currently, this only contains a dropdown, "Validate" button, and a template sidebar (this sidebar has no functionality currently). The dropdown is used to select saved locations. "Validate" button initiates the validation procedure for the location.
+
+## Components to Improve On
+
+- SelectPage
+  - Interactive map
+  - Saved Locations page to view and modify saved locations
+- Sign-In Page
+- Settings Page
+  - Interface to configure user privacy settings
+
+## Setup Troubleshooting
 
 ### Android Setup Troubleshooting
 
@@ -19,7 +36,6 @@ For Android development, make note of the following things:
 
 ### Windows Setup Troubleshooting
 
-- You must run VSCode in Administrator mode to build on Windows.
 - Error: The current VSCode installation is incomplete ([Fix](https://medium.com/flutter-community/fixing-issues-with-flutter-on-windows-9a4bb40eb54))
 - Error: Nuget is not installed ([Fix](https://stackoverflow.com/questions/71734042/flutter-windows-build-nuget-is-not-installed))
 - Error: win32 library was outdated (Fix: I upgraded all libraries to the latest version)
