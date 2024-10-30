@@ -1,9 +1,9 @@
 #! /bin/csh -f
 
-# if (! $?PROIOT ) setenv PROIOT $PRO/iot
-# set WD = $PROIOT/devices
+if (! $?PROIOT ) setenv PROIOT $PRO/SENSE
+set WD = $PROIOT/devices
 
-cd ~/SENSE/devices
+pushd $WD
 
 ant
 
@@ -13,7 +13,7 @@ cat < /dev/null > $WD/devices.log
 
 pm2 start --log $WD/devices.log --name devices $WD/rundevices.sh
 
-# popd
+popd
 
 
 
