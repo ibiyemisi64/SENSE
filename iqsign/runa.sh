@@ -2,6 +2,6 @@
 
 source ~/.bashrc1
 
-cd /vol/iot/iqsign
+cd ~/SENSE/iqsign
 
 nvm run default appserver.js

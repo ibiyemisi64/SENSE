@@ -2,6 +2,6 @@
 
 source ~/.bashrc1
 
-cd /vol/iot/cedes
+cd ~/SENSE/cedes
 
 nvm run default server.js
