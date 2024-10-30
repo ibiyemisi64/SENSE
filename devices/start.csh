@@ -3,14 +3,14 @@
 # if (! $?PROIOT ) setenv PROIOT $PRO/iot
 # set WD = $PROIOT/devices
 
-# pushd $WD
-cd ~/SENSE/devices
+# pushd $WD - this might be the wrong directory
+cd /vol/home/server/SENSE/devices/
 
 ant
 
 pm2 stop devices
 
-cat < /dev/null > ~/SENSE/devices/devices.log
+cat < /dev/null > /vol/home/server/SENSE/devices/devices.log
 
 pm2 start --log ~/SENSE/devices/devices.log --name devices ~/SENSE/devices/rundevices.sh
 
