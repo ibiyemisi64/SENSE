@@ -1,6 +1,6 @@
 #! /bin/bash
 
-source ~/.bashrc1
+source ~/.bashrc
 
 cd ~/SENSE/cedes
 
