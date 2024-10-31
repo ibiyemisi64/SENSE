@@ -2,8 +2,9 @@
 - Finished UI prototype
 - Finished UI Statement
 - UML Diagram
+- UI mockup
 
 
 
 ## Currently Working on
-- UI Mockup 
+- combining UIs, connecting to backend
