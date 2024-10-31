@@ -7,5 +7,5 @@ Default Password: server
 ```
 
 **Quick Tips**
-- You can switch to the server user by running the command `sudo -i -u server` and type in the server user's password. 
+- You can switch to the server user by running the command `sudo -i -u server` and type in the your user's password. 
 
