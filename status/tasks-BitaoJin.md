@@ -4,4 +4,8 @@
 
 10/24 join to help ui group for sherpa uml and decide to refine the user testing plan.
 
-10/30 uploaded SHERPA UML
+10/30 upload SHERPA UML
+
+10/31 refine the testing plan
+
+
