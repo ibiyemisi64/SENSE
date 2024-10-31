@@ -6,6 +6,6 @@
 
 10/30 upload SHERPA UML
 
-10/31 refine the testing plan
+10/31 refine the testing plan, push it to github, and get the new issue #48 testing phase 1.
 
 
