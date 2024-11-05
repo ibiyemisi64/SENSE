@@ -5,21 +5,21 @@ const FileUpload = ({ onUpload }) => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
 
-    // Handle file selection
+
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
             setSelectedFile(file);
-            setPreviewUrl(URL.createObjectURL(file)); // Create a preview URL for the selected image
+            setPreviewUrl(URL.createObjectURL(file));
         }
     };
 
-    // Handle file upload
+
     const handleUpload = () => {
         if (selectedFile) {
             onUpload(selectedFile);
-            setSelectedFile(null); // Reset the file selection
-            setPreviewUrl(null); // Clear the preview
+            setSelectedFile(null);
+            setPreviewUrl(null);
         }
     };
 
@@ -34,13 +34,13 @@ const FileUpload = ({ onUpload }) => {
                 boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
             }}
         >
-            {/* Styled input and label */}
+
             <input
                 type="file"
                 accept="image/*"
                 onChange={handleFileChange}
                 id="file-input"
-                style={{ display: 'none' }} // Hide the default input
+                style={{ display: 'none' }}
             />
             <label htmlFor="file-input">
                 <Button variant="outlined" component="span">
@@ -57,8 +57,8 @@ const FileUpload = ({ onUpload }) => {
                             src={previewUrl}
                             alt="Selected Preview"
                             sx={{
-                                width: '100%', // Set width to 100% of the container
-                                maxWidth: '300px', // You can adjust this value for your layout
+                                width: '100%',
+                                maxWidth: '300px',
                                 height: 'auto',
                                 borderRadius: '4px',
                                 boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
@@ -70,7 +70,6 @@ const FileUpload = ({ onUpload }) => {
                 </Box>
             )}
 
-            {/* Conditionally render the Upload Image button */}
             {selectedFile && (
                 <Button
                     variant="contained"

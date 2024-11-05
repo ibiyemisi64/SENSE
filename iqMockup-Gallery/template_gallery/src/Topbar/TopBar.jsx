@@ -13,12 +13,12 @@ const TopBar = () => {
             }}
         >
             <Toolbar sx={{ justifyContent: 'space-between', width: '100%' }}>
-                {/* Logo/Text */}
+
                 <Typography variant="h6" component="div" sx={{ flexGrow: 0 }}>
                     IQSign
                 </Typography>
 
-                {/* Centered Search Bar */}
+
                 <Box
                     sx={{
                         flexGrow: 1,
