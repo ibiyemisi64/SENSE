@@ -1,7 +1,8 @@
 #! /bin/bash
 
-source ~/.bashrc1
+source ~/.bashrc
+source ~/.nvm/nvm.sh
 
-cd /vol/iot/iqsign
+cd ~/SENSE/iqsign
 
 nvm run default oauthserver.js
