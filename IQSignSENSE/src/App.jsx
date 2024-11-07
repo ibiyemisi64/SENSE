@@ -5,6 +5,7 @@ import LoginPage from './LoginPage';
 import ProfilePage from './ProfilePage';
 import Home from './HomePage';
 import SignEditor  from './Sign';
+import Gallery from "./Gallery/Gallery.jsx";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/edit" element={<SignEditor />} />
         <Route path="/home" element={<Home />} />
+          <Route path={"/gallery"} element={<Gallery/>}/>
       </Routes>
     </Router>
   );

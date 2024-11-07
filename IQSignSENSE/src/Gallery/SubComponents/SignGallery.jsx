@@ -3,6 +3,7 @@ import { Box, Grid, IconButton, Modal, Tabs, Tab, Stack } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useGalleryStore } from '../hooks/galleryStore.jsx';
 import FileUpload from './FileUpload.jsx';
+import {useNavigate} from "react-router-dom";
 
 // Define scrollbar styles
 const scrollStyles = {
@@ -26,16 +27,16 @@ const SignGallery = () => {
     const { images, addImage } = useGalleryStore();
     const [open, setOpen] = useState(false);
     const [tabIndex, setTabIndex] = useState(0);
+    const navigate = useNavigate();
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const handleTabChange = (event, newValue) => setTabIndex(newValue);
 
-    // Handle image upload
     const handleImageUpload = (file) => {
         const fileUrl = URL.createObjectURL(file);
         addImage(fileUrl);
-        handleClose(); // Close the modal after upload
+        handleClose();
     };
 
     return (
@@ -91,6 +92,7 @@ const SignGallery = () => {
                                 objectFit: 'cover',
                                 boxShadow: 3,
                             }}
+                            onClick={()=>navigate("/edit")}
                         />
                     </Grid>
                 ))}
