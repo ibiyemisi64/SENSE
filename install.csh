@@ -1,62 +1,46 @@
 #! /bin/csh -f
 
-git commit -a --dry-run >&! /dev/null
-if ($status == 0) then
-   git commit -a
-   if ($status > 0) exit;
-endif
+# File Name: ~/SENSE/install.
+# Purpose: CSH Script that starts all SENSE Services
+# Last Modified By: Kelsie Edie on 29 OCT 2024
 
-git push
+# 1: Get current SENSE repository code
+cd ~/SENSE
+git pull --verbose
 
-
-ssh sherpa.cs.brown.edu '(cd /vol/iot; git pull)'
-if ($status > 0) exit;
-
-pushd savedimages
-# copy any images that you want to maintain here
-# scp baby.jpg sherpa.cs.brown.edu:/vol/iot/images
-popd
-
-scp flutter/iqsign/assets/*.html sherpa.cs.brown.edu:/vol/web/html/iqsign
-scp flutter/iqsign/assets/images/*.png sherpa.cs.brown.edu:/vol/web/html/iqsign/images
-
-
-
-pushd secret
-update.csh
-popd
-
-pushd devices
+# 2: Build updated SENSE repository code
+# Build iQsign
+cd ~/SENSE/iqsign
+npm update
+# Build Signmaker
+cd ~/SENSE/signmaker
 ant
-popd
-
-pushd catre
+# Build CATRE
+cd ~/SENSE/catre
 ant
-popd
+# Build Devices
+cd ~/SENSE/devices
+ant
+# Build CEDES
+cd ~/SENSE/cedes
+npm update
 
-ssh sherpa.cs.brown.edu '(cd /vol/iot/iqsign; npm update)'
-echo npm status $status
-ssh sherpa.cs.brown.edu '(cd /vol/iot/signmaker; ant)'
-echo signmaker ant status $status
-ssh sherpa.cs.brown.edu '(cd /vol/iot/catre; ant)'
-echo catre ant status $status
-ssh sherpa.cs.brown.edu '(cd /vol/iot/devices; ant)'
-echo devices ant status $status
-ssh sherpa.cs.brown.edu '(cd /vol/iot/cedes; npm update)'
-echo npm status $status
-
-
-ssh sherpa.cs.brown.edu '(cd /vol/iot/iqsign; start.csh)'
-echo iqsign start status $status
-ssh sherpa.cs.brown.edu '(cd /vol/iot/cedes; start.csh)'
-echo cedes start status $status
-ssh sherpa.cs.brown.edu '(cd /vol/iot/signmaker; start.csh)'
-echo signmaker start status $status
-ssh sherpa.cs.brown.edu '(cd /vol/iot/iqsign; starto.csh)'
-echo oauth start status $status
-ssh sherpa.cs.brown.edu '(cd /vol/iot/catre; start.csh)'
-echo catre start status $status
-
-pushd devices
-start.csh
-popd
+# 3: Start SENSE services (server)
+# Start iQsign
+cd ~/SENSE/iqsign
+./start.csh
+# Start CEDES
+cd ~/SENSE/cedes
+./start.csh
+# Start Signmaker
+cd ~/SENSE/signmaker
+./start.csh
+# Start Oauth (different script under iQsign)
+cd ~/SENSE/iqsign
+./starto.csh
+# Start CATRE
+cd ~/SENSE/catre
+./start.csh
+# Start Devices
+cd ~/SENSE/devices
+./start.csh
