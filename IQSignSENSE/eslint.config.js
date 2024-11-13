@@ -35,4 +35,17 @@ export default [
       ],
     },
   },
-]
+
+  // Configuration for Node.js (backend) files
+  {
+    files: ['backend/**/*.js'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.node,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
+    },
+  },
+];
