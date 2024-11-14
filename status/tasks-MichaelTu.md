@@ -21,3 +21,5 @@
   - Defined additional requirements and specifications for ALDS.
   - Presented ALDS updates for the in-class project presentation.
 - 11/7: Attended SENSE status update meeting. Organized ALDS tasks for this sprint.
+- 11/13-11/14: Implemented the UI Mockup of the main ALDS page into code.  // More detail
+- 11/14: Attended SENSE status update meeting.
