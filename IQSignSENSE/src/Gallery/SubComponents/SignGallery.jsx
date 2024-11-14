@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Box, Grid, IconButton, Modal, Tabs, Tab, Stack } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useGalleryStore } from '../hooks/galleryStore.jsx';
@@ -24,11 +24,13 @@ const scrollStyles = {
 };
 
 const SignGallery = () => {
-    const { images, addImage } = useGalleryStore();
+    const { images, addImage,loadImages } = useGalleryStore();
     const [open, setOpen] = useState(false);
     const [tabIndex, setTabIndex] = useState(0);
     const navigate = useNavigate();
-
+    useEffect(()=> {
+        loadImages();
+    },[])
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const handleTabChange = (event, newValue) => setTabIndex(newValue);
