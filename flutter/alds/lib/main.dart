@@ -34,13 +34,15 @@ import 'device.dart' as device;
 import 'util.dart' as util;
 import "locator.dart";
 import 'dart:async';
+import 'mainpage.dart';
 
 void main() {
   initialize(false);
   runApp(
     const MaterialApp(
       title: "ALDS Location Selector",
-      home: AldsSelect(),
+      // home: AldsSelect(),
+      home: AldsMain(),
     ),
   );
 }
