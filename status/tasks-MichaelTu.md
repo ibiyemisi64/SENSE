@@ -11,7 +11,7 @@
 - 10/3: Attended SENSE status update meeting. Joined the ALDS team.
 - 10/10: Attended SENSE status update meeting.
 - 10/16: Designed an initial ALDS UML Diagram of the existing codebase.
-- 10/17: Attended SENSE status update meeting.
+- 10/17: Attended SENSE status update meeting. I was the scribe for this meeting.
   - Between meetings, I was trouble-shooting setup for ALDS on my local machine.
 - 10/24: Attended SENSE status update meeting.
 - 10/28: Assisted in the planning and completion of the ALDS UI Figma prototype.
@@ -22,4 +22,4 @@
   - Presented ALDS updates for the in-class project presentation.
 - 11/7: Attended SENSE status update meeting. Organized ALDS tasks for this sprint.
 - 11/11-11/14: Implemented the UI Mockup of the main ALDS page into code. The UI mockup requires some new libraries including: `flutter_map`, `flutter_map_location_marker`, `google_fonts`.
-- 11/14: Attended SENSE status update meeting.
+- 11/14: Attended SENSE status update meeting. Demoed ALDS progress.
