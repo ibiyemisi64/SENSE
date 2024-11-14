@@ -47,9 +47,9 @@ dependencies:
   flutter_logs: ^2.1.10
   http: ^1.2.2
   phone_state: ^1.0.4
-  google_maps_flutter: ^2.9.0  # TODO: Remove if no longer using Google Maps
   flutter_map: ^7.0.2
   latlong2: ^0.9.1
+  flutter_map_location_marker: ^9.1.1
 
 
 dev_dependencies:
