@@ -10,6 +10,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'widgets.dart' as widgets;
 import 'util.dart' as util;
@@ -100,7 +101,10 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("ALDS Location Selector"),
+        title: Text(
+            "ALDS Location Selector",
+            style: GoogleFonts.anta(),
+          ),
       ),
       body: Column(
         children: [
@@ -110,7 +114,9 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
             child: Center(
               child: Text(
                 "Current Location: $_curLocationText",
-                style: TextStyle(color: Colors.black, fontSize: 20),
+                style: GoogleFonts.anta(
+                  textStyle: const TextStyle(color: Colors.black, fontSize: 20),
+                ),
               ),
             ),
           ),
@@ -129,7 +135,9 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
                 onPressed: _saveLocationAction, 
                 child: Text(
                   "Save Location",
-                  style: TextStyle(color: Colors.white),
+                  style: GoogleFonts.anta(
+                    textStyle: const TextStyle(color: Colors.white),
+                  ),
                 )
               ),
             )
@@ -151,7 +159,7 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
             icon: Icon(Icons.settings),
             label: 'Settings',
           ),
-        ]
+        ], 
       ),
     );
   }
