@@ -56,7 +56,7 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
             height: 50,
             child: Center(
               child: Text(
-                'Current Location: ',
+                "Current Location: ",
                 style: TextStyle(color: Colors.black, fontSize: 20),
               ),
             ),
@@ -68,6 +68,19 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
           ),
           SizedBox(
             height: 50,
+            child: Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+
+                ),
+                onPressed: _saveLocationAction, 
+                child: Text(
+                  "Save Location",
+                  style: TextStyle(color: Colors.white),
+                )
+              ),
+            )
           )
         ],
       ),
@@ -104,5 +117,9 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
         ),
       ]
     );
+  }
+
+  void _saveLocationAction() {
+    
   }
 }
