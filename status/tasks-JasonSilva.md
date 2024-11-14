@@ -3,8 +3,11 @@
 - Finished UI Statement
 - UML Diagram
 - UI mockup
+- combining UIs
+- MOSTLY connecting to backend
 
 
 
 ## Currently Working on
-- combining UIs, connecting to backend
+- Fully connected backend (needs AUTH)
+
