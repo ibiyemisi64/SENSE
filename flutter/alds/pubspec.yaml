@@ -47,6 +47,7 @@ dependencies:
   flutter_logs: ^2.1.10
   http: ^1.2.2
   phone_state: ^1.0.4
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
