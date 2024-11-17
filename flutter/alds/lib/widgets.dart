@@ -183,7 +183,46 @@ DropdownMenuItem<String> createMenuItem(String value) {
   );
 }
 
+Text heading(String text, {int? headingLevel}) {
 
+  /* With multiple levels of heading, this function can take a heading level. The idea is that we can use a switch statement to output the correctly-formatted heading. */
+
+  return Text(
+    text,
+    style: TextStyle(
+      fontSize: 24.0,
+    ),
+  );
+}
+
+// class SwitchExample extends StatefulWidget {
+//   const SwitchExample({
+//       super.key, 
+//       required this.initVal, 
+//       required this.color, 
+//       required this.onChanged
+//     }
+//   );
+
+//   final bool initVal;
+//   final MaterialColor? color;
+//   final Function(bool)? onChanged;
+
+//   @override
+//   State<SwitchExample> createState() => _SwitchExampleState();
+// }
+
+// class _SwitchExampleState extends State<SwitchExample> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Switch(
+//       // This bool value toggles the switch.
+//       value: widget.initVal,
+//       activeColor: widget.color,
+//       onChanged: widget.onChanged,
+//     );
+//   }
+// }
 
 
 
