@@ -11,6 +11,7 @@ import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'savedpage.dart';
 
 import 'widgets.dart' as widgets;
 import 'util.dart' as util;
@@ -144,24 +145,51 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
           )
         ],
       ),
-      bottomNavigationBar: NavigationBar(  // NOTE: Code structure from demo on https://api.flutter.dev/flutter/material/NavigationBar-class.html
-        destinations: const <Widget>[
-          NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.location_on),
-            label: 'Saved',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ], 
-      ),
-    );
+    //   bottomNavigationBar: NavigationBar(  // NOTE: Code structure from demo on https://api.flutter.dev/flutter/material/NavigationBar-class.html
+    //     destinations: const <Widget>[
+    //       NavigationDestination(
+    //         selectedIcon: Icon(Icons.home),
+    //         icon: Icon(Icons.home_outlined),
+    //         label: 'Home',
+    //       ),
+    //       NavigationDestination(
+    //         icon: Icon(Icons.location_on),
+    //         label: 'Saved',
+    //       ),
+    //       NavigationDestination(
+    //         icon: Icon(Icons.settings),
+    //         label: 'Settings',
+    //       ),
+    //     ], 
+    //   ),
+    // );
+        bottomNavigationBar: NavigationBar(
+          destinations: const <Widget>[
+            NavigationDestination(
+              selectedIcon: Icon(Icons.home),
+              icon: Icon(Icons.home_outlined),
+              label: 'Home',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.location_on),
+              label: 'Saved',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.settings),
+              label: 'Settings',
+            ),
+          ],
+          onDestinationSelected: (int index) {
+            if (index == 1) {
+              // Navigate to saved locations page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SavedLocationsPage()),
+              );
+            }
+            // Add other navigation cases here if needed
+          }
+        ));
   }
 
   Widget _createLocationMap() {
