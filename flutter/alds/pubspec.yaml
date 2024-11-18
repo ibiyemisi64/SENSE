@@ -47,6 +47,9 @@ dependencies:
   flutter_logs: ^2.1.10
   http: ^1.2.2
   phone_state: ^1.0.4
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+  flutter_map_location_marker: ^9.1.1
   google_fonts: ^6.2.1
 
 dev_dependencies:

@@ -35,11 +35,13 @@ import 'device.dart' as device;
 import 'util.dart' as util;
 import "locator.dart";
 import 'dart:async';
+import 'mainpage.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   initialize(false);
   runApp(
-    const MaterialApp(
+    MaterialApp(
       title: "ALDS Location Selector",
       home: AldsLogin(),
     ),
