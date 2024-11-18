@@ -8,9 +8,9 @@
  */
 
 import 'package:flutter/material.dart';
-
 import 'util.dart' as util;
 import 'widgets.dart' as widgets;
+import 'package:google_fonts/google_fonts.dart';
 
 class AldsSettingsPage extends StatelessWidget {
   const AldsSettingsPage({super.key});
@@ -19,7 +19,9 @@ class AldsSettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'ALDS Settings',
-      theme: util.getTheme(),
+      theme: ThemeData(
+        textTheme: GoogleFonts.antaTextTheme()
+      ),
       home: const AldsSettingsWidget(),
     );
   }
@@ -33,37 +35,66 @@ class AldsSettingsWidget extends StatefulWidget {
 }
 
 class _AldsSettingsWidgetState extends State<AldsSettingsWidget> {
-
   // State variables
-  bool locationServicesLight = false;
-  bool notificationsLight = false;
-
-  _AldsSettingsWidgetState();
+  bool locationServicesEnabled = false;
+  bool notificationsEnabled = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("ALDS Settings"),
+        title: const Text("Settings"),
+        centerTitle: true,
       ),
-      body: Center(
-        child: ListView(children: <Widget>[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(15.0),
-              child: Expanded(
-                child: _featurePanel(),
-              ),
+      body: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: [
+          _buildSectionHeader("Features"),
+          _buildSwitchTile(
+            title: "Location Services",
+            subtitle: "Allow the app to access your location",
+            value: locationServicesEnabled,
+            onChanged: (value) {
+              setState(() {
+                locationServicesEnabled = value;
+              });
+            },
+          ),
+          _buildSwitchTile(
+            title: "Notifications",
+            subtitle: "Enable app notifications",
+            value: notificationsEnabled,
+            onChanged: (value) {
+              setState(() {
+                notificationsEnabled = value;
+              });
+            },
+          ),
+          const Divider(),
+          _buildSectionHeader("Preferences"),
+          _buildListTile(
+            title: "Language",
+            subtitle: "Change the app language",
+            trailing: TextButton(
+              onPressed: () {
+                // TODO: Implement language selector
+              },
+              child: const Text("English"),
             ),
-            widgets.fieldSeparator(),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(15.0),
-              child: Expanded(
-                child: _preferencesPanel(),
-              )
-            )]
-        )
+          ),
+          _buildListTile(
+            title: "Theme",
+            subtitle: "Switch between light and dark themes",
+            trailing: TextButton(
+              onPressed: () {
+                // TODO: Implement theme toggle
+              },
+              child: const Text("Light"),
+            ),
+          ),
+        ],
       ),
-      bottomNavigationBar: NavigationBar(  // NOTE: Code structure from demo on https://api.flutter.dev/flutter/material/NavigationBar-class.html
+      bottomNavigationBar: NavigationBar(
         destinations: const <Widget>[
           NavigationDestination(
             selectedIcon: Icon(Icons.home),
@@ -79,88 +110,48 @@ class _AldsSettingsWidgetState extends State<AldsSettingsWidget> {
             label: 'Settings',
           ),
         ],
-      )
+      ),
     );
   }
 
-  Widget _featurePanel() {
-    return Column(
-      children: <Widget>[
-        widgets.heading("Features"),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text("Location Services"),
-            Switch(
-              value: locationServicesLight, 
-              activeColor: Colors.green, 
-              onChanged: (bool value) => 
-                {setState(() => locationServicesLight = value)},
-            )
-          ],),
-        widgets.fieldSeparator(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text("Notifications"),
-            Switch(
-              value: notificationsLight,
-              activeColor: Colors.green,
-              onChanged: (bool value) => 
-                {setState(() => notificationsLight = value)},
-            )
-          ],
-        )
-      ],
-    );
-  }
-
-  Widget _preferencesPanel() {
-    return Column(
-      children: <Widget>[
-        widgets.heading("Preferences"),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text("Language"),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-              ),
-              child: Text('English'),
-              onPressed: () {},
-            )
-            // _createLanguageSelector()
-          ],
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text("Theme"),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-              ),
-              child: Text('Light'),
-              onPressed: () {},
-            )
-          ],
-        )
-      ],
+      ),
     );
   }
 
-  Widget _createLanguageSelector() {
-    List<String> languages = []; // FIXME: Fill this in later
-
-    return widgets.dropDown(languages, value: "English", onChanged: _locationSelected);
+  Widget _buildSwitchTile({
+    required String title,
+    required String subtitle,
+    required bool value,
+    required ValueChanged<bool> onChanged,
+  }) {
+    return SwitchListTile(
+      title: Text(title),
+      subtitle: Text(subtitle),
+      value: value,
+      onChanged: onChanged,
+      activeColor: Colors.blue,
+    );
   }
 
-  Future<void> _locationSelected(String? value) async {
-    
+  Widget _buildListTile({
+    required String title,
+    required String subtitle,
+    required Widget trailing,
+  }) {
+    return ListTile(
+      title: Text(title),
+      subtitle: Text(subtitle),
+      trailing: trailing,
+    );
   }
 }
