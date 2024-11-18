@@ -5,6 +5,7 @@
  * 
  */
 
+import 'package:alds/settingspage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
@@ -172,7 +173,7 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
             ),
             NavigationDestination(
               icon: Icon(Icons.location_on),
-              label: 'Saved',
+              label: 'Locations',
             ),
             NavigationDestination(
               icon: Icon(Icons.settings),
@@ -185,6 +186,13 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const SavedLocationsPage()),
+              );
+            }
+            if (index == 2) {
+              // Navigate to saved locations page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AldsSettingsPage()),
               );
             }
             // Add other navigation cases here if needed

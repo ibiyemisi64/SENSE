@@ -7,6 +7,8 @@
  * 
  */
 
+import 'package:alds/mainpage.dart';
+import 'package:alds/savedpage.dart';
 import 'package:flutter/material.dart';
 import 'util.dart' as util;
 import 'widgets.dart' as widgets;
@@ -103,13 +105,29 @@ class _AldsSettingsWidgetState extends State<AldsSettingsWidget> {
           ),
           NavigationDestination(
             icon: Icon(Icons.location_on),
-            label: 'Saved',
+            label: 'Locations',
           ),
           NavigationDestination(
             icon: Icon(Icons.settings),
             label: 'Settings',
           ),
         ],
+        onDestinationSelected: (int index) {
+            if (index == 0) {
+              // Navigate to saved locations page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AldsMain()),
+              );
+            }
+            if (index == 1) {
+              // Navigate to saved locations page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SavedLocationsPage()),
+              );
+            }
+        }
       ),
     );
   }

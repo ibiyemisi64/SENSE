@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:latlong2/latlong.dart';
 import 'mainpage.dart';
+import 'settingspage.dart';
 
 class SavedLocationsPage extends StatefulWidget {
   const SavedLocationsPage({super.key});
@@ -48,7 +49,7 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
           NavigationDestination(
             selectedIcon: Icon(Icons.location_on),
             icon: Icon(Icons.location_on_outlined),
-            label: 'Saved',
+            label: 'Locations',
           ),
           NavigationDestination(
             icon: Icon(Icons.settings_outlined),
@@ -66,7 +67,11 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
               );
               break;
             case 2:
-              // Navigate to settings
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AldsSettingsPage()),
+              );
               break;
           }
         },

@@ -1,3 +1,4 @@
+import 'package:alds/mainpage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -28,10 +29,16 @@ class _AldsLoginWidgetState extends State<AldsLoginWidget> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _loginAction() {
+  Future<void>_loginAction(context) async {
     final email = _emailController.text;
     final password = _passwordController.text;
-    // Add your login logic here
+    
+    // TODO: Check if cred are valid, if they are nav to other page, if not err message
+    Navigator.push(
+      context, 
+      MaterialPageRoute(builder: (context) => const AldsMain())
+      );
+  
     debugPrint('Email: $email, Password: $password');
   }
 
@@ -77,7 +84,7 @@ class _AldsLoginWidgetState extends State<AldsLoginWidget> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _loginAction,
+                onPressed: () => _loginAction(context),
                 child: const Text('Login'),
               ),
             ),
