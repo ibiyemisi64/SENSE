@@ -24,6 +24,7 @@
 ///										 *
 ///******************************************************************************
 
+import 'package:alds/settingspage.dart';
 import 'package:flutter/material.dart';
 import 'package:phone_state/phone_state.dart';
 //import 'selectpage.dart';
