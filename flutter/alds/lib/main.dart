@@ -26,7 +26,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:phone_state/phone_state.dart';
-import 'selectpage.dart';
+//import 'selectpage.dart';
+import 'loginpage.dart';
 import 'storage.dart' as storage;
 import 'globals.dart' as globals;
 import 'recheck.dart' as recheck;
@@ -42,13 +43,7 @@ void main() {
   runApp(
     MaterialApp(
       title: "ALDS Location Selector",
-      // home: AldsSelect(),
-      home: AldsMain(),
-      theme: ThemeData(
-        navigationBarTheme: NavigationBarThemeData(
-          labelTextStyle: WidgetStateProperty.all(GoogleFonts.anta()),
-        )
-      )
+      home: AldsLogin(),
     ),
   );
 }
