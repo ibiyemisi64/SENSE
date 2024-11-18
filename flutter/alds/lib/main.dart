@@ -27,7 +27,8 @@
 import 'package:alds/settingspage.dart';
 import 'package:flutter/material.dart';
 import 'package:phone_state/phone_state.dart';
-import 'selectpage.dart';
+//import 'selectpage.dart';
+import 'loginpage.dart';
 import 'storage.dart' as storage;
 import 'globals.dart' as globals;
 import 'recheck.dart' as recheck;
@@ -35,14 +36,15 @@ import 'device.dart' as device;
 import 'util.dart' as util;
 import "locator.dart";
 import 'dart:async';
+import 'mainpage.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   initialize(false);
   runApp(
-    const MaterialApp(
+    MaterialApp(
       title: "ALDS Location Selector",
-      // home: AldsSelect(),
-      home: AldsSettingsPage(),
+      home: AldsLogin(),
     ),
   );
 }
