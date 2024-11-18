@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'util.dart' as util;
 import 'widgets.dart' as widgets;
 import 'package:google_fonts/google_fonts.dart';
+import 'loginpage.dart';
 
 class AldsSettingsPage extends StatelessWidget {
   const AldsSettingsPage({super.key});
@@ -129,7 +130,33 @@ class _AldsSettingsWidgetState extends State<AldsSettingsWidget> {
             }
         }
       ),
-    );
+      bottomSheet: Container(
+       height: 60,
+       alignment: Alignment.center,
+       child: ElevatedButton(
+         onPressed: () {
+           // Navigate to saved locations page on logout
+           Navigator.push(
+             context,
+             MaterialPageRoute(builder: (context) => const AldsLogin(),
+              ),
+           );
+         },
+         style: ElevatedButton.styleFrom(
+           backgroundColor: Colors.red,
+           padding: const EdgeInsets.symmetric(horizontal: 40),
+         ),
+         child: const Text(
+           'Logout account',
+           style: TextStyle(
+             color: Colors.white,
+             fontSize: 16,
+           ),
+         ),
+       ),
+     ),
+   );
+
   }
 
   Widget _buildSectionHeader(String title) {

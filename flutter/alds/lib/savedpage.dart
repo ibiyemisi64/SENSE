@@ -1,5 +1,5 @@
 /*
-*Some of the code below is adopted from mainpage.dart, written by Michael and from claude.ai
+*Some of the code below is adapted from mainpage.dart, written by Michael and from claude.ai
 */
 
 import 'package:flutter/material.dart';
