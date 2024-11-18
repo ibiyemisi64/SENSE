@@ -23,3 +23,5 @@
 - 11/7: Attended SENSE status update meeting. Organized ALDS tasks for this sprint.
 - 11/11-11/14: Implemented the UI Mockup of the main ALDS page into code. The UI mockup requires some new libraries including: `flutter_map`, `flutter_map_location_marker`, `google_fonts`.
 - 11/14: Attended SENSE status update meeting. Demoed ALDS progress.
+- 11/17: Implemented the UI Mockup of the ALDS settings page into code.
+- 11/17: Met with ALDS team to merge ALDS pages.
