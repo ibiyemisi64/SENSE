@@ -16,9 +16,8 @@ const LoginPage = () => {
     try {
       // retrieve padding and session info
       const preLoginResponse = await fetch('https://sherpa.cs.brown.edu:3336/rest/login', {
-        // https://localhost:3336/rest/login
         method: 'GET',
-        credentials: 'include', // cookies for session tracking
+        credentials: 'include',
       });
 
       if (!preLoginResponse.ok) {
