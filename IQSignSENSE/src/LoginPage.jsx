@@ -31,7 +31,7 @@ const LoginPage = () => {
 
       // Hash credentials with padding and session
       const lowerCaseUsername = username.toLowerCase();
-      const hashedPassword = hasher(password); // Replace with your hash function
+      const hashedPassword = hasher(password);
       const hashedUsername = hasher(lowerCaseUsername);
       const paddedHash = hasher(hashedUsername + curPadding);
       const finalHash = hasher(hashedPassword + paddedHash);
@@ -56,7 +56,7 @@ const LoginPage = () => {
       const loginData = await loginResponse.json();
 
       if (loginResponse.ok && loginData.status === 'OK') {
-        // Save the session ID in localStorage or cookies
+
         localStorage.setItem('iqsignSession', loginData.session);
 
         // Redirect or display success
@@ -64,7 +64,7 @@ const LoginPage = () => {
         window.location.href = '/home';
       } else if (loginData.TEMPORARY) {
         alert('Temporary session detected. Redirecting to password reset...');
-        window.location.href = '/reset-password'; // Redirect to a password reset page
+        window.location.href = '/reset-password';
       } else {
         setError(loginData.error || 'Invalid login credentials.');
       }
