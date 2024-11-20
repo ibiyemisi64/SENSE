@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Container, TextField, Button, Typography, Link, Box, Checkbox, FormControlLabel } from '@mui/material';
+import { hasher } from './utils/utils';
+
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -12,28 +14,61 @@ const LoginPage = () => {
     setError('');
 
     try {
-      const response = await fetch('https://sherpa.cs.brown.edu:3336/rest', {
-        //https://localhost:3336/rest'
+      // retrieve padding and session info
+      const preLoginResponse = await fetch('https://sherpa.cs.brown.edu:3336/rest/login', {
+        // https://localhost:3336/rest/login
+        method: 'GET',
+        credentials: 'include', // cookies for session tracking
+      });
+
+      if (!preLoginResponse.ok) {
+        setError('Failed to initialize login.');
+        return;
+      }
+
+      const preLoginData = await preLoginResponse.json();
+      const { code: curPadding, session: curSession } = preLoginData;
+
+      // Hash credentials with padding and session
+      const lowerCaseUsername = username.toLowerCase();
+      const hashedPassword = hasher(password); // Replace with your hash function
+      const hashedUsername = hasher(lowerCaseUsername);
+      const paddedHash = hasher(hashedUsername + curPadding);
+      const finalHash = hasher(hashedPassword + paddedHash);
+
+      // POST request with hashed credentials
+      const body = {
+        username: lowerCaseUsername,
+        padding: curPadding,
+        password: finalHash,
+        iqsignSession: curSession,
+      };
+
+      const loginResponse = await fetch('https://sherpa.cs.brown.edu:3336/rest', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // Include cookies for session tracking?
-        body: JSON.stringify({ username, password, rememberMe }),
+        credentials: 'include',
+        body: JSON.stringify(body),
       });
 
-      const data = await response.json();
+      const loginData = await loginResponse.json();
 
-      if (response.ok) {
-        // Handle successful login (e.g., redirect or show success message)
-        alert(data.message);
-        window.location.href = '/home'; // Redirect to home page
+      if (loginResponse.ok && loginData.status === 'OK') {
+        // Save the session ID in localStorage or cookies
+        localStorage.setItem('iqsignSession', loginData.session);
+
+        // Redirect or display success
+        alert('Login successful!');
+        window.location.href = '/home';
+      } else if (loginData.TEMPORARY) {
+        alert('Temporary session detected. Redirecting to password reset...');
+        window.location.href = '/reset-password'; // Redirect to a password reset page
       } else {
-        // Handle server-side error
-        setError(data.error || 'Login failed.');
+        setError(loginData.error || 'Invalid login credentials.');
       }
     } catch (err) {
-      // Handle network or unexpected errors
       console.error('Login error:', err);
       setError('An error occurred. Please try again.');
     }
