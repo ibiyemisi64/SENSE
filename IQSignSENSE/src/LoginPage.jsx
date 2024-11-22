@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, TextField, Button, Typography, Link, Box, Checkbox, FormControlLabel } from '@mui/material';
 import { hasher } from './utils/utils';
+import axios from 'axios';
 
 
 const LoginPage = () => {
@@ -8,6 +9,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
+  const serverUrl = 'https://sherpa.cs.brown.edu:3336';
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -15,25 +17,26 @@ const LoginPage = () => {
 
     try {
       // retrieve padding and session info
-      const preLoginResponse = await fetch('https://sherpa.cs.brown.edu:3336/rest/login', {
-        method: 'GET',
-        credentials: 'include',
-      });
+      const url = new URL(`${serverUrl}/rest/login`);
+      const preLoginResponse = await axios.get(url.toString());
 
-      if (!preLoginResponse.ok) {
-        setError('Failed to initialize login.');
-        return;
-      }
+      //if (!preLoginResponse.ok) {
+        //setError('Failed to initialize login.');
+        //return;
+      //}
 
-      const preLoginData = await preLoginResponse.json();
+      const preLoginData = await preLoginResponse.data;
       const { code: curPadding, session: curSession } = preLoginData;
+
 
       // Hash credentials with padding and session
       const lowerCaseUsername = username.toLowerCase();
+
+
       const hashedPassword = hasher(password);
-      const hashedUsername = hasher(lowerCaseUsername);
-      const paddedHash = hasher(hashedUsername + curPadding);
-      const finalHash = hasher(hashedPassword + paddedHash);
+      //const hashedUsername = hasher(lowerCaseUsername);
+      const paddedHash = hasher(hashedPassword + lowerCaseUsername);
+      const finalHash = hasher(paddedHash + curPadding);
 
       // POST request with hashed credentials
       const body = {
@@ -43,7 +46,7 @@ const LoginPage = () => {
         iqsignSession: curSession,
       };
 
-      const loginResponse = await fetch('https://sherpa.cs.brown.edu:3336/rest', {
+      const loginResponse = await axios.post(`${serverUrl}/rest/login`, body,  {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -52,7 +55,7 @@ const LoginPage = () => {
         body: JSON.stringify(body),
       });
 
-      const loginData = await loginResponse.json();
+      const loginData = await loginResponse.data;
 
       if (loginResponse.ok && loginData.status === 'OK') {
 
