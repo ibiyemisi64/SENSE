@@ -16,3 +16,11 @@ GitHub Username: KelsieEdie
 - 28 October: Assisted in the planning and completion of the ALDS UI figma prototype
 - 30 October: Got the csci2340 VM fully up and working with the SENSE code on the server user
 - 31 October: Help to plan Sprint #3 and added all relevant issues to GitHub
+- 01 November - 07 November: Worked on ALDS Mockup Code for Login Page 
+- 08 November - 13 November: Worked on ALDS Mockup Code for Settings Page
+- 14 November: Tested all ALDS UI Mockup Code, merged all UI code into `main`.
+- 15 November: Closed out Sprint #3 Issue, did the planning for Sprint #4. 
+- 18 November: Further dug into the flutter and java code for ALDS. 
+- 19 November: Removed ALDS Login Page from main codebase and closed logout button PR.
+- 20 November - 21 November: Fixed Podfile errors for MacOS/iOS, prepped for the Code Review, and then conducted the Code Review with my group members.
+- 22 November - 25 November: Working on fixing MacOS Location Marker plug-in errors and implementing the `validate` location logic. 
