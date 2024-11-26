@@ -1,15 +1,15 @@
 
-/***
+
 import sjcl from 'sjcl';
 
-export const hasher = async (msg) => {
-    console.log("Hasher input:", msg);
+export const hasher = (msg) => {
+
     let bits = sjcl.hash.sha512.hash(msg);
     let str = sjcl.codec.base64.fromBits(bits);
     return str;
 };
- ***/
 
+/***
 export const hasher = async (msg) => {
     console.log("Hasher input:", msg);
     const encoder = new TextEncoder();
@@ -21,7 +21,7 @@ export const hasher = async (msg) => {
     return hashBase64;
 };
 //symlink that file into the same directory
-
+***/
 /***
 
 import crypto from 'crypto';
