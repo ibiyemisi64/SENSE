@@ -5,52 +5,35 @@
  * 
  */
 
-import 'package:alds/mappage.dart';
-import 'package:alds/settingspage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'savedpage.dart';
 
+import 'widgets.dart' as widgets;
 import 'util.dart' as util;
 import 'locator.dart';
 
-class AldsMain extends StatelessWidget {
-  const AldsMain({super.key});
+class AldsMapPage extends StatefulWidget {
+  const AldsMapPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ALDS',
-      theme: util.getTheme(),
-      home: const AldsMainWidget()
-    ); // App
-  }
+  State<AldsMapPage> createState() => _AldsMapPageState();
 }
 
-class AldsMainWidget extends StatefulWidget {
-  const AldsMainWidget({super.key});
-
-  @override
-  State<AldsMainWidget> createState() => _AldsMainWidgetState();
-}
-
-class _AldsMainWidgetState extends State<AldsMainWidget> {
+class _AldsMapPageState extends State<AldsMapPage> {
   String _curLocationText = "";
   Position? _curPosition;
-  late int navBarIndex; // use of the `late` keyword denotes a non-nullable variable that will be initialized later
 
-  _AldsMainWidgetState();
+  _AldsMapPageState();
 
   @override
   void initState() {
     super.initState();
     
     // Initial state
-    navBarIndex = 0;
     Locator loc = Locator();
     _curLocationText = loc.lastLocation ?? "N/A";
     _getCurrentLocation();
@@ -103,40 +86,43 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-            "ALDS Location Selector",
-            style: GoogleFonts.anta(),
+    return Column(
+      children: [
+        // Header
+        SizedBox(
+          height: 50,
+          child: Center(
+            child: Text(
+              "Current Location: $_curLocationText",
+              style: GoogleFonts.anta(
+                textStyle: const TextStyle(color: Colors.black, fontSize: 20),
+              ),
+            ),
           ),
-      ),
-      body: <Widget>[
-        const AldsMapPage(),
-        const SavedLocationsPage(),
-        const AldsSettingsWidget(),
-      ][navBarIndex],
-      bottomNavigationBar: NavigationBar(  // NOTE: Code structure from demo on https://api.flutter.dev/flutter/material/NavigationBar-class.html
-        onDestinationSelected: (int index) {
-          setState(() => navBarIndex = index);
-        },
-        indicatorColor: Colors.purpleAccent,
-        selectedIndex: navBarIndex,
-        destinations: const <Widget>[
-          NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.location_on),
-            label: 'Saved',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
-      ),
+        ),
+        widgets.fieldSeparator(),
+        // Map
+        Expanded(
+          child: _createLocationMap(),
+        ),
+        SizedBox(
+          height: 50,
+          child: Center(
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+              ),
+              onPressed: _saveLocationAction, 
+              child: Text(
+                "Save Location",
+                style: GoogleFonts.anta(
+                  textStyle: const TextStyle(color: Colors.white),
+                ),
+              )
+            ),
+          )
+        )
+      ],
     );
   }
 

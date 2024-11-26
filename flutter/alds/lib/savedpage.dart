@@ -1,12 +1,9 @@
 /*
-*Some of the code below is adopted from mainpage.dart, written by Michael and from claude.ai
+* Some of the code below is adopted from mainpage.dart, written by Michael and from claude.ai
 */
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:latlong2/latlong.dart';
-import 'mainpage.dart';
-import 'settingspage.dart';
 
 class SavedLocationsPage extends StatefulWidget {
   const SavedLocationsPage({super.key});
@@ -26,58 +23,13 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Saved Locations",
-          style: GoogleFonts.anta(),
-        ),
-      ),
-      body: ListView.builder(
+    return ListView.builder(
         itemCount: _savedLocations.length,
         itemBuilder: (context, index) {
           return _buildLocationCard(_savedLocations[index]);
         },
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: 1, // Saved tab
-        destinations: const <Widget>[
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.location_on),
-            icon: Icon(Icons.location_on_outlined),
-            label: 'Locations',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.settings_outlined),
-            label: 'Settings',
-          ),
-        ],
-        onDestinationSelected: (int index) {
-          // Handle navigation
-          switch (index) {
-            case 0:
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const AldsMain()),
-              );
-              break;
-            case 2:
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const AldsSettingsPage()),
-              );
-              break;
-          }
-        },
-      ),
-    );
-  }
+      );
+    }
 
   Widget _buildLocationCard(SavedLocation location) {
     return Card(
