@@ -7,27 +7,7 @@
  * 
  */
 
-import 'package:alds/mainpage.dart';
-import 'package:alds/savedpage.dart';
 import 'package:flutter/material.dart';
-import 'util.dart' as util;
-import 'widgets.dart' as widgets;
-import 'package:google_fonts/google_fonts.dart';
-
-class AldsSettingsPage extends StatelessWidget {
-  const AldsSettingsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ALDS Settings',
-      theme: ThemeData(
-        textTheme: GoogleFonts.antaTextTheme()
-      ),
-      home: const AldsSettingsWidget(),
-    );
-  }
-}
 
 class AldsSettingsWidget extends StatefulWidget {
   const AldsSettingsWidget({super.key});
@@ -43,12 +23,7 @@ class _AldsSettingsWidgetState extends State<AldsSettingsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Settings"),
-        centerTitle: true,
-      ),
-      body: ListView(
+    return ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
           _buildSectionHeader("Features"),
@@ -95,41 +70,7 @@ class _AldsSettingsWidgetState extends State<AldsSettingsWidget> {
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: NavigationBar(
-        destinations: const <Widget>[
-          NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.location_on),
-            label: 'Locations',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
-        onDestinationSelected: (int index) {
-            if (index == 0) {
-              // Navigate to saved locations page
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AldsMain()),
-              );
-            }
-            if (index == 1) {
-              // Navigate to saved locations page
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SavedLocationsPage()),
-              );
-            }
-        }
-      ),
-    );
+      );
   }
 
   Widget _buildSectionHeader(String title) {
