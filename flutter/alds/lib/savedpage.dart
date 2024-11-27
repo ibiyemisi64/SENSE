@@ -23,8 +23,8 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
     // Ensure storage is initialized
     await storage.setupStorage();
 
-    // Get locations from storage
-    List<String> locationNames = storage.getLocations();
+    // Get location from storage
+    List<String> locationData = storage.readLocationData() as List<String>;
 
     // For now, we're generating random coordinates around New York coordinates
     setState(() {

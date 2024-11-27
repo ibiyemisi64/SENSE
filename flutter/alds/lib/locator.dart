@@ -158,6 +158,8 @@ class Locator {
       // for a single room
     }
     String data = jsonEncode(_knownLocations);
+    util.log("Location data: $data");
+    
     storage.saveLocatorData(data);
   }
 
