@@ -1,9 +1,6 @@
-/*
-* Some of the code below is adopted from mainpage.dart, written by Michael and from claude.ai
-*/
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'storage.dart' as storage;
 
 class SavedLocationsPage extends StatefulWidget {
   const SavedLocationsPage({super.key});
@@ -13,23 +10,65 @@ class SavedLocationsPage extends StatefulWidget {
 }
 
 class _SavedLocationsPageState extends State<SavedLocationsPage> {
-  // Mock data - a list of saved locations (name, latitude, longitude)
-  final List<SavedLocation> _savedLocations = [
-    SavedLocation("Home", 40.7128, -74.0060),
-    SavedLocation("Work", 40.7589, -73.9851),
-    SavedLocation("Gym", 40.7549, -73.9840),
-    SavedLocation("Starbucks", 40.7082, -74.0337),
-  ];
+  List<SavedLocation> _savedLocations = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLocations();
+  }
+
+  Future<void> _loadLocations() async {
+    // Ensure storage is initialized
+    await storage.setupStorage();
+
+    // Get locations from storage
+    List<String> locationNames = storage.getLocations();
+
+    // For now, we're generating random coordinates around New York coordinates
+    setState(() {
+      _savedLocations = locationNames.map((name) {
+        double latVariation =
+            (DateTime.now().millisecondsSinceEpoch % 100) / 1000;
+        double longVariation =
+            (DateTime.now().millisecondsSinceEpoch % 100) / 1000;
+        return SavedLocation(
+          name,
+          40.7128 + latVariation,
+          -74.0060 + longVariation,
+        );
+      }).toList();
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _deleteLocation(SavedLocation location) async {
+    setState(() {
+      //TODO: FIX THE REMOVE
+      _savedLocations.remove(location);
+    });
+
+    // TODO: FIX THE UPDATE BUTTON
+    List<String> updatedNames = _savedLocations.map((loc) => loc.name).toList();
+    await storage.saveData();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: _savedLocations.length,
-        itemBuilder: (context, index) {
-          return _buildLocationCard(_savedLocations[index]);
-        },
+    if (_isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
       );
     }
+
+    return ListView.builder(
+      itemCount: _savedLocations.length,
+      itemBuilder: (context, index) {
+        return _buildLocationCard(_savedLocations[index]);
+      },
+    );
+  }
 
   Widget _buildLocationCard(SavedLocation location) {
     return Card(
@@ -66,12 +105,9 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
               child: Text('Delete'),
             ),
           ],
-          onSelected: (String value) {
-            // Handle menu item selection
+          onSelected: (String value) async {
             if (value == 'delete') {
-              setState(() {
-                _savedLocations.remove(location);
-              });
+              await _deleteLocation(location);
             }
           },
         ),
