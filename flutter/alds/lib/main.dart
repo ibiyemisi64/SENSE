@@ -44,6 +44,9 @@ void main() {
     MaterialApp(
       title: "ALDS Location Selector",
       home: AldsMain(),
+      theme: ThemeData.light(),
+      // darkTheme: ThemeData.dark(),
+      // themeMode: ThemeMode.system,
     ),
   );
 }

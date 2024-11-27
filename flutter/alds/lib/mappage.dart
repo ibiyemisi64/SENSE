@@ -35,7 +35,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
     
     // Initial state
     Locator loc = Locator();
-    _curLocationText = loc.lastLocation ?? "N/A";
+    _curLocationText = loc.lastLocation ?? "Unsaved Location";
     _getCurrentLocation();
   }
 
