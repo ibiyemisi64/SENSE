@@ -39,7 +39,7 @@ class AldsMainWidget extends StatefulWidget {
 }
 
 class _AldsMainWidgetState extends State<AldsMainWidget> {
-  String _curLocationText = "";
+  String _curLocationText = "";  // FIXME: Remove this code???
   Position? _curPosition;
   late int navBarIndex; // use of the `late` keyword denotes a non-nullable variable that will be initialized later
 
@@ -56,7 +56,7 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
     _getCurrentLocation();
   }
 
-  _getCurrentLocation() async {
+  _getCurrentLocation() async {  // TODO: Remove this code???
     // Code adapted from: https://pub.dev/packages/geolocator#example
 
     bool serviceEnabled;
@@ -99,6 +99,8 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
     setState(() {
       _curPosition = pos;
     });
+
+    _handleUpdate();
   }
 
   @override
@@ -117,6 +119,10 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
       ][navBarIndex],
       bottomNavigationBar: NavigationBar(  // NOTE: Code structure from demo on https://api.flutter.dev/flutter/material/NavigationBar-class.html
         onDestinationSelected: (int index) {
+          if (index == 0) {  // mapPage index
+            _getCurrentLocation();
+          }
+
           setState(() => navBarIndex = index);
         },
         indicatorColor: Colors.purpleAccent,
@@ -138,5 +144,16 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
         ],
       ),
     );
+  }
+
+  void _locationSelected(String? value) {
+    util.log("SET CURRENT TO $value");
+    setState(() => _curLocationText = value ?? "");
+  }
+
+  Future<void> _handleUpdate() async {
+    Locator loc = Locator();
+    String? where = await loc.findLocation();
+    _locationSelected(where);
   }
 }
