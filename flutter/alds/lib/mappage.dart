@@ -1,5 +1,5 @@
 /*
- *      mainpage.dart 
+ *    mainpage.dart 
  *    
  *    New Main page for displaying room
  * 
@@ -84,9 +84,10 @@ class _AldsMapPageState extends State<AldsMapPage> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Column( 
       children: [
         // Header
         SizedBox(
@@ -112,9 +113,9 @@ class _AldsMapPageState extends State<AldsMapPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
               ),
-              onPressed: _saveLocationAction, 
+              onPressed: _handleValidateLocation, 
               child: Text(
-                "Save Location",
+                "Validate Location",
                 style: GoogleFonts.anta(
                   textStyle: const TextStyle(color: Colors.white),
                 ),
@@ -149,7 +150,10 @@ class _AldsMapPageState extends State<AldsMapPage> {
     );
   }
 
-  void _saveLocationAction() {
-    // TODO: Implement action for clicking the "Save Location" button
+  void _handleValidateLocation() async {
+    String txt = _curLocationText;
+    Locator loc = Locator();
+    loc.noteLocation(txt);
+    util.log("VALIDATE location as $txt");
   }
 }

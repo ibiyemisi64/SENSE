@@ -139,31 +139,4 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
       ),
     );
   }
-
-  Widget _createLocationMap() {
-    return FlutterMap(
-      options: MapOptions(
-        initialCenter: (_curPosition != null) ? LatLng(_curPosition!.latitude, _curPosition!.longitude) : LatLng(51.509364, -0.128928),  // defaults to London
-        initialZoom: 9.2,
-      ),
-      children: [
-        TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: "edu.brown.alds",  // FIXME: Fix the package name when you know it
-        ),
-        CurrentLocationLayer(
-          alignPositionOnUpdate: AlignOnUpdate.always,
-          style: LocationMarkerStyle(
-            marker: const DefaultLocationMarker(),
-            markerSize: const Size(20, 20),
-            markerDirection: MarkerDirection.heading,
-          ),
-        ),
-      ]
-    );
-  }
-
-  void _saveLocationAction() {
-    // TODO: Implement action for clicking the "Save Location" button
-  }
 }
