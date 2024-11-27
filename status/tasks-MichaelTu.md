@@ -25,3 +25,8 @@
 - 11/14: Attended SENSE status update meeting. Demoed ALDS progress.
 - 11/17: Implemented the UI Mockup of the ALDS settings page into code.
 - 11/17: Met with ALDS team to merge ALDS pages. Created new issues and delegated tasks for Sprint 4. Iterated on our UI mockup by defining new functionality to add to ALDS.
+- 11/21: Attended SENSE status update meeting. Participated in completing the code review of `cedes/alds.js` and `cedes/iqsign.js`.
+- 11/25-11/26: Completed two issues assigned to me for this sprint.
+  - Added the ability to see saved locations on the map
+  - Refactored the code to be better capatible with the navigation bar. This consisted of removing navigation by routing and, instead, replacing the body widgets with the content of each page.
+- 11/26: Attended SENSE status update meeting. Began working on the final presentation.
