@@ -8,6 +8,7 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:alds/widgets.dart' as widgets;
 
 class AldsSettingsWidget extends StatefulWidget {
   const AldsSettingsWidget({super.key});
@@ -18,59 +19,56 @@ class AldsSettingsWidget extends StatefulWidget {
 
 class _AldsSettingsWidgetState extends State<AldsSettingsWidget> {
   // State variables
-  bool locationServicesEnabled = false;
-  bool notificationsEnabled = false;
+  String selectedTheme = "Light";
+  String selectedLang = "English";
 
   @override
   Widget build(BuildContext context) {
     return ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          _buildSectionHeader("Features"),
-          _buildSwitchTile(
-            title: "Location Services",
-            subtitle: "Allow the app to access your location",
-            value: locationServicesEnabled,
-            onChanged: (value) {
-              setState(() {
-                locationServicesEnabled = value;
-              });
-            },
-          ),
-          _buildSwitchTile(
-            title: "Notifications",
-            subtitle: "Enable app notifications",
-            value: notificationsEnabled,
-            onChanged: (value) {
-              setState(() {
-                notificationsEnabled = value;
-              });
-            },
-          ),
-          const Divider(),
           _buildSectionHeader("Preferences"),
           _buildListTile(
             title: "Language",
             subtitle: "Change the app language",
-            trailing: TextButton(
-              onPressed: () {
-                // TODO: Implement language selector
+            trailing: DropdownButton<String>(
+              value: selectedLang,
+              onChanged: (String? newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    selectedLang = newValue;
+                  });
+                }
               },
-              child: const Text("English"),
+              items: ["English"].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
             ),
           ),
           _buildListTile(
             title: "Theme",
             subtitle: "Switch between light and dark themes",
-            trailing: TextButton(
-              onPressed: () {
-                // TODO: Implement theme toggle
+            trailing: DropdownButton<String>(
+              value: selectedTheme,
+              onChanged: (String? newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    selectedTheme = newValue;
+                  });
+                }
               },
-              child: const Text("Light"),
+              items: ["Light", "Dark"].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
             ),
           ),
-        ],
-      );
+        ]);
   }
 
   Widget _buildSectionHeader(String title) {
