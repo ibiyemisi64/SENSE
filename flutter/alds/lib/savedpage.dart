@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'storage.dart' as storage;
+import 'dart:convert';
 
 class SavedLocationsPage extends StatefulWidget {
   const SavedLocationsPage({super.key});
@@ -20,38 +21,55 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
   }
 
   Future<void> _loadLocations() async {
-    // Ensure storage is initialized
     await storage.setupStorage();
 
-    // Get location from storage
-    List<String> locationData = storage.readLocationData() as List<String>;
+    String? locDataJson = await storage.readLocationData();
+    if (locDataJson != null) {
+      try {
+        List<dynamic> locDataList = json.decode(locDataJson);
 
-    // For now, we're generating random coordinates around New York coordinates
-    setState(() {
-      _savedLocations = locationNames.map((name) {
-        double latVariation =
-            (DateTime.now().millisecondsSinceEpoch % 100) / 1000;
-        double longVariation =
-            (DateTime.now().millisecondsSinceEpoch % 100) / 1000;
-        return SavedLocation(
-          name,
-          40.7128 + latVariation,
-          -74.0060 + longVariation,
-        );
-      }).toList();
-      _isLoading = false;
-    });
+        setState(() {
+          _savedLocations = locDataList.map((locData) {
+            Map<String, dynamic> position = locData['position'] ?? {};
+            return SavedLocation(
+              locData['location'] ?? 'Unknown',
+              position['latitude']?.toDouble() ?? 0.0,
+              position['longitude']?.toDouble() ?? 0.0,
+            );
+          }).toList();
+          _isLoading = false;
+        });
+      } catch (e) {
+        debugPrint('Error parsing location data: $e');
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   Future<void> _deleteLocation(SavedLocation location) async {
     setState(() {
-      //TODO: FIX THE REMOVE
       _savedLocations.remove(location);
     });
 
-    // TODO: FIX THE UPDATE BUTTON
-    List<String> updatedNames = _savedLocations.map((loc) => loc.name).toList();
-    await storage.saveData();
+    // Convert updated locations back to JSON format
+    List<Map<String, dynamic>> locDataList = _savedLocations
+        .map((loc) => {
+              'location': loc.name,
+              'position': {
+                'latitude': loc.latitude,
+                'longitude': loc.longitude,
+              }
+            })
+        .toList();
+
+    // Save updated data
+    await storage.saveLocatorData(json.encode(locDataList));
   }
 
   @override
@@ -59,6 +77,12 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
     if (_isLoading) {
       return const Center(
         child: CircularProgressIndicator(),
+      );
+    }
+
+    if (_savedLocations.isEmpty) {
+      return const Center(
+        child: Text('No saved locations'),
       );
     }
 
