@@ -7,20 +7,29 @@
  * 
  */
 
+import 'package:alds/providers.dart';
 import 'package:flutter/material.dart';
-import 'package:alds/widgets.dart' as widgets;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AldsSettingsPage extends StatefulWidget {
+import 'widgets.dart' as widgets;
+import 'util.dart' as util;
+
+class AldsSettingsPage extends ConsumerStatefulWidget {
   const AldsSettingsPage({super.key});
 
   @override
-  State<AldsSettingsPage> createState() => _AldsSettingsPageState();
+  ConsumerState<AldsSettingsPage> createState() => _AldsSettingsPageState();
 }
 
-class _AldsSettingsPageState extends State<AldsSettingsPage> {
+class _AldsSettingsPageState extends ConsumerState<AldsSettingsPage> {
   // State variables
-  String selectedTheme = "Light";
+  String selectedTheme = "System";
   String selectedLang = "English";
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,12 +64,15 @@ class _AldsSettingsPageState extends State<AldsSettingsPage> {
               value: selectedTheme,
               onChanged: (String? newValue) {
                 if (newValue != null) {
-                  setState(() {
+                  setState(() {  // Update the dropdown value
                     selectedTheme = newValue;
                   });
+
+                  // Update the app theme via the provider
+                  ref.read(themeProvider).setTheme(newValue);
                 }
               },
-              items: ["Light", "Dark"].map<DropdownMenuItem<String>>((String value) {
+              items: ["System", "Light", "Dark"].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),

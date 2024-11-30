@@ -5,30 +5,37 @@
  * 
  */
 
-import 'package:alds/mappage.dart';
-import 'package:alds/settingspage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'savedpage.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'util.dart' as util;
-import 'locator.dart';
+import 'locator.dart' as alds_loc;
+import 'savedpage.dart';
+import 'mappage.dart';
+import 'settingspage.dart';
+import 'providers.dart';
 
-class AldsApp extends StatelessWidget {
+class AldsApp extends ConsumerWidget {
   const AldsApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeListener = ref.watch(themeProvider);
+    ThemeMode themeMode = util.getThemeMode(themeListener.themeMode);
+
+    // util.log("Current theme mode: $themeMode");
+
     return MaterialApp(
       title: "ALDS Location Selector",
       home: AldsMain(),
       theme: ThemeData.light(),
-      // darkTheme: ThemeData.dark(),
-      // themeMode: ThemeMode.system,
+      darkTheme: ThemeData.dark(),
+      themeMode: themeMode,
     ); // App
   }
 }
@@ -53,7 +60,7 @@ class _AldsMainState extends State<AldsMain> {
     
     // Initial state
     navBarIndex = 0;
-    Locator loc = Locator();
+    alds_loc.Locator loc = alds_loc.Locator();
     _curLocationText = loc.lastLocation ?? "N/A";
     _getCurrentLocation();
   }
@@ -154,7 +161,7 @@ class _AldsMainState extends State<AldsMain> {
   }
 
   Future<void> _handleUpdate() async {
-    Locator loc = Locator();
+    alds_loc.Locator loc = alds_loc.Locator();
     String? where = await loc.findLocation();
     _locationSelected(where);
   }

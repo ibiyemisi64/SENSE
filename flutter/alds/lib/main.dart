@@ -30,24 +30,25 @@ import 'globals.dart' as globals;
 import 'recheck.dart' as recheck;
 import 'device.dart' as device;
 import 'util.dart' as util;
-import "locator.dart";
+import "locator.dart" as alds_loc;
 import 'mainpage.dart';
 // Dart Packages 
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:phone_state/phone_state.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
   initialize(false);
-  runApp(AldsApp());
+  runApp(ProviderScope(child: AldsApp()));
 }
 
 void initialize(bool flag) async {
   await util.setup();
   await storage.setupStorage();
   await recheck.initialize();
-  Locator loc = Locator();
+  alds_loc.Locator loc = alds_loc.Locator();
   loc.setup();
 
   Timer.periodic(

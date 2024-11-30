@@ -72,6 +72,20 @@ ThemeData getTheme() {
   );
 }
 
+ThemeMode getThemeMode(String themeMode) {
+  switch (themeMode.toLowerCase()) {
+    case 'light':
+      return ThemeMode.light;
+    case 'dark':
+      return ThemeMode.dark;
+    case 'system':
+      return ThemeMode.system;
+    default:
+      log("ERROR: Couldn't retrieve theme mode: $themeMode");
+      return ThemeMode.system;
+  }
+}
+
 String randomString(int len) {
   var r = Random();
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
