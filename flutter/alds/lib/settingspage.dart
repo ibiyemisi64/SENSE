@@ -10,14 +10,14 @@
 import 'package:flutter/material.dart';
 import 'package:alds/widgets.dart' as widgets;
 
-class AldsSettingsWidget extends StatefulWidget {
-  const AldsSettingsWidget({super.key});
+class AldsSettingsPage extends StatefulWidget {
+  const AldsSettingsPage({super.key});
 
   @override
-  State<AldsSettingsWidget> createState() => _AldsSettingsWidgetState();
+  State<AldsSettingsPage> createState() => _AldsSettingsPageState();
 }
 
-class _AldsSettingsWidgetState extends State<AldsSettingsWidget> {
+class _AldsSettingsPageState extends State<AldsSettingsPage> {
   // State variables
   String selectedTheme = "Light";
   String selectedLang = "English";

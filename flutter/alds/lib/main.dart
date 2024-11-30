@@ -40,15 +40,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   initialize(false);
-  runApp(
-    MaterialApp(
-      title: "ALDS Location Selector",
-      home: AldsMainWidget(),
-      theme: ThemeData.light(),
-      // darkTheme: ThemeData.dark(),
-      // themeMode: ThemeMode.system,
-    ),
-  );
+  runApp(AldsApp());
 }
 
 void initialize(bool flag) async {

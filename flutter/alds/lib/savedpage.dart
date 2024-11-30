@@ -5,14 +5,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SavedLocationsPage extends StatefulWidget {
-  const SavedLocationsPage({super.key});
+class AldsSavedLocationsPage extends StatefulWidget {
+  const AldsSavedLocationsPage({super.key});
 
   @override
-  State<SavedLocationsPage> createState() => _SavedLocationsPageState();
+  State<AldsSavedLocationsPage> createState() => _AldsSavedLocationsPageState();
 }
 
-class _SavedLocationsPageState extends State<SavedLocationsPage> {
+class _AldsSavedLocationsPageState extends State<AldsSavedLocationsPage> {
   // Mock data - a list of saved locations (name, latitude, longitude)
   final List<SavedLocation> _savedLocations = [
     SavedLocation("Home", 40.7128, -74.0060),

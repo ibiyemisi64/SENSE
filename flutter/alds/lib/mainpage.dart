@@ -18,19 +18,34 @@ import 'savedpage.dart';
 import 'util.dart' as util;
 import 'locator.dart';
 
-class AldsMainWidget extends StatefulWidget {
-  const AldsMainWidget({super.key});
+class AldsApp extends StatelessWidget {
+  const AldsApp({super.key});
 
   @override
-  State<AldsMainWidget> createState() => _AldsMainWidgetState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: "ALDS Location Selector",
+      home: AldsMain(),
+      theme: ThemeData.light(),
+      // darkTheme: ThemeData.dark(),
+      // themeMode: ThemeMode.system,
+    ); // App
+  }
 }
 
-class _AldsMainWidgetState extends State<AldsMainWidget> {
+class AldsMain extends StatefulWidget {
+  const AldsMain({super.key});
+
+  @override
+  State<AldsMain> createState() => _AldsMainState();
+}
+
+class _AldsMainState extends State<AldsMain> {
   String _curLocationText = "";  // FIXME: Remove this code???
   Position? _curPosition;
   late int navBarIndex; // use of the `late` keyword denotes a non-nullable variable that will be initialized later
 
-  _AldsMainWidgetState();
+  _AldsMainState();
 
   @override
   void initState() {
@@ -101,8 +116,8 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
       ),
       body: <Widget>[
         const AldsMapPage(),
-        const SavedLocationsPage(),
-        const AldsSettingsWidget(),
+        const AldsSavedLocationsPage(),
+        const AldsSettingsPage(),
       ][navBarIndex],
       bottomNavigationBar: NavigationBar(  // NOTE: Code structure from demo on https://api.flutter.dev/flutter/material/NavigationBar-class.html
         onDestinationSelected: (int index) {
