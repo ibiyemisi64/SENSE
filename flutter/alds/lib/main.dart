@@ -43,7 +43,7 @@ void main() {
   runApp(
     MaterialApp(
       title: "ALDS Location Selector",
-      home: AldsMain(),
+      home: AldsMainWidget(),
       theme: ThemeData.light(),
       // darkTheme: ThemeData.dark(),
       // themeMode: ThemeMode.system,

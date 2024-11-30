@@ -18,19 +18,6 @@ import 'savedpage.dart';
 import 'util.dart' as util;
 import 'locator.dart';
 
-class AldsMain extends StatelessWidget {
-  const AldsMain({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ALDS',
-      theme: util.getTheme(),
-      home: const AldsMainWidget()
-    ); // App
-  }
-}
-
 class AldsMainWidget extends StatefulWidget {
   const AldsMainWidget({super.key});
 
