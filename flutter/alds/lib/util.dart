@@ -72,6 +72,7 @@ ThemeData getTheme() {
   );
 }
 
+// Convert theme mode string to ThemeMode
 ThemeMode getThemeMode(String themeMode) {
   switch (themeMode.toLowerCase()) {
     case 'light':

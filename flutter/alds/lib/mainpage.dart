@@ -6,9 +6,6 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,7 +22,7 @@ class AldsApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeListener = ref.watch(themeProvider);
+    final themeListener = ref.watch(themeProvider);  // ref.watch() is used to access the state provider
     ThemeMode themeMode = util.getThemeMode(themeListener.themeMode);
 
     // util.log("Current theme mode: $themeMode");
@@ -35,7 +32,7 @@ class AldsApp extends ConsumerWidget {
       home: AldsMain(),
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
-      themeMode: themeMode,
+      themeMode: themeMode,  // default is ThemeMode.system (see providers.dart)
     ); // App
   }
 }

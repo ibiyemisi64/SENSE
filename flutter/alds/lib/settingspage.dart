@@ -11,9 +11,6 @@ import 'package:alds/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'widgets.dart' as widgets;
-import 'util.dart' as util;
-
 class AldsSettingsPage extends ConsumerStatefulWidget {
   const AldsSettingsPage({super.key});
 
@@ -23,13 +20,8 @@ class AldsSettingsPage extends ConsumerStatefulWidget {
 
 class _AldsSettingsPageState extends ConsumerState<AldsSettingsPage> {
   // State variables
-  String selectedTheme = "System";
+  String selectedTheme = "System";  // dropdown defaults to system to match theme being initialized to system
   String selectedLang = "English";
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +61,7 @@ class _AldsSettingsPageState extends ConsumerState<AldsSettingsPage> {
                   });
 
                   // Update the app theme via the provider
-                  ref.read(themeProvider).setTheme(newValue);
+                  ref.read(themeProvider).setTheme(newValue);  // ref.read() is used to modify the state provider
                 }
               },
               items: ["System", "Light", "Dark"].map<DropdownMenuItem<String>>((String value) {
