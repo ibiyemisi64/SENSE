@@ -5,6 +5,7 @@
  * 
  */
 
+import 'package:alds/searchable_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
@@ -106,23 +107,30 @@ class _AldsMapPageState extends State<AldsMapPage> {
         Expanded(
           child: _createLocationMap(),
         ),
-        SizedBox(
-          height: 50,
-          child: Center(
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-              ),
-              onPressed: _handleValidateLocation, 
-              child: Text(
-                "Validate Location",
-                style: GoogleFonts.anta(
-                  textStyle: const TextStyle(color: Colors.white),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SearchableDropdown(),
+            const SizedBox(width: 50,),
+            SizedBox(
+              height: 50,
+              child: Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                  ),
+                  onPressed: _handleValidateLocation, 
+                  child: Text(
+                    "Validate Location",
+                    style: GoogleFonts.anta(
+                      textStyle: const TextStyle(color: Colors.white),
+                    ),
+                  )
                 ),
               )
-            ),
-          )
-        )
+            )
+          ],
+        ),
       ],
     );
   }
