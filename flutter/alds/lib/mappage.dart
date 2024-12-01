@@ -12,10 +12,12 @@ import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:convert';
 
 import 'widgets.dart' as widgets;
 import 'util.dart' as util;
 import 'locator.dart';
+import 'storage.dart' as storage;
 
 class AldsMapPage extends StatefulWidget {
   const AldsMapPage({super.key});
@@ -25,8 +27,13 @@ class AldsMapPage extends StatefulWidget {
 }
 
 class _AldsMapPageState extends State<AldsMapPage> {
+  // State variables
   String _curLocationText = "";
   Position? _curPosition;
+  final TextEditingController _controller = TextEditingController();
+  String? selectedLocation;
+  List<String> locations = [];
+  late bool _isLoading;
 
   _AldsMapPageState();
 
@@ -34,13 +41,17 @@ class _AldsMapPageState extends State<AldsMapPage> {
   void initState() {
     super.initState();
     
-    // Initial state
+    // Initialize state variables
     Locator loc = Locator();
     _curLocationText = loc.lastLocation ?? "Unsaved Location";
+    _isLoading = true;
+
+    // Async functions
+    _getSavedLocations();
     _getCurrentLocation();
   }
 
-  _getCurrentLocation() async {
+  Future<void> _getCurrentLocation() async {
     // Code adapted from: https://pub.dev/packages/geolocator#example
 
     bool serviceEnabled;
@@ -85,9 +96,40 @@ class _AldsMapPageState extends State<AldsMapPage> {
     });
   }
 
+  Future<void> _getSavedLocations() async {
+    await storage.mockLocationData();
+    String? locDataJson = await storage.readLocationData();
+    if (locDataJson != null) {
+      try {
+        List<dynamic> locDataParsed = List<dynamic>.from(jsonDecode(locDataJson));
+        setState(() {
+          locations = locDataParsed.map((locData) => locData['location'] as String).toList();
+          _isLoading = false;
+        });
+      } catch (e) {
+        util.log("Error parsing location data: $e");
+        setState(() {
+          locations = [];
+          _isLoading = false;
+        });
+      }
+    } else {
+      setState(() {
+        locations = [];
+        _isLoading = false;
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
+    // If still fetching data, show loading indicator
+    if (_isLoading) {
+      return const CircularProgressIndicator();
+    }
+
+    // Build this widget when the data is finishing loading
     return Column( 
       children: [
         // Header
@@ -107,29 +149,41 @@ class _AldsMapPageState extends State<AldsMapPage> {
         Expanded(
           child: _createLocationMap(),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SearchableDropdown(),
-            const SizedBox(width: 50,),
-            SizedBox(
-              height: 50,
-              child: Center(
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              widgets.searchableDropdown(
+                  _controller, 
+                  locations, 
+                  (String? value) => setState(() => selectedLocation = value)
+              ),
+              const SizedBox(width: 20,),
+              SizedBox(
+                height: 50,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue,
+                    padding: const EdgeInsets.symmetric(horizontal: 12), // Tighter padding
                   ),
-                  onPressed: _handleValidateLocation, 
-                  child: Text(
-                    "Validate Location",
-                    style: GoogleFonts.anta(
-                      textStyle: const TextStyle(color: Colors.white),
+                  onPressed: _handleValidateLocation,
+                  child: FittedBox( // Helps text scale down if needed
+                    child: Text(
+                      "Validate Location",
+                      style: GoogleFonts.anta(
+                        textStyle: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16, // Optional: control text size
+                        ),
+                      ),
                     ),
-                  )
+                  ),
                 ),
               )
-            )
-          ],
+            ],
+          )
         ),
       ],
     );

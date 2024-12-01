@@ -40,7 +40,7 @@ import 'package:phone_state/phone_state.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  initialize(false);
+  // initialize(false);
   runApp(
     MaterialApp(
       title: "ALDS Location Selector",
@@ -55,6 +55,7 @@ void main() {
 void initialize(bool flag) async {
   await util.setup();
   await storage.setupStorage();
+  util.log("STORAGE INITIAILIZED");
   await recheck.initialize();
   Locator loc = Locator();
   loc.setup();

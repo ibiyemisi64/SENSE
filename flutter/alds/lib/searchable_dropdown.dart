@@ -14,12 +14,7 @@ class SearchableDropdown extends StatefulWidget {
 class _SearchableDropDownState extends State<SearchableDropdown> {
   final TextEditingController _controller = TextEditingController();
   String? selectedLocation;
-  List<String> locations = [
-    'Office',
-    'Home',
-    'Work',
-    'Classroom'
-  ];
+  List<String> locations = [];
   late bool _isLoading;
 
   @override
@@ -27,11 +22,13 @@ class _SearchableDropDownState extends State<SearchableDropdown> {
     super.initState();
 
     // Initial state
+    // storage.mockLocationData();
     _isLoading = true;
-    _loadLocations();
+    _getSavedLocations();
   }
 
-  void _loadLocations() async {
+  Future<void> _getSavedLocations() async {
+    await storage.mockLocationData();
     String? locDataJson = await storage.readLocationData();
     if (locDataJson != null) {
       try {
@@ -43,11 +40,13 @@ class _SearchableDropDownState extends State<SearchableDropdown> {
       } catch (e) {
         util.log("Error parsing location data: $e");
         setState(() {
+          locations = [];
           _isLoading = false;
         });
       }
     } else {
       setState(() {
+        locations = [];
         _isLoading = false;
       });
     }
@@ -55,6 +54,12 @@ class _SearchableDropDownState extends State<SearchableDropdown> {
 
   @override
   Widget build(BuildContext context) {
+    // If still fetching data, show loading indicator
+    if (_isLoading) {
+      return const CircularProgressIndicator();
+    }
+
+    // Build this widget when the data is finishing loading
     return DropdownMenu<String>(
       controller: _controller,
       enableFilter: true,

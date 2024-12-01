@@ -33,6 +33,7 @@
 library alds.storage;
 
 import 'package:hive_flutter/hive_flutter.dart';
+import 'dart:convert';
 
 import 'util.dart' as util;
 
@@ -97,6 +98,49 @@ List<String> getLocations() {
 
 String getDeviceId() {
   return _deviceId;
+}
+
+Future<void> mockLocationData() async {
+  await setupStorage();
+  var appbox = Hive.box('appData');
+
+  List<Map<String, dynamic>> jsonData = [
+    {
+      "location": "Office",
+      "position": {  // New Watson
+        "latitude": 41.82415891316371,
+        "longitude": -71.39895318840045,
+      },
+      "bluetooth": {},
+    },
+    {
+      "location": "Work",
+      "position": {  // CIT
+        "latitude": 41.826922607676,
+        "longitude": -71.3995623245632,
+      },
+      "bluetooth": {},
+    },
+    {
+      "location": "Gym",
+      "position": {  // Nelson Fitness Center
+        "latitude": 41.830156496801976,
+        "longitude": -71.39804070374443,
+      },
+      "bluetooth": {},
+    },
+    {
+      "location": "Home",
+      "position": {  // Brown Campus Center
+        "latitude": 41.826874886601985,
+        "longitude": -71.40318586689112,
+      },
+      "bluetooth": {},
+    }
+  ];
+
+  String json = jsonEncode(jsonData);
+  await appbox.put("locdata", json);
 }
 
 Future<void> saveLocatorData(String json) async {

@@ -184,6 +184,29 @@ DropdownMenuItem<String> createMenuItem(String value) {
   );
 }
 
+DropdownMenu searchableDropdown(
+ TextEditingController textController,
+ List<String> locations,
+ Function(String?)? onSelected,
+) {
+  return DropdownMenu<String>(
+      controller: textController,
+      enableFilter: true,
+      requestFocusOnTap: true,
+      leadingIcon: Icon(Icons.location_on),
+      inputDecorationTheme: const InputDecorationTheme(
+        filled: true, 
+        contentPadding: EdgeInsets.symmetric(vertical: 5.0),
+      ),
+      onSelected: onSelected,
+      dropdownMenuEntries: createMenuEntries(locations),
+  );
+}
+
+List<DropdownMenuEntry<String>> createMenuEntries(List<String> locations) {
+    return locations.map((String loc) => DropdownMenuEntry<String>(value: loc, label: loc)).toList();
+  }
+
 Text heading(String text, {int? headingLevel}) {
 
   /* With multiple levels of heading, this function can take a heading level. The idea is that we can use a switch statement to output the correctly-formatted heading. */
