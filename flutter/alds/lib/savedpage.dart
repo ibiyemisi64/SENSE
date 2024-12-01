@@ -19,6 +19,7 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
     super.initState();
     _loadLocations();
   }
+  //loads the saved location from the storage
 
   Future<void> _loadLocations() async {
     await storage.setupStorage();
@@ -52,12 +53,7 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
     }
   }
 
-  Future<void> _deleteLocation(SavedLocation location) async {
-    setState(() {
-      _savedLocations.remove(location);
-    });
-
-    // Convert updated locations back to JSON format
+  Future<void> _saveLocations() async {
     List<Map<String, dynamic>> locDataList = _savedLocations
         .map((loc) => {
               'location': loc.name,
@@ -68,8 +64,62 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
             })
         .toList();
 
-    // Save updated data
     await storage.saveLocatorData(json.encode(locDataList));
+  }
+
+  //deletes the selected location
+
+  Future<void> _deleteLocation(SavedLocation location) async {
+    setState(() {
+      _savedLocations.remove(location);
+    });
+    await _saveLocations();
+  }
+
+  //Edits the current location
+
+  Future<void> _editLocation(SavedLocation location) async {
+    final TextEditingController nameController =
+        TextEditingController(text: location.name);
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Edit Location Name'),
+          content: TextField(
+            controller: nameController,
+            decoration: InputDecoration(
+              labelText: 'Location Name',
+              hintText: 'Enter new location name',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                if (nameController.text.isNotEmpty) {
+                  final index = _savedLocations.indexOf(location);
+                  setState(() {
+                    _savedLocations[index] = SavedLocation(
+                      nameController.text,
+                      location.latitude,
+                      location.longitude,
+                    );
+                  });
+                  await _saveLocations();
+                  Navigator.pop(context);
+                }
+              },
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -132,6 +182,8 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
           onSelected: (String value) async {
             if (value == 'delete') {
               await _deleteLocation(location);
+            } else if (value == 'edit') {
+              await _editLocation(location);
             }
           },
         ),
