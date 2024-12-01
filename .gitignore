@@ -1,5 +1,5 @@
 saveles to ignore
-
+.idea
 *.class
 bBUFFERS
 bCONTROL
