@@ -5,11 +5,11 @@ import 'locator.dart' as locator;
 import 'dart:convert';
 import 'util.dart' as util;
 
-class SavedLocationsPage extends StatefulWidget {
-  const SavedLocationsPage({super.key});
+class AldsSavedLocationsPage extends StatefulWidget {
+  const AldsSavedLocationsPage({super.key});
 
   @override
-  State<SavedLocationsPage> createState() => _SavedLocationsPageState();
+  State<AldsSavedLocationsPage> createState() => _AldsSavedLocationsPageState();
 }
 
 class _SavedLocationsPageState extends State<SavedLocationsPage> {
@@ -137,6 +137,7 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
       },
     );
   }
+
 
   @override
   Widget build(BuildContext context) {

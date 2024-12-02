@@ -34,6 +34,7 @@ library alds.storage;
 
 import 'package:alds/locator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'dart:convert';
 
 import 'util.dart' as util;
 import 'savedpage.dart';
@@ -42,6 +43,7 @@ import 'dart:convert';
 AuthData _authData = AuthData('*', "*");
 // List<String> _locations = defaultLocations;
 String _deviceId = "*";
+String _appTheme = "System"; // Initial default value
 
 // const List<String> defaultLocations = [
 //   'Office',
@@ -76,6 +78,7 @@ Future<void> setupStorage() async {
   // _locations = appbox.get("locations", defaultValue: defaultLocations);
   _deviceId =
       appbox.get("deviceid", defaultValue: "ALDS_${util.randomString(20)}");
+  _appTheme = appbox.get("theme", defaultValue: _appTheme);
   if (!setup) {
     await saveData();
   }
@@ -88,6 +91,7 @@ Future<void> saveData() async {
   await appbox.put('userpass', _authData.userPass);
   // await appbox.put('locations', _locations);
   await appbox.put('deviceid', _deviceId);
+  await appbox.put('theme', _appTheme);
 }
 
 AuthData getAuthData() {
@@ -102,6 +106,18 @@ String getDeviceId() {
   return _deviceId;
 }
 
+// THEME DATA
+Future<void> saveThemePref(String theme) async {
+  var appbox = Hive.box('appData');
+  await appbox.put('theme', theme);
+  _appTheme = theme; 
+}
+
+String readThemePref() {
+  return _appTheme;
+}
+
+// USER LOCATION DATA
 Future<void> saveLocatorData(String json) async {
   var appbox = Hive.box('appData');
   await appbox.put("locdata", json);
@@ -111,6 +127,7 @@ Future<String?> readLocationData() async {
   var appbox = Hive.box('appData');
   return await appbox.get('locdata');
 }
+
 
 Future<void> remove(SavedLocation location) async {
   var appbox = Hive.box('appData');
@@ -149,5 +166,47 @@ Future<void> update(SavedLocation location, String locName) async {
 }
 
 
+// MOCK LOCATION DATA
+Future<void> mockLocationData() async {
+  await setupStorage();
+  var appbox = Hive.box('appData');
 
+  List<Map<String, dynamic>> jsonData = [
+    {
+      "location": "Office",
+      "position": {  // New Watson
+        "latitude": 41.82415891316371,
+        "longitude": -71.39895318840045,
+      },
+      "bluetooth": {},
+    },
+    {
+      "location": "Work",
+      "position": {  // CIT
+        "latitude": 41.826922607676,
+        "longitude": -71.3995623245632,
+      },
+      "bluetooth": {},
+    },
+    {
+      "location": "Gym",
+      "position": {  // Nelson Fitness Center
+        "latitude": 41.830156496801976,
+        "longitude": -71.39804070374443,
+      },
+      "bluetooth": {},
+    },
+    {
+      "location": "Home",
+      "position": {  // Brown Campus Center
+        "latitude": 41.826874886601985,
+        "longitude": -71.40318586689112,
+      },
+      "bluetooth": {},
+    }
+  ];
+
+  String json = jsonEncode(jsonData);
+  await appbox.put("locdata", json);
+}
 
