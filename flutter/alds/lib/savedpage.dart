@@ -16,7 +16,7 @@ class AldsSavedLocationsPage extends StatefulWidget {
   State<AldsSavedLocationsPage> createState() => _AldsSavedLocationsPageState();
 }
 
-class _SavedLocationsPageState extends State<SavedLocationsPage> {
+class _AldsSavedLocationsPageState extends State<AldsSavedLocationsPage> {
   List<SavedLocation> _savedLocations = [];
   bool _isLoading = true;
 
