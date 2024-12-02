@@ -31,7 +31,6 @@
 ///******************************************************************************
 
 
-import 'package:alds/searchable_dropdown.dart';
 import 'package:flutter/material.dart';
 
 Widget textFormField({
@@ -188,6 +187,7 @@ DropdownMenu searchableDropdown(
  TextEditingController textController,
  List<String> locations,
  Function(String?)? onSelected,
+ List<DropdownMenuEntry<String>> Function(List<DropdownMenuEntry<String>>, String)? filterCallback,
 ) {
   return DropdownMenu<String>(
       controller: textController,
@@ -199,6 +199,7 @@ DropdownMenu searchableDropdown(
         contentPadding: EdgeInsets.symmetric(vertical: 5.0),
       ),
       onSelected: onSelected,
+      filterCallback: filterCallback,
       dropdownMenuEntries: createMenuEntries(locations),
   );
 }
@@ -218,35 +219,6 @@ Text heading(String text, {int? headingLevel}) {
     ),
   );
 }
-
-// class SwitchExample extends StatefulWidget {
-//   const SwitchExample({
-//       super.key, 
-//       required this.initVal, 
-//       required this.color, 
-//       required this.onChanged
-//     }
-//   );
-
-//   final bool initVal;
-//   final MaterialColor? color;
-//   final Function(bool)? onChanged;
-
-//   @override
-//   State<SwitchExample> createState() => _SwitchExampleState();
-// }
-
-// class _SwitchExampleState extends State<SwitchExample> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Switch(
-//       // This bool value toggles the switch.
-//       value: widget.initVal,
-//       activeColor: widget.color,
-//       onChanged: widget.onChanged,
-//     );
-//   }
-// }
 
 
 
