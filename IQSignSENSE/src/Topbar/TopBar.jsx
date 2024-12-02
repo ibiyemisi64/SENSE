@@ -17,7 +17,7 @@ const TopBar = ({ showSearchBox = false }) => {
 
                 <Typography variant="h6" component="div" sx={{ flexGrow: 0 }}>
                     <Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    iQSign
+                        iQSign
                     </Link>
                 </Typography>
 

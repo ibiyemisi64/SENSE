@@ -5,7 +5,7 @@ import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
 import FormatItalicIcon from '@mui/icons-material/FormatItalic';
 import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
 import DefaultClassSign from '../assets/backgrounds/class.png';
-
+import TopBar from "../Topbar/TopBar.jsx";
 
 export default function Sign() {
   return (
@@ -16,8 +16,8 @@ export default function Sign() {
         maxWidth: { xs: 350, md: 500 },
         boxShadow: 3
       }}
-    alt="User's current sign."
-    src={DefaultClassSign}
+      alt="User's current sign."
+      src={DefaultClassSign}
     >
 
     </Box>
@@ -114,34 +114,39 @@ export function SignTextFormatter() {
 
 export function SignEditor() {
   return (
-    <Grid2
-      container
-      spacing={4}  // Add some spacing between the items
-      sx={{
-        background: 'white',
-        display: 'flex',
-        flexDirection: 'row',
-        gap: 4,
-        alignItems: 'flex-start', // Align to the start
-        justifyContent: 'center',
-      }}
-    >
-      {/* Sign Text Formatter */}
-      <Grid2 item xs={12} sm={6}> {/* Adjusted item size for responsiveness */}
-        <SignTextFormatter fullWidth />
-      </Grid2>
+    <>
+      <TopBar></TopBar>
+      <Grid2
+        container
+        fullWidth
+        spacing={4}  // Add some spacing between the items
+        sx={{
+          background: 'white',
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 4,
+          alignItems: 'left',
+          justifyContent: 'left',
+          marginTop: '100px'
+        }}
+      >
 
-      {/* Sign with Background */}
-      <Grid2 item xs={12} sm={6}> {/* Adjusted item size for responsiveness */}
-        <Sign />
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ mt: 4, backgroundColor: 'black', color: 'white' }}
-        >
-          Edit Background
-        </Button>
+        <Grid2 item xs={12} sm={6}>
+          <SignTextFormatter />
+        </Grid2>
+
+
+        <Grid2 item>
+          <Sign />
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ mt: 4, backgroundColor: 'black', color: 'white' }}
+          >
+            Edit Background
+          </Button>
+        </Grid2>
       </Grid2>
-    </Grid2>
+    </>
   );
 }
