@@ -5,7 +5,6 @@
  * 
  */
 
-import 'package:alds/searchable_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
@@ -18,6 +17,7 @@ import 'widgets.dart' as widgets;
 import 'util.dart' as util;
 import 'locator.dart';
 import 'storage.dart' as storage;
+import 'savedpage.dart';
 
 class AldsMapPage extends StatefulWidget {
   const AldsMapPage({super.key});
@@ -192,10 +192,10 @@ class _AldsMapPageState extends State<AldsMapPage> {
   Widget _createLocationMap() {
     return FlutterMap(
       options: MapOptions(
-        initialCenter: (_curPosition != null) ? LatLng(_curPosition!.latitude, _curPosition!.longitude) : LatLng(51.509364, -0.128928),  // defaults to London
-        initialZoom: 9.2,
+        initialCenter: (_curPosition != null) ? LatLng(_curPosition!.latitude, _curPosition!.longitude) : LatLng(41.82674914418993, -71.40251841199533),  // defaults to Brown
+        initialZoom: 13.0,
       ),
-      children: [
+      children: <Widget>[
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: "edu.brown.alds",  // FIXME: Fix the package name when you know it
@@ -208,8 +208,32 @@ class _AldsMapPageState extends State<AldsMapPage> {
             markerDirection: MarkerDirection.heading,
           ),
         ),
+        ..._createSavedLocationMarkers(),
       ]
     );
+  }
+
+  List<Widget> _createSavedLocationMarkers() {
+    
+    // Mocked saved locations - (name, (lat, long))
+    List<SavedLocation> savedLocations = [
+      SavedLocation("Home", 41.826874886601985, -71.40318586689112),  // Brown Campus Center
+      SavedLocation("Gym", 41.830156496801976, -71.39804070374443), // Nelson Fitness Center
+      SavedLocation("Work", 41.826922607676, -71.3995623245632), // CIT
+      SavedLocation("Office", 41.82415891316371, -71.39895318840045), // New Watson
+    ];
+
+    List<LocationMarkerLayer> savedLocationMarkers = savedLocations.map((SavedLocation loc) => 
+      LocationMarkerLayer(
+        position: LocationMarkerPosition(latitude: loc.latitude, longitude: loc.longitude, accuracy: 0.5),
+        style: LocationMarkerStyle(
+          marker: const Icon(Icons.location_on, color: Colors.red),
+          markerSize: const Size(20, 20),
+        ),
+      )
+    ).toList();
+
+    return savedLocationMarkers;
   }
 
   void _handleValidateLocation() async {
