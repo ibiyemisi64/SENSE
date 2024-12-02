@@ -10,7 +10,7 @@ import TopBar from "../Topbar/TopBar.jsx";
 
 const Gallery = () => {
     return <Stack sx={{overflowY:'hidden', overflowX:'hidden'}} gap={2}>
-        <TopBar></TopBar>
+        <TopBar showSearchBox={true}></TopBar>
         <SignGallery></SignGallery>
     </Stack>
 }

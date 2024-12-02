@@ -4,7 +4,7 @@ import RegistrationPage from './RegistrationPage';
 import LoginPage from './LoginPage';
 import ProfilePage from './ProfilePage';
 import Home from './HomePage';
-import SignEditor  from './Sign';
+import SignEditor  from './Sign/Sign.jsx';
 import Gallery from "./Gallery/Gallery.jsx";
 
 const App = () => {
@@ -16,7 +16,7 @@ const App = () => {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/edit" element={<SignEditor />} />
         <Route path="/home" element={<Home />} />
-          <Route path={"/gallery"} element={<Gallery/>}/>
+        <Route path={"/gallery"} element={<Gallery/>}/>
       </Routes>
     </Router>
   );

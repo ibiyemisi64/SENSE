@@ -13,6 +13,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import TopBar from "./Topbar/TopBar.jsx";
 
 const ProfilePage = () => {
   const [username, setUsername] = useState("Myusername");
@@ -31,34 +32,12 @@ const ProfilePage = () => {
 
   return (
     <Container maxWidth="lg" sx={{ paddingTop: "20px", color: "black" }}>
-      {/* Header with Search and Profile Icon */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
-        <Typography variant="h4">IQSign</Typography>
-        <Box display="flex" alignItems="center" sx={{ gap: "10px" }}>
-          <TextField
-            variant="outlined"
-            placeholder="Value"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton>
-                    <SearchIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            sx={{ width: "400px" }}
-          />
-          <IconButton>
-            <AccountCircleIcon sx={{ fontSize: 40 }} />
-          </IconButton>
-        </Box>
-      </Box>
 
-      <Divider sx={{ marginBottom: "20px" }} />
+      {/* Header with Search Icon */}
+      <TopBar></TopBar>
 
       {/* Profile Section */}
-      <Box>
+      <Box sx={{ marginBottom: "20px", marginTop: '100px' }}>
         <Typography variant="h5" mb={3}>
           Profile
         </Typography>
