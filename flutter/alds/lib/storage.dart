@@ -32,29 +32,32 @@
 
 library alds.storage;
 
+import 'package:alds/locator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:convert';
 
 import 'util.dart' as util;
+import 'savedpage.dart';
+import 'dart:convert';
 
 AuthData _authData = AuthData('*', "*");
-List<String> _locations = defaultLocations;
+// List<String> _locations = defaultLocations;
 String _deviceId = "*";
 String _appTheme = "System"; // Initial default value
 
-const List<String> defaultLocations = [
-  'Office',
-  'Home',
-  'Dining',
-  'Meeting',
-  'Class',
-  'Driving',
-  'Gym',
-  'Bed',
-  'Shopping',
-  'Home Office',
-  'Other',
-];
+// const List<String> defaultLocations = [
+//   'Office',
+//   'Home',
+//   'Dining',
+//   'Meeting',
+//   'Class',
+//   'Driving',
+//   'Gym',
+//   'Bed',
+//   'Shopping',
+//   'Home Office',
+//   'Other',
+// ];
 
 class AuthData {
   late String userId;
@@ -72,7 +75,7 @@ Future<void> setupStorage() async {
   String upa =
       await appbox.get("userpass", defaultValue: util.randomString(16));
   _authData = AuthData(uid, upa);
-  _locations = appbox.get("locations", defaultValue: defaultLocations);
+  // _locations = appbox.get("locations", defaultValue: defaultLocations);
   _deviceId =
       appbox.get("deviceid", defaultValue: "ALDS_${util.randomString(20)}");
   _appTheme = appbox.get("theme", defaultValue: _appTheme);
@@ -86,7 +89,7 @@ Future<void> saveData() async {
   await appbox.put('setup', true);
   await appbox.put('userid', _authData.userId);
   await appbox.put('userpass', _authData.userPass);
-  await appbox.put('locations', _locations);
+  // await appbox.put('locations', _locations);
   await appbox.put('deviceid', _deviceId);
   await appbox.put('theme', _appTheme);
 }
@@ -95,9 +98,9 @@ AuthData getAuthData() {
   return _authData;
 }
 
-List<String> getLocations() {
-  return _locations;
-}
+// List<String> getLocations() {
+//   return _locations;
+// }
 
 String getDeviceId() {
   return _deviceId;
@@ -124,6 +127,44 @@ Future<String?> readLocationData() async {
   var appbox = Hive.box('appData');
   return await appbox.get('locdata');
 }
+
+
+Future<void> remove(SavedLocation location) async {
+  var appbox = Hive.box('appData');
+  // WE ASSUME THAT LOC NAME IS UNIQUE
+  String? existingData = await readLocationData();
+  if (existingData != null) {
+    List<dynamic> locations = json.decode(existingData);
+    // util.log("BEFORE REMOVE CALLED: $locations");
+    locations.removeWhere((loc) => loc['location'] == location.name);
+    // util.log ("REMOVE CALLED - $locations");
+    appbox.delete("locdata");
+    await saveLocatorData(json.encode(locations));
+  }
+}
+
+Future<void> update(SavedLocation location, String locName) async {
+  var appbox = Hive.box('appData');
+  
+  String? existingData = await readLocationData();
+  if (existingData != null) {
+
+    List<dynamic> locations = json.decode(existingData);
+    final currIndex = locations.indexWhere((loc) => loc['location'] == location.name);
+  
+    util.log("INDEXWHERE: $currIndex");
+    util.log("LOCS: $locations");    
+    locations[currIndex]["location"] = locName;
+    util.log("Current Locs $locations");
+  
+    // appbox.delete("locdata");
+
+    await saveLocatorData(json.encode(locations));
+  }
+
+
+}
+
 
 // MOCK LOCATION DATA
 Future<void> mockLocationData() async {
@@ -168,3 +209,4 @@ Future<void> mockLocationData() async {
   String json = jsonEncode(jsonData);
   await appbox.put("locdata", json);
 }
+
