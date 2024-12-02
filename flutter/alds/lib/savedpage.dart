@@ -19,7 +19,6 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
     super.initState();
     _loadLocations();
   }
-  //loads the saved location from the storage
 
   Future<void> _loadLocations() async {
     await storage.setupStorage();
@@ -67,16 +66,12 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
     await storage.saveLocatorData(json.encode(locDataList));
   }
 
-  //deletes the selected location
-
   Future<void> _deleteLocation(SavedLocation location) async {
     setState(() {
       _savedLocations.remove(location);
     });
     await _saveLocations();
   }
-
-  //Edits the current location
 
   Future<void> _editLocation(SavedLocation location) async {
     final TextEditingController nameController =
