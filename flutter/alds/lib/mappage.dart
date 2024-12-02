@@ -31,7 +31,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
   String _curLocationText = "";
   Position? _curPosition;
   final TextEditingController _controller = TextEditingController();
-  String? selectedLocation;
+  String? _selectedLocation;
   List<String> locations = [];
   late bool _isLoading;
 
@@ -158,7 +158,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
               widgets.searchableDropdown(
                   _controller, 
                   locations, 
-                  (String? value) => setState(() => selectedLocation = value)
+                  (String? value) => setState(() => _selectedLocation = value)
               ),
               const SizedBox(width: 20,),
               SizedBox(
@@ -213,7 +213,15 @@ class _AldsMapPageState extends State<AldsMapPage> {
   }
 
   void _handleValidateLocation() async {
-    String txt = _curLocationText;
+    String txt = _controller.text;
+
+    // Handle invalid input
+    if (txt.isEmpty) {
+      util.log("NO LOCATION ENTERED");
+      return;
+    }
+
+    // Validate location
     Locator loc = Locator();
     loc.noteLocation(txt);
     util.log("VALIDATE location as $txt");
