@@ -5,6 +5,10 @@ import 'locator.dart' as locator;
 import 'dart:convert';
 import 'util.dart' as util;
 
+
+
+// FIXME - Remove unecessary log statements
+
 class AldsSavedLocationsPage extends StatefulWidget {
   const AldsSavedLocationsPage({super.key});
 
@@ -75,7 +79,7 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
 
   Future<void> _deleteLocation(SavedLocation location) async {
     // REMOVES THE FIRST LOCATION THAT MATCHES A PARTICULAR CONDITION - and not a conditional remove
-    storage.remove(location);
+    storage.removeLocation(location);
     setState(() {
       _savedLocations.remove(location);
       _isLoading = true; 
@@ -116,7 +120,7 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
                   // util.log("BEFORE UPDATE - ${location.name}");
 
                   // UPDATE STORAGE
-                  await storage.update(location, nameController.text);
+                  await storage.updateLocation(location, nameController.text);
 
                   // util.log("AFTER UPDATE - ${location.name}");
                   // UPDATE UI

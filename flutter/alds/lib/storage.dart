@@ -129,7 +129,7 @@ Future<String?> readLocationData() async {
 }
 
 
-Future<void> remove(SavedLocation location) async {
+Future<void> removeLocation(SavedLocation location) async {
   var appbox = Hive.box('appData');
   // WE ASSUME THAT LOC NAME IS UNIQUE
   String? existingData = await readLocationData();
@@ -143,7 +143,7 @@ Future<void> remove(SavedLocation location) async {
   }
 }
 
-Future<void> update(SavedLocation location, String locName) async {
+Future<void> updateLocation(SavedLocation location, String locName) async {
   var appbox = Hive.box('appData');
   
   String? existingData = await readLocationData();
