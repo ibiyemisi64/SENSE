@@ -39,6 +39,7 @@ import 'util.dart' as util;
 AuthData _authData = AuthData('*', "*");
 List<String> _locations = defaultLocations;
 String _deviceId = "*";
+String _appTheme = "System"; // Initial default value
 
 const List<String> defaultLocations = [
   'Office',
@@ -73,6 +74,7 @@ Future<void> setupStorage() async {
   _locations = appbox.get("locations", defaultValue: defaultLocations);
   _deviceId =
       appbox.get("deviceid", defaultValue: "ALDS_${util.randomString(20)}");
+  _appTheme = appbox.get("theme", defaultValue: _appTheme);
   if (!setup) {
     await saveData();
   }
@@ -85,6 +87,7 @@ Future<void> saveData() async {
   await appbox.put('userpass', _authData.userPass);
   await appbox.put('locations', _locations);
   await appbox.put('deviceid', _deviceId);
+  await appbox.put('theme', _appTheme);
 }
 
 AuthData getAuthData() {
@@ -98,6 +101,17 @@ List<String> getLocations() {
 String getDeviceId() {
   return _deviceId;
 }
+
+Future<void> saveThemePref(String theme) async {
+  var appbox = Hive.box('appData');
+  await appbox.put('theme', theme);
+  _appTheme = theme; 
+}
+
+String readThemePref() {
+  return _appTheme;
+}
+
 
 Future<void> saveLocatorData(String json) async {
   var appbox = Hive.box('appData');
