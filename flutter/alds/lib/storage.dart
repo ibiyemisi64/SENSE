@@ -35,6 +35,8 @@ library alds.storage;
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'util.dart' as util;
+import 'savedpage.dart';
+import 'dart:convert';
 
 AuthData _authData = AuthData('*', "*");
 // List<String> _locations = defaultLocations;
@@ -109,8 +111,35 @@ Future<String?> readLocationData() async {
   return await appbox.get('locdata');
 }
 
+Future<void> remove(SavedLocation location) async {
+  String? existingData = await readLocationData();
+  if (existingData != null) {
+    List<dynamic> locations = json.decode(existingData);
+    locations.removeWhere((loc) =>
+        loc['location'] == location.name &&
+        loc['position']['latitude'] == location.latitude &&
+        loc['position']['longitude'] == location.longitude);
+
+    await saveLocatorData(json.encode(locations));
+  }
 
 
+}
+
+Future<void> update(SavedLocation location) async {
+   String? existingData = await readLocationData();
+  if (existingData != null) {
+    List<dynamic> locations = json.decode(existingData);
+    locations.removeWhere((loc) =>
+        loc['location'] == location.name &&
+        loc['position']['latitude'] == location.latitude &&
+        loc['position']['longitude'] == location.longitude);
+
+    await saveLocatorData(json.encode(locations));
+  }
+
+
+}
 
 
 

@@ -67,11 +67,13 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
   }
 
   Future<void> _deleteLocation(SavedLocation location) async {
+    storage.remove(location);
     setState(() {
       _savedLocations.remove(location);
     });
-    await _saveLocations();
+    // await _saveLocations();
   }
+
 
   Future<void> _editLocation(SavedLocation location) async {
     final TextEditingController nameController =
@@ -105,7 +107,8 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
                       location.longitude,
                     );
                   });
-                  await _saveLocations();
+                  // await _saveLocations();
+                  storage.update()
                   Navigator.pop(context);
                 }
               },
