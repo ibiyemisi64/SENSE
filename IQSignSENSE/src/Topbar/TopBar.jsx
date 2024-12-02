@@ -1,8 +1,9 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Box, InputBase, Container } from '@mui/material';
 import { alpha } from '@mui/material/styles';
+import { Link } from 'react-router-dom';
 
-const TopBar = () => {
+const TopBar = ({ showSearchBox = false }) => {
     return (
         <AppBar
             sx={{
@@ -15,7 +16,9 @@ const TopBar = () => {
             <Toolbar sx={{ justifyContent: 'space-between', width: '100%' }}>
 
                 <Typography variant="h6" component="div" sx={{ flexGrow: 0 }}>
-                    IQSign
+                    <Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>
+                    iQSign
+                    </Link>
                 </Typography>
 
 
@@ -39,7 +42,7 @@ const TopBar = () => {
                             maxWidth: '400px',
                         }}
                     >
-                        <InputBase
+                        {showSearchBox && <InputBase
                             placeholder="Search…"
                             inputProps={{ 'aria-label': 'search' }}
                             sx={{
@@ -47,12 +50,13 @@ const TopBar = () => {
                                 padding: '6px 12px',
                                 width: '100%',
                             }}
-                        />
+                        />}
                     </Box>
                 </Box>
             </Toolbar>
         </AppBar>
     );
 };
+
 
 export default TopBar;

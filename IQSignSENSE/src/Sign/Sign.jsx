@@ -4,28 +4,24 @@ import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
 import FormatItalicIcon from '@mui/icons-material/FormatItalic';
 import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
+import DefaultClassSign from '../assets/backgrounds/class.png';
+
 
 export default function Sign() {
-
   return (
-    <Box id="outlined-uncontrolled" component="div" sx={{
-      backgroundImage: `url('./assests/cs2340-fall-background.png')`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      minWidth: 500,
-      minHeight: 300,
-      mt: 4,
-      justifyContent: 'center',
-      display: 'flex',
-      boxShadow: 3
+    <Box
+      component="img"
+      sx={{
+        maxHeight: { xs: 233, md: 357 },
+        maxWidth: { xs: 350, md: 500 },
+        boxShadow: 3
+      }}
+    alt="User's current sign."
+    src={DefaultClassSign}
+    >
 
-    }}>
-      <Typography sx={{
-        m: 1,
-        padding: 5
-      }} align='center' color='textSecondary'>Default Sign Text</Typography>
     </Box>
-  )
+  );
 }
 
 export function SignTextFormatterSizeMenuItem() {
@@ -69,7 +65,7 @@ export function SignTextFormatterFontMenuItem() {
 export function SignTextFormatterMenu() {
 
   return (
-    <Stack direction="row" spacing={2} sx={{ mt: 4 }} fullWidth >
+    <Stack direction="row" spacing={2} >
       <SignTextFormatterFontMenuItem />
       <SignTextFormatterSizeMenuItem />
       <IconButton>
@@ -95,16 +91,13 @@ export function SignTextFormatter() {
         width: '100%', // Ensure the Box takes up the full width of its container
       }}
     >
-      <SignTextFormatterMenu fullWidth />
+      <SignTextFormatterMenu />
       <TextField
         id="outlined-multiline"
         label="Sign Text"
         multiline
         rows={4}
         defaultValue="Default Sign Text"
-        sx={{
-          mt: 4
-        }}
         fullWidth
       />
       <Button
@@ -120,24 +113,26 @@ export function SignTextFormatter() {
 }
 
 export function SignEditor() {
-
   return (
-    <Grid2 container
-      fullWidth
+    <Grid2
+      container
+      spacing={4}  // Add some spacing between the items
       sx={{
-        padding: 1,
         background: 'white',
         display: 'flex',
         flexDirection: 'row',
         gap: 4,
-        alignItems: 'center',
+        alignItems: 'flex-start', // Align to the start
         justifyContent: 'center',
       }}
     >
-      <Grid2 item fullWidth>
+      {/* Sign Text Formatter */}
+      <Grid2 item xs={12} sm={6}> {/* Adjusted item size for responsiveness */}
         <SignTextFormatter fullWidth />
       </Grid2>
-      <Grid2 item fullWidth>
+
+      {/* Sign with Background */}
+      <Grid2 item xs={12} sm={6}> {/* Adjusted item size for responsiveness */}
         <Sign />
         <Button
           variant="contained"
@@ -147,8 +142,6 @@ export function SignEditor() {
           Edit Background
         </Button>
       </Grid2>
-
     </Grid2>
-
   );
-};
+}
