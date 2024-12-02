@@ -8,6 +8,7 @@
  */
 
 import 'package:alds/providers.dart';
+import 'package:alds/storage.dart'; // Import storage
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,12 +20,18 @@ class AldsSettingsPage extends ConsumerStatefulWidget {
 }
 
 class _AldsSettingsPageState extends ConsumerState<AldsSettingsPage> {
-  // State variables
-  String selectedTheme = "System";  // dropdown defaults to system to match theme being initialized to system
-  String selectedLang = "English";
 
   @override
   Widget build(BuildContext context) {
+
+    // State variables
+    // Watch the current theme state from themeProvider, fallback to "System" if no theme is currently set
+    final currentTheme = ref.watch(themeProvider).themeMode.isNotEmpty
+        ? ref.watch(themeProvider).themeMode
+        : "System";
+
+    String selectedLang = "English";
+
     return ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
@@ -53,15 +60,11 @@ class _AldsSettingsPageState extends ConsumerState<AldsSettingsPage> {
             title: "Theme",
             subtitle: "Switch between light and dark themes",
             trailing: DropdownButton<String>(
-              value: selectedTheme,
-              onChanged: (String? newValue) {
+              value: currentTheme,
+              onChanged: (String? newValue) async {
                 if (newValue != null) {
-                  setState(() {  // Update the dropdown value
-                    selectedTheme = newValue;
-                  });
-
                   // Update the app theme via the provider
-                  ref.read(themeProvider).setTheme(newValue);  // ref.read() is used to modify the state provider
+                  ref.read(themeProvider).setTheme(newValue); 
                 }
               },
               items: ["System", "Light", "Dark"].map<DropdownMenuItem<String>>((String value) {

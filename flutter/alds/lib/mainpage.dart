@@ -131,7 +131,7 @@ class _AldsMainState extends State<AldsMain> {
 
           setState(() => navBarIndex = index);
         },
-        indicatorColor: Colors.purpleAccent,
+        indicatorColor: const Color.fromARGB(97, 124, 77, 255),
         selectedIndex: navBarIndex,
         destinations: const <Widget>[
           NavigationDestination(

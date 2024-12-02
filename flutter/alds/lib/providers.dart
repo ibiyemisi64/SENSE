@@ -5,26 +5,25 @@
  * 
  * 
  */
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:alds/storage.dart'; // Import storage functions
 
-final themeProvider = ChangeNotifierProvider<ThemeProvider>((ref) => ThemeProvider(themeMode: "system"));
+final themeProvider = ChangeNotifierProvider<ThemeProvider>(
+  (ref) => ThemeProvider(themeMode: readThemePref()),
+);
 
-/**
- * ThemeProvider
- * 
- * This function is used to manage the state of the theme.
- * This tutorial was really helpful: https://www.youtube.com/watch?v=7Cp1GlmHTGE
- */
 class ThemeProvider extends ChangeNotifier {
   String themeMode;
 
   ThemeProvider({required this.themeMode});
 
-  void setTheme(String newTheme) {
+  void setTheme(String newTheme) async {
     themeMode = newTheme;
     notifyListeners();
+
+    // Save the updated theme to local storage
+    await saveThemePref(newTheme);
   }
 }
 
