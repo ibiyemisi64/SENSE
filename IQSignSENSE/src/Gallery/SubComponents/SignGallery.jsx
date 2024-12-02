@@ -24,13 +24,14 @@ const scrollStyles = {
 };
 
 const SignGallery = () => {
-    const { images, addImage,loadImages } = useGalleryStore();
+    const { images, addImage,loadImages, loadMockImages } = useGalleryStore();
     const [open, setOpen] = useState(false);
     const [tabIndex, setTabIndex] = useState(0);
     const navigate = useNavigate();
     useEffect(()=> {
-        loadImages();
+        loadMockImages();
     },[])
+    console.log(images);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const handleTabChange = (event, newValue) => setTabIndex(newValue);
@@ -57,7 +58,7 @@ const SignGallery = () => {
                 rowSpacing={2}
                 sx={{
                     width: '75%',
-                    maxHeight: '50%',
+                    maxHeight: '75%',
                     overflowY: 'auto',
                     ...scrollStyles,
                 }}
@@ -66,7 +67,7 @@ const SignGallery = () => {
                     <Box
                         sx={{
                             width: '100%',
-                            height: '150px',
+                            height: '200px',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -89,7 +90,7 @@ const SignGallery = () => {
                             alt={`Sign ${index + 1}`}
                             sx={{
                                 width: '100%',
-                                height: '150px',
+                                height: '200px',
                                 borderRadius: 1,
                                 objectFit: 'cover',
                                 boxShadow: 3,
