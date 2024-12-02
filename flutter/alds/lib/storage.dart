@@ -103,7 +103,29 @@ String getDeviceId() {
   return _deviceId;
 }
 
+// THEME DATA
+Future<void> saveThemePref(String theme) async {
+  var appbox = Hive.box('appData');
+  await appbox.put('theme', theme);
+  _appTheme = theme; 
+}
 
+String readThemePref() {
+  return _appTheme;
+}
+
+// USER LOCATION DATA
+Future<void> saveLocatorData(String json) async {
+  var appbox = Hive.box('appData');
+  await appbox.put("locdata", json);
+}
+
+Future<String?> readLocationData() async {
+  var appbox = Hive.box('appData');
+  return await appbox.get('locdata');
+}
+
+// MOCK LOCATION DATA
 Future<void> mockLocationData() async {
   await setupStorage();
   var appbox = Hive.box('appData');
@@ -146,30 +168,3 @@ Future<void> mockLocationData() async {
   String json = jsonEncode(jsonData);
   await appbox.put("locdata", json);
 }
-
-Future<void> saveThemePref(String theme) async {
-  var appbox = Hive.box('appData');
-  await appbox.put('theme', theme);
-  _appTheme = theme; 
-}
-
-String readThemePref() {
-  return _appTheme;
-}
-
-Future<void> saveLocatorData(String json) async {
-  var appbox = Hive.box('appData');
-  await appbox.put("locdata", json);
-}
-
-Future<String?> readLocationData() async {
-  var appbox = Hive.box('appData');
-  return await appbox.get('locdata');
-}
-
-
-
-
-
-
-
