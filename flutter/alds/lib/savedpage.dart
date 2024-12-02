@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'storage.dart' as storage;
+import 'locator.dart' as locator; 
 import 'dart:convert';
 import 'util.dart' as util;
 
@@ -53,20 +54,24 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
     }
   }
 
-  Future<void> _saveLocations() async {
-    List<Map<String, dynamic>> locDataList = _savedLocations
-        .map((loc) => {
-              'location': loc.name,
-              'position': {
-                'latitude': loc.latitude,
-                'longitude': loc.longitude,
-              }
-            })
-        .toList();
-    util.log("locDatalist - $locDataList");
-    // Remove it from storage - aka make a copy of what is stored, delete all of storage 
-    await storage.saveLocatorData(json.encode(locDataList));
-  }
+  // Future<void> _saveLocations() async {
+  //   List<Map<String, dynamic>> locDataList = _savedLocations
+  //       .map((loc) => {
+  //             'location': loc.name,
+  //             'position': {
+  //               'latitude': loc.latitude,
+  //               'longitude': loc.longitude,
+  //             }
+  //           })
+  //       .toList();
+  //   util.log("locDatalist - $locDataList");
+  //   // save metadata locally 
+  //   // call delete on that storage that you clicked on 
+  //   // edit the name and add it back - append
+
+
+  //   await storage.saveLocatorData(json.encode(locDataList));
+  // }
 
   Future<void> _deleteLocation(SavedLocation location) async {
     // REMOVES THE FIRST LOCATION THAT MATCHES A PARTICULAR CONDITION - and not a conditional remove
@@ -74,14 +79,18 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
     setState(() {
       _savedLocations.remove(location);
       _isLoading = true; 
-      _loadLocations(); 
     });
+    await _loadLocations(); 
   }
 
 
   Future<void> _editLocation(SavedLocation location) async {
+
+    String currName = location.name; 
+    String copyCurrName = String.fromCharCodes(currName.codeUnits);
+
     final TextEditingController nameController =
-        TextEditingController(text: location.name);
+        TextEditingController(text: copyCurrName);
 
     await showDialog(
       context: context,
@@ -102,17 +111,22 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
             ),
             TextButton(
               onPressed: () async {
+
                 if (nameController.text.isNotEmpty) {
+                  // util.log("BEFORE UPDATE - ${location.name}");
+
+                  // UPDATE STORAGE
+                  await storage.update(location, nameController.text);
+
+                  // util.log("AFTER UPDATE - ${location.name}");
+                  // UPDATE UI
                   final index = _savedLocations.indexOf(location);
                   setState(() {
-                    _savedLocations[index] = SavedLocation(
-                      nameController.text,
-                      location.latitude,
-                      location.longitude,
-                    );
+                    _savedLocations[index].name = nameController.text;
+                    _isLoading = true;
+                    
                   });
-                  _saveLocations();
-                  //storage.update();
+                  await _loadLocations();
                   Navigator.pop(context);
                 }
               },
@@ -195,7 +209,7 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
 }
 
 class SavedLocation {
-  final String name;
+  String name;
   final double latitude;
   final double longitude;
 

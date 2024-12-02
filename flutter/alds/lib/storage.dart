@@ -32,6 +32,7 @@
 
 library alds.storage;
 
+import 'package:alds/locator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'util.dart' as util;
@@ -117,26 +118,29 @@ Future<void> remove(SavedLocation location) async {
   String? existingData = await readLocationData();
   if (existingData != null) {
     List<dynamic> locations = json.decode(existingData);
-    util.log("BEFORE REMOVE CALLED: $locations");
+    // util.log("BEFORE REMOVE CALLED: $locations");
     locations.removeWhere((loc) => loc['location'] == location.name);
-        // loc['location'] == location.name &&
-        // loc['position']['latitude'] == location.latitude &&
-        // loc['position']['longitude'] == location.longitude);
-    util.log ("REMOVE CALLED - $locations");
-
+    // util.log ("REMOVE CALLED - $locations");
     appbox.delete("locdata");
     await saveLocatorData(json.encode(locations));
   }
 }
 
-Future<void> update(SavedLocation location) async {
+Future<void> update(SavedLocation location, String locName) async {
+  var appbox = Hive.box('appData');
+  
   String? existingData = await readLocationData();
   if (existingData != null) {
+
     List<dynamic> locations = json.decode(existingData);
-    locations.removeWhere((loc) =>
-        loc['location'] == location.name &&
-        loc['position']['latitude'] == location.latitude &&
-        loc['position']['longitude'] == location.longitude);
+    final currIndex = locations.indexWhere((loc) => loc['location'] == location.name);
+  
+    util.log("INDEXWHERE: $currIndex");
+    util.log("LOCS: $locations");    
+    locations[currIndex]["location"] = locName;
+    util.log("Current Locs $locations");
+  
+    // appbox.delete("locdata");
 
     await saveLocatorData(json.encode(locations));
   }
