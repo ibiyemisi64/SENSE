@@ -30,7 +30,7 @@ import 'globals.dart' as globals;
 import 'recheck.dart' as recheck;
 import 'device.dart' as device;
 import 'util.dart' as util;
-import "locator.dart";
+import "locator.dart" as alds_loc;
 import 'mainpage.dart';
 
 // Dart Packages 
@@ -38,18 +38,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:phone_state/phone_state.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  // initialize(false);
-  runApp(
-    MaterialApp(
-      title: "ALDS Location Selector",
-      home: AldsMain(),
-      theme: ThemeData.light(),
-      // darkTheme: ThemeData.dark(),
-      // themeMode: ThemeMode.system,
-    ),
-  );
+  initialize(false);
+  runApp(ProviderScope(child: AldsApp()));
 }
 
 void initialize(bool flag) async {
@@ -57,7 +50,7 @@ void initialize(bool flag) async {
   await storage.setupStorage();
   util.log("STORAGE INITIAILIZED");
   await recheck.initialize();
-  Locator loc = Locator();
+  alds_loc.Locator loc = alds_loc.Locator();
   loc.setup();
 
   Timer.periodic(

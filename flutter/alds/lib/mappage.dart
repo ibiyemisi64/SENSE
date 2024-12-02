@@ -139,7 +139,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
             child: Text(
               "Current Location: $_curLocationText",
               style: GoogleFonts.anta(
-                textStyle: const TextStyle(color: Colors.black, fontSize: 20),
+                textStyle: const TextStyle(fontSize: 20),
               ),
             ),
           ),
@@ -165,7 +165,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
                 height: 50,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Colors.deepPurpleAccent,
                     padding: const EdgeInsets.symmetric(horizontal: 12), // Tighter padding
                   ),
                   onPressed: _handleValidateLocation,
