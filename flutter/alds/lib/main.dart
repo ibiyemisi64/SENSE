@@ -32,6 +32,7 @@ import 'device.dart' as device;
 import 'util.dart' as util;
 import "locator.dart" as alds_loc;
 import 'mainpage.dart';
+
 // Dart Packages 
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -47,6 +48,7 @@ void main() {
 void initialize(bool flag) async {
   await util.setup();
   await storage.setupStorage();
+  util.log("STORAGE INITIAILIZED");
   await recheck.initialize();
   alds_loc.Locator loc = alds_loc.Locator();
   loc.setup();
