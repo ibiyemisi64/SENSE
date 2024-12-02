@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'storage.dart' as storage;
 import 'dart:convert';
+import 'util.dart' as util;
 
 class SavedLocationsPage extends StatefulWidget {
   const SavedLocationsPage({super.key});
@@ -17,7 +18,7 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
   @override
   void initState() {
     super.initState();
-    _loadLocations();
+    _loadLocations(); // Potential BUG
   }
 
   Future<void> _loadLocations() async {
@@ -62,16 +63,19 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
               }
             })
         .toList();
-
+    util.log("locDatalist - $locDataList");
+    // Remove it from storage - aka make a copy of what is stored, delete all of storage 
     await storage.saveLocatorData(json.encode(locDataList));
   }
 
   Future<void> _deleteLocation(SavedLocation location) async {
+    // REMOVES THE FIRST LOCATION THAT MATCHES A PARTICULAR CONDITION - and not a conditional remove
     storage.remove(location);
     setState(() {
       _savedLocations.remove(location);
+      _isLoading = true; 
+      _loadLocations(); 
     });
-    // await _saveLocations();
   }
 
 
@@ -88,7 +92,7 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
             controller: nameController,
             decoration: InputDecoration(
               labelText: 'Location Name',
-              hintText: 'Enter new location name',
+              hintText: 'Enter a new location name',
             ),
           ),
           actions: [
@@ -107,8 +111,8 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
                       location.longitude,
                     );
                   });
-                  // await _saveLocations();
-                  storage.update()
+                  _saveLocations();
+                  //storage.update();
                   Navigator.pop(context);
                 }
               },
@@ -130,7 +134,7 @@ class _SavedLocationsPageState extends State<SavedLocationsPage> {
 
     if (_savedLocations.isEmpty) {
       return const Center(
-        child: Text('No saved locations'),
+        child: Text('No Saved Locations'),
       );
     }
 

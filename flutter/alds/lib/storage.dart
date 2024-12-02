@@ -112,22 +112,25 @@ Future<String?> readLocationData() async {
 }
 
 Future<void> remove(SavedLocation location) async {
+  var appbox = Hive.box('appData');
+  // WE ASSUME THAT LOC NAME IS UNIQUE
   String? existingData = await readLocationData();
   if (existingData != null) {
     List<dynamic> locations = json.decode(existingData);
-    locations.removeWhere((loc) =>
-        loc['location'] == location.name &&
-        loc['position']['latitude'] == location.latitude &&
-        loc['position']['longitude'] == location.longitude);
+    util.log("BEFORE REMOVE CALLED: $locations");
+    locations.removeWhere((loc) => loc['location'] == location.name);
+        // loc['location'] == location.name &&
+        // loc['position']['latitude'] == location.latitude &&
+        // loc['position']['longitude'] == location.longitude);
+    util.log ("REMOVE CALLED - $locations");
 
+    appbox.delete("locdata");
     await saveLocatorData(json.encode(locations));
   }
-
-
 }
 
 Future<void> update(SavedLocation location) async {
-   String? existingData = await readLocationData();
+  String? existingData = await readLocationData();
   if (existingData != null) {
     List<dynamic> locations = json.decode(existingData);
     locations.removeWhere((loc) =>
