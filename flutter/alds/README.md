@@ -2,6 +2,44 @@
 
 Phone app to report location and other information to Catre
 
+## Unit Testing
+
+### Local Storage
+
+- [ ] Deleting an item from local storage actually deletes the item
+- [ ] Updating an item in local storage ...
+- [ ] Adding an item to local storage ...
+
+### Saved Locations
+
+- [ ] Deleting an item from the Saved Locations page removes the item from local storage
+- [ ] Editing a Saved Location edits the name of the item in local storage
+
+### Map Page
+
+- [ ] Validating an item that isn't in the saved locations adds it to saved locations
+- [ ] Validating an item that is in the saved locations merges the saved location (i.e. the position of the saved location updates)
+- [ ] Dropdown entries are our saved locations
+- [ ] If the user is in a saved location, it outputs the name of that saved location
+
+### Settings Page
+
+- Toggling the system settings to each of the modes works:
+  - [ ] Light
+  - [ ] Dark
+  - [ ] System
+
+### Navigation Bar
+
+- [ ] Changing between pages doesn't change the content on the page (i.e. re-render the page)
+
+## User Testing (things I don't think we can user test)
+
+### Map Page
+
+- [ ] User's current location is the center of the map, and a marker marks the user's location
+- [ ] User's saved locations appear on the map
+
 ## Local Development Setup
 
 Follow these [directions](https://docs.flutter.dev/get-started/install) for configure your environment for Flutter development based on your OS and application needs.
