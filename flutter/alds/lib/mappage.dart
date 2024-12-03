@@ -158,8 +158,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
               widgets.searchableDropdown(
                   _controller, 
                   locations, 
-                  (String? value) => setState(() => _selectedLocation = value),
-                  _handleFilter,
+                  (String? value) => setState(() => _selectedLocation = value)
               ),
               const SizedBox(width: 20,),
               SizedBox(
@@ -250,15 +249,5 @@ class _AldsMapPageState extends State<AldsMapPage> {
     Locator loc = Locator();
     loc.noteLocation(txt);
     util.log("VALIDATE location as $txt");
-  }
-
-  List<DropdownMenuEntry<String>> _handleFilter(List<DropdownMenuEntry<String>> entries, String filter) {
-    List<DropdownMenuEntry<String>> filtered = entries.where((entry) => entry.label.toString().toLowerCase().contains(filter.toLowerCase())).toList();
-
-    if (filtered.isEmpty) {
-      return entries;
-    } else {
-      return filtered;
-    }
   }
 }

@@ -46,7 +46,7 @@ dependencies:
   mutex: ^3.0.1
   flutter_logs: ^2.1.10
   http: ^1.2.2
-  phone_state: ^1.0.4
+  phone_state: ^1.0.4  # FIXME: Upgrade to latest major version
   flutter_map: ^7.0.2
   latlong2: ^0.9.1
   flutter_map_location_marker: ^9.1.1
