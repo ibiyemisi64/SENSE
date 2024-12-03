@@ -1,5 +1,8 @@
 import { create } from 'zustand';
 import {serverUrl} from "../../utils/utils.js";
+import classImg from "../../assets/backgrounds/class.png"
+import oooImg from "../../assets/backgrounds/ooo-tomorrow.png"
+import fallImg from "../../assets/backgrounds/fall-background.png"
 
 
 export const useGalleryStore = create((set) => ({
@@ -7,6 +10,9 @@ export const useGalleryStore = create((set) => ({
     ],
     addImage: (newImage) =>
         set((state) => ({ images: [...state.images, newImage] })),
+    loadMockImages: () => {
+        set({images: [classImg, fallImg, oooImg]})
+    },
     loadImages: async () => {
         const url = new URL(`${serverUrl}/rest/signs`); // Replace with actual base URL
         url.searchParams.append("session", sessionStorage.getItem('session'));
