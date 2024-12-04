@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Container, TextField, Button, Typography, Link, Box, Checkbox, FormControlLabel } from '@mui/material';
-import { hasher } from './utils/utils';
+//import { hasher } from './utils/utils';
 import axios from 'axios';
+import hasher from './web/iqsign'
 
 
 const LoginPage = () => {
@@ -30,13 +31,13 @@ const LoginPage = () => {
 
 
       // Hash credentials with padding and session
-      const lowerCaseUsername = username.toLowerCase();
+      let lowerCaseUsername = username.toLowerCase();
 
-
-      const hashedPassword = hasher(password);
+      let hashedPassword = hasher(password);
       //const hashedUsername = hasher(lowerCaseUsername);
-      const paddedHash = hasher(hashedPassword + lowerCaseUsername);
-      const finalHash = hasher(paddedHash + curPadding);
+
+      let paddedHash = hasher(hashedPassword + lowerCaseUsername);
+      let finalHash = hasher(paddedHash + curPadding);
 
       // POST request with hashed credentials
       const body = {

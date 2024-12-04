@@ -4,8 +4,9 @@ import sjcl from 'sjcl';
 
 export const hasher = (msg) => {
 
-    let bits = sjcl.hash.sha512.hash(msg);
-    let str = sjcl.codec.base64.fromBits(bits);
+    let bits = String(sjcl.hash.sha512.hash(msg));
+    console.log(typeof bits)
+    let str = String(sjcl.codec.base64.fromBits(bits));
     return str;
 };
 

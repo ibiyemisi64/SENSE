@@ -126,8 +126,9 @@ function setup()
 	  resave : true }));
     app.use(sessionManager);
 
-    //app.get('/login',auth.displayLoginPage);
+    app.get('/login',auth.displayLoginPage);
     app.post('/login',auth.handleLogin);
+
     app.get('/register',auth.displayRegisterPage);
     app.post('/register',auth.handleRegister);
     app.get('/validate',auth.handleValidate);
