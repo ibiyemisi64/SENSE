@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Container, TextField, Button, Typography, Link, Box, Checkbox, FormControlLabel } from '@mui/material';
-//import { hasher } from './utils/utils';
+import { hasher } from './utils/utils';
 import axios from 'axios';
-import hasher from './web/iqsign'
+//import hasher from './web/iqsign'
 
 
 const LoginPage = () => {

@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import RegistrationPage from './Auth/RegistrationPage';
 //import LoginPage from './LoginPage';
-import LoginPage from '../../iqsign/LoginPage';
+import LoginPage from './Auth/LoginPage';
 import ProfilePage from './ProfilePage';
 import Home from './HomePage';
 import SignEditor  from './Sign';
