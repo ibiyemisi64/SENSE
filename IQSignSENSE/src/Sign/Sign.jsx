@@ -9,6 +9,7 @@ import TopBar from "../Topbar/TopBar.jsx";
 
 export default function Sign() {
   return (
+      <>
     <Box
       component="img"
       sx={{
@@ -21,6 +22,7 @@ export default function Sign() {
     >
 
     </Box>
+      </>
   );
 }
 
