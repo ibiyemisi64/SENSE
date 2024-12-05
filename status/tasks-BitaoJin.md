@@ -8,4 +8,8 @@
 
 10/31 refine the testing plan, push it to github, and get the new issue #48 testing phase 1.
 
+11/04 wait for the whole mockup code push to github
+
+11/07 begin to work on building the sample mockup testing environment and the others testing components.
+
 
