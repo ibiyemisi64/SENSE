@@ -5,6 +5,7 @@ import LoginPage from './Auth/LoginPage';
 import ProfilePage from './ProfilePage';
 import SignEditor  from './Sign/Sign.jsx';
 import Gallery from "./Gallery/Gallery.jsx";
+import Home from './HomePage';
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         <Route path="/" element={<LoginPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/edit" element={<SignEditor />} />
+        <Route path="/home" element={<Home />} />
         <Route path={"/gallery"} element={<Gallery/>}/>
       </Routes>
     </Router>
