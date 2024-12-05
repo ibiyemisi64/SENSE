@@ -4,7 +4,7 @@ import RegistrationPage from './RegistrationPage';
 import LoginPage from './LoginPage';
 import ProfilePage from './ProfilePage';
 import Home from './HomePage';
-import {SignEditor}  from './Sign/Sign.jsx';
+import {SignEditor} from './Sign/Sign.jsx';
 import Gallery from "./Gallery/Gallery.jsx";
 
 const App = () => {
