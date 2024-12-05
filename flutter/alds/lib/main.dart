@@ -24,23 +24,29 @@
 ///										 *
 ///******************************************************************************
 
-import 'package:flutter/material.dart';
-import 'package:phone_state/phone_state.dart';
-import 'selectpage.dart';
+// ALDS Dart Files
 import 'storage.dart' as storage;
 import 'globals.dart' as globals;
 import 'recheck.dart' as recheck;
 import 'device.dart' as device;
 import 'util.dart' as util;
 import "locator.dart";
+import 'mainpage.dart';
+// Dart Packages 
 import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:phone_state/phone_state.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   initialize(false);
   runApp(
-    const MaterialApp(
+    MaterialApp(
       title: "ALDS Location Selector",
-      home: AldsSelect(),
+      home: AldsMain(),
+      theme: ThemeData.light(),
+      // darkTheme: ThemeData.dark(),
+      // themeMode: ThemeMode.system,
     ),
   );
 }
@@ -64,6 +70,7 @@ void _handleRecheck(Timer timer) async {
   await recheck.recheck();
 }
 
+// Note: This is where user/device registration occurs.
 void _handleDevice(Timer timer) async {
   device.Cedes cedes = device.Cedes();
   await cedes.ping();
