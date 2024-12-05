@@ -1,7 +1,9 @@
 import React from 'react';
 import { Container, TextField, Button, Typography, Link, Box } from '@mui/material';
+import {useNavigate} from "react-router-dom";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   return (
     <Container maxWidth="sm">
       <Box sx={{ textAlign: 'center', mt: 4 }}>
@@ -28,6 +30,7 @@ const LoginPage = () => {
             variant="contained"
             color="primary"
             sx={{ mt: 3, backgroundColor: 'black', color: 'white' }}
+            onClick={()=>navigate("/home")}
           >
             Log in
           </Button>
@@ -35,6 +38,7 @@ const LoginPage = () => {
             <Link href="#" underline="hover" sx={{ color: 'black' }}>
               Forgot password?
             </Link>
+            <Typography>Need to make an account? <Link href="#" onClick={()=> navigate("/register")} underline="hover" sx={{ color: 'black' }}> Register </Link></Typography>
           </Box>
         </Box>
       </Box>

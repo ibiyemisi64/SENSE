@@ -1,7 +1,9 @@
 import React from 'react';
-import { Container, TextField, Button, Typography, Box } from '@mui/material';
+import {Container, TextField, Button, Typography, Box, Link} from '@mui/material';
+import {useNavigate} from "react-router-dom";
 
 const RegistrationPage = () => {
+  const navigate = useNavigate();
   return (
     <Container maxWidth="sm">
       <Box sx={{ textAlign: 'center', mt: 4 }}>
@@ -41,9 +43,13 @@ const RegistrationPage = () => {
             variant="contained"
             color="primary"
             sx={{ mt: 3, backgroundColor: 'black', color: 'white' }}
+            onClick={()=>navigate("/home")}
           >
             Register
           </Button>
+          <Box sx={{ mt: 2 }}>
+            <Typography>Already have an account?<Link href="#" onClick={()=> navigate("/")} underline="hover" sx={{ color: 'black' }}> Sign in </Link></Typography>
+          </Box>
         </Box>
       </Box>
     </Container>
