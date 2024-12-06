@@ -97,7 +97,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
   }
 
   Future<void> _getSavedLocations() async {
-    await storage.mockLocationData();
+    // await storage.mockLocationData();
     String? locDataJson = await storage.readLocationData();
     if (locDataJson != null) {
       try {
