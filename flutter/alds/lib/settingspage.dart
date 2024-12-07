@@ -7,23 +7,31 @@
  * 
  */
 
+import 'package:alds/providers.dart';
+import 'package:alds/storage.dart'; // Import storage
 import 'package:flutter/material.dart';
-import 'package:alds/widgets.dart' as widgets;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AldsSettingsWidget extends StatefulWidget {
-  const AldsSettingsWidget({super.key});
+class AldsSettingsPage extends ConsumerStatefulWidget {
+  const AldsSettingsPage({super.key});
 
   @override
-  State<AldsSettingsWidget> createState() => _AldsSettingsWidgetState();
+  ConsumerState<AldsSettingsPage> createState() => _AldsSettingsPageState();
 }
 
-class _AldsSettingsWidgetState extends State<AldsSettingsWidget> {
-  // State variables
-  String selectedTheme = "Light";
-  String selectedLang = "English";
+class _AldsSettingsPageState extends ConsumerState<AldsSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    // State variables
+    // Watch the current theme state from themeProvider, fallback to "System" if no theme is currently set
+    final currentTheme = ref.watch(themeProvider).themeMode.isNotEmpty
+        ? ref.watch(themeProvider).themeMode
+        : "System";
+
+    String selectedLang = "English";
+
     return ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
@@ -52,15 +60,14 @@ class _AldsSettingsWidgetState extends State<AldsSettingsWidget> {
             title: "Theme",
             subtitle: "Switch between light and dark themes",
             trailing: DropdownButton<String>(
-              value: selectedTheme,
-              onChanged: (String? newValue) {
+              value: currentTheme,
+              onChanged: (String? newValue) async {
                 if (newValue != null) {
-                  setState(() {
-                    selectedTheme = newValue;
-                  });
+                  // Update the app theme via the provider
+                  ref.read(themeProvider).setTheme(newValue); 
                 }
               },
-              items: ["Light", "Dark"].map<DropdownMenuItem<String>>((String value) {
+              items: ["System", "Light", "Dark"].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),

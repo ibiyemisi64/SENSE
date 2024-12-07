@@ -5,45 +5,51 @@
  * 
  */
 
-import 'package:alds/mappage.dart';
-import 'package:alds/settingspage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'savedpage.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'util.dart' as util;
-import 'locator.dart';
+import 'locator.dart' as alds_loc;
+import 'savedpage.dart';
+import 'mappage.dart';
+import 'settingspage.dart';
+import 'providers.dart';
 
-class AldsMain extends StatelessWidget {
-  const AldsMain({super.key});
+class AldsApp extends ConsumerWidget {
+  const AldsApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeListener = ref.watch(themeProvider);  // ref.watch() is used to access the state provider
+    ThemeMode themeMode = util.getThemeMode(themeListener.themeMode);
+
+    // util.log("Current theme mode: $themeMode");
+
     return MaterialApp(
-      title: 'ALDS',
-      theme: util.getTheme(),
-      home: const AldsMainWidget()
+      title: "ALDS Location Selector",
+      home: AldsMain(),
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: themeMode,  // default is ThemeMode.system (see providers.dart)
     ); // App
   }
 }
 
-class AldsMainWidget extends StatefulWidget {
-  const AldsMainWidget({super.key});
+class AldsMain extends StatefulWidget {
+  const AldsMain({super.key});
 
   @override
-  State<AldsMainWidget> createState() => _AldsMainWidgetState();
+  State<AldsMain> createState() => _AldsMainState();
 }
 
-class _AldsMainWidgetState extends State<AldsMainWidget> {
+class _AldsMainState extends State<AldsMain> {
   String _curLocationText = "";  // FIXME: Remove this code???
   Position? _curPosition;
   late int navBarIndex; // use of the `late` keyword denotes a non-nullable variable that will be initialized later
 
-  _AldsMainWidgetState();
+  _AldsMainState();
 
   @override
   void initState() {
@@ -51,7 +57,7 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
     
     // Initial state
     navBarIndex = 0;
-    Locator loc = Locator();
+    alds_loc.Locator loc = alds_loc.Locator();
     _curLocationText = loc.lastLocation ?? "N/A";
     _getCurrentLocation();
   }
@@ -114,8 +120,8 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
       ),
       body: <Widget>[
         const AldsMapPage(),
-        const SavedLocationsPage(),
-        const AldsSettingsWidget(),
+        const AldsSavedLocationsPage(),
+        const AldsSettingsPage(),
       ][navBarIndex],
       bottomNavigationBar: NavigationBar(  // NOTE: Code structure from demo on https://api.flutter.dev/flutter/material/NavigationBar-class.html
         onDestinationSelected: (int index) {
@@ -125,7 +131,7 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
 
           setState(() => navBarIndex = index);
         },
-        indicatorColor: Colors.purpleAccent,
+        indicatorColor: const Color.fromARGB(97, 124, 77, 255),
         selectedIndex: navBarIndex,
         destinations: const <Widget>[
           NavigationDestination(
@@ -152,7 +158,7 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
   }
 
   Future<void> _handleUpdate() async {
-    Locator loc = Locator();
+    alds_loc.Locator loc = alds_loc.Locator();
     String? where = await loc.findLocation();
     _locationSelected(where);
   }
