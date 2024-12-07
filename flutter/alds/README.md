@@ -4,23 +4,36 @@ Phone app to report location and other information to Catre
 
 ## Unit Testing
 
-### Local Storage
+### Local Storage (`storage.dart`)
 
-- [ ] Deleting an item from local storage actually deletes the item
-- [ ] Updating an item in local storage ...
-- [ ] Adding an item to local storage ...
+- [ ] Deleting an item from local storage successfully deletes the item (`removeLocation`)
+- [ ] Updating an existing item in local storage successfully updates the item (`updateLocation`)
+- [ ] Adding a new item to local storage successfully adds the item
 
 ### Saved Locations
 
-- [ ] Deleting an item from the Saved Locations page removes the item from local storage
-- [ ] Editing a Saved Location edits the name of the item in local storage
+- [ ] If no saved locations exist, the page should display "No Saved Locations"
+- [ ] If saved locations do exist, each saved location should appear as a card on the page
+- [ ] Clicking on the "3 dots" should allow the user to access "Edit" or "Delete" functionalities
+- [ ] User should be able to view all their existing saved locations
+- [ ] Deleting a Saved Location removes the item from the list of saved locations
+- [ ] Deleting a Saved Location, then adding a new saved location (from the Map Page) shows the new item but not the deleted item
+- [ ] Deleting a Saved Location, then updating an existing saved location (from the Map Page) updates the existing item and removes the deleted item
+- [ ] Deleting a Saved Location does not change the ordering of the other items in the list (since no sort is applied)
+- [ ] Editing a Saved Location edits the name of the item
+- [ ] Editing a Saved Location does not change the position of the item in the saved locations list (since no sort is applied)
 
 ### Map Page
 
+- [ ] The page should render a "circular waiting animation" before the saved locations are completely read from local storage
+- [ ] When local storage is successfully retrieved, a map, dropdown, and a "Validate Location" button should render
+- [ ] Validating an item with no name should not add that item to saved locations
 - [ ] Validating an item that isn't in the saved locations adds it to saved locations
 - [ ] Validating an item that is in the saved locations merges the saved location (i.e. the position of the saved location updates)
-- [ ] Dropdown entries are our saved locations
-- [ ] If the user is in a saved location, it outputs the name of that saved location
+- [ ] The user should be able to type into the text area of the dropdown
+- [ ] If the user does not have saved locations, the dropdown entries should be empty
+- [ ] If the user has saved locations, the dropdown entries should be the user's saved locations
+- [ ] If the user is in a saved location, the page displays the name of that saved location
 
 ### Settings Page
 
@@ -28,17 +41,25 @@ Phone app to report location and other information to Catre
   - [ ] Light
   - [ ] Dark
   - [ ] System
+- [ ] An option for theme selection appears, with a dropdown to select between System, Light, and Dark modes
 
 ### Navigation Bar
 
 - [ ] Changing between pages doesn't change the content on the page (i.e. re-render the page)
+- [ ] When an icon is selected, the icon indicates that it is selected
+
+### Login
+
+- [ ] User should only see their saved locations + theme preferences
+- [ ] The same user's saved locations + settings should persist across several logins
 
 ## User Testing (things I don't think we can user test)
 
-### Map Page
+### Map Page User Testing
 
-- [ ] User's current location is the center of the map, and a marker marks the user's location
-- [ ] User's saved locations appear on the map
+- [ ] User's current location is marked on the map
+- [ ] User's saved locations are marked on the map
+- [ ] The map should be centered on the user's current location
 
 ## Local Development Setup
 
