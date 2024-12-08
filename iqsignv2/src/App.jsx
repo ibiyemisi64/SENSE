@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import RegistrationPage from './Auth/RegistrationPage';
 import LoginPage from './Auth/LoginPage';
 import ProfilePage from './ProfilePage';
-import SignEditor  from './Sign/Sign.jsx';
+import Home from './HomePage';
+import {SignEditor} from './Sign/Sign.jsx';
 import Gallery from "./Gallery/Gallery.jsx";
 
 const App = () => {
