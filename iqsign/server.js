@@ -35,6 +35,8 @@
 
 const http = require('http');
 const https = require('https');
+const path = require('path');
+
 
 const express = require('express');
 
@@ -101,6 +103,14 @@ function setup()
     app.use('/signimage',express.static(config.getWebDirectory() + "/signs/"));
     app.get('/robots.txt',(req1,res1) => { res1.redirect('/static/robots.txt')});
 
+    // Serve React static files
+    app.use(express.static(path.join(__dirname, '../IQSignSENSE/dist')));
+
+    // React fallback for unmatched routes
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, '../IQSignSENSE/dist', 'index.html'));
+    });
+
 //  app.use(cors({credentials: true, origin: true}));
     app.use(cors());
 
@@ -118,6 +128,7 @@ function setup()
 
     app.get('/login',auth.displayLoginPage);
     app.post('/login',auth.handleLogin);
+
     app.get('/register',auth.displayRegisterPage);
     app.post('/register',auth.handleRegister);
     app.get('/validate',auth.handleValidate);

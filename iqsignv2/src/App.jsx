@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import RegistrationPage from './RegistrationPage';
-import LoginPage from './LoginPage';
+import RegistrationPage from './Auth/RegistrationPage';
+import LoginPage from './Auth/LoginPage';
 import ProfilePage from './ProfilePage';
 import Home from './HomePage';
 import {SignEditor} from './Sign/Sign.jsx';
@@ -12,10 +12,10 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/register" element={<RegistrationPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<LoginPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/edit" element={<SignEditor />} />
-        <Route path="/home" element={<Home />} />
         <Route path={"/gallery"} element={<Gallery/>}/>
       </Routes>
     </Router>
