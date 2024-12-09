@@ -2,6 +2,7 @@
 
 source setup.sql
 
+set +x
 echo WORKING ON DATABASE $db
 
 
