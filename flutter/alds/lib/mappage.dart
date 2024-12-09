@@ -11,10 +11,13 @@ import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:convert';
 
 import 'widgets.dart' as widgets;
 import 'util.dart' as util;
 import 'locator.dart';
+import 'storage.dart' as storage;
+import 'savedpage.dart';
 
 class AldsMapPage extends StatefulWidget {
   const AldsMapPage({super.key});
@@ -24,8 +27,13 @@ class AldsMapPage extends StatefulWidget {
 }
 
 class _AldsMapPageState extends State<AldsMapPage> {
+  // State variables
   String _curLocationText = "";
   Position? _curPosition;
+  final TextEditingController _controller = TextEditingController();
+  String? _selectedLocation;
+  List<String> locations = [];
+  late bool _isLoading;
 
   _AldsMapPageState();
 
@@ -33,13 +41,17 @@ class _AldsMapPageState extends State<AldsMapPage> {
   void initState() {
     super.initState();
     
-    // Initial state
+    // Initialize state variables
     Locator loc = Locator();
     _curLocationText = loc.lastLocation ?? "Unsaved Location";
+    _isLoading = true;
+
+    // Async functions
+    _getSavedLocations();
     _getCurrentLocation();
   }
 
-  _getCurrentLocation() async {
+  Future<void> _getCurrentLocation() async {
     // Code adapted from: https://pub.dev/packages/geolocator#example
 
     bool serviceEnabled;
@@ -84,9 +96,40 @@ class _AldsMapPageState extends State<AldsMapPage> {
     });
   }
 
+  Future<void> _getSavedLocations() async {
+    // await storage.mockLocationData();
+    String? locDataJson = await storage.readLocationData();
+    if (locDataJson != null) {
+      try {
+        List<dynamic> locDataParsed = List<dynamic>.from(jsonDecode(locDataJson));
+        setState(() {
+          locations = locDataParsed.map((locData) => locData['location'] as String).toList();
+          _isLoading = false;
+        });
+      } catch (e) {
+        util.log("Error parsing location data: $e");
+        setState(() {
+          locations = [];
+          _isLoading = false;
+        });
+      }
+    } else {
+      setState(() {
+        locations = [];
+        _isLoading = false;
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
+    // If still fetching data, show loading indicator
+    if (_isLoading) {
+      return const CircularProgressIndicator();
+    }
+
+    // Build this widget when the data is finishing loading
     return Column( 
       children: [
         // Header
@@ -96,7 +139,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
             child: Text(
               "Current Location: $_curLocationText",
               style: GoogleFonts.anta(
-                textStyle: const TextStyle(color: Colors.black, fontSize: 20),
+                textStyle: const TextStyle(fontSize: 20),
               ),
             ),
           ),
@@ -106,23 +149,42 @@ class _AldsMapPageState extends State<AldsMapPage> {
         Expanded(
           child: _createLocationMap(),
         ),
-        SizedBox(
-          height: 50,
-          child: Center(
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              widgets.searchableDropdown(
+                  _controller, 
+                  locations, 
+                  (String? value) => setState(() => _selectedLocation = value)
               ),
-              onPressed: _handleValidateLocation, 
-              child: Text(
-                "Validate Location",
-                style: GoogleFonts.anta(
-                  textStyle: const TextStyle(color: Colors.white),
+              const SizedBox(width: 20,),
+              SizedBox(
+                height: 50,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurpleAccent,
+                    padding: const EdgeInsets.symmetric(horizontal: 12), // Tighter padding
+                  ),
+                  onPressed: _handleValidateLocation,
+                  child: FittedBox( // Helps text scale down if needed
+                    child: Text(
+                      "Validate Location",
+                      style: GoogleFonts.anta(
+                        textStyle: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16, // Optional: control text size
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               )
-            ),
+            ],
           )
-        )
+        ),
       ],
     );
   }
@@ -130,10 +192,10 @@ class _AldsMapPageState extends State<AldsMapPage> {
   Widget _createLocationMap() {
     return FlutterMap(
       options: MapOptions(
-        initialCenter: (_curPosition != null) ? LatLng(_curPosition!.latitude, _curPosition!.longitude) : LatLng(51.509364, -0.128928),  // defaults to London
-        initialZoom: 9.2,
+        initialCenter: (_curPosition != null) ? LatLng(_curPosition!.latitude, _curPosition!.longitude) : LatLng(41.82674914418993, -71.40251841199533),  // defaults to Brown
+        initialZoom: 13.0,
       ),
-      children: [
+      children: <Widget>[
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: "edu.brown.alds",  // FIXME: Fix the package name when you know it
@@ -146,12 +208,44 @@ class _AldsMapPageState extends State<AldsMapPage> {
             markerDirection: MarkerDirection.heading,
           ),
         ),
+        ..._createSavedLocationMarkers(),
       ]
     );
   }
 
+  List<Widget> _createSavedLocationMarkers() {
+    
+    // Mocked saved locations - (name, (lat, long))
+    List<SavedLocation> savedLocations = [
+      SavedLocation("Home", 41.826874886601985, -71.40318586689112),  // Brown Campus Center
+      SavedLocation("Gym", 41.830156496801976, -71.39804070374443), // Nelson Fitness Center
+      SavedLocation("Work", 41.826922607676, -71.3995623245632), // CIT
+      SavedLocation("Office", 41.82415891316371, -71.39895318840045), // New Watson
+    ];
+
+    List<LocationMarkerLayer> savedLocationMarkers = savedLocations.map((SavedLocation loc) => 
+      LocationMarkerLayer(
+        position: LocationMarkerPosition(latitude: loc.latitude, longitude: loc.longitude, accuracy: 0.5),
+        style: LocationMarkerStyle(
+          marker: const Icon(Icons.location_on, color: Colors.red),
+          markerSize: const Size(20, 20),
+        ),
+      )
+    ).toList();
+
+    return savedLocationMarkers;
+  }
+
   void _handleValidateLocation() async {
-    String txt = _curLocationText;
+    String txt = _controller.text;
+
+    // Handle invalid input
+    if (txt.isEmpty) {
+      util.log("NO LOCATION ENTERED");
+      return;
+    }
+
+    // Validate location
     Locator loc = Locator();
     loc.noteLocation(txt);
     util.log("VALIDATE location as $txt");

@@ -56,7 +56,7 @@ SPEC CHECKSUMS:
   flutter_blue_plus: 4837da7d00cf5d441fdd6635b3a57f936778ea96
   flutter_compass: cbbd285cea1584c7ac9c4e0c3e1f17cbea55e855
   flutter_logs: 5d0dca26963e0f30b11a995a764744ef77d5d428
-  geolocator_apple: 6cbaf322953988e009e5ecb481f07efece75c450
+  geolocator_apple: 9bcea1918ff7f0062d98345d238ae12718acfbc1
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   phone_state: 699623cef1a83f28ea66bc1d33cf0a65bdb1ffb1
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
