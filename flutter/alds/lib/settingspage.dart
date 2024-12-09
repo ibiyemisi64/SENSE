@@ -1,14 +1,12 @@
-/**
- * 
- *  settingspage.dart
- * 
- *  Settings page
- * 
- * 
- */
+/// 
+///  settingspage.dart
+/// 
+///  Settings page
+/// 
+/// 
 
 import 'package:alds/providers.dart';
-import 'package:alds/storage.dart'; // Import storage
+// Import storage
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

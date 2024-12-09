@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'storage.dart' as storage;
-import 'locator.dart' as locator; 
 import 'dart:convert';
-import 'util.dart' as util;
 
 
 

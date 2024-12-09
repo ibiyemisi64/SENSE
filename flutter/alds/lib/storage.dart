@@ -32,13 +32,11 @@
 
 library alds.storage;
 
-import 'package:alds/locator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:convert';
 
 import 'util.dart' as util;
 import 'savedpage.dart';
-import 'dart:convert';
 
 AuthData _authData = AuthData('*', "*");
 // List<String> _locations = defaultLocations;
