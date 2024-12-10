@@ -58,8 +58,8 @@ const HTTPS_PORT = 3336;
 const OAUTH_PORT = 3337;
 const OAUTH_HTTPS_PORT = 3338;
 
-const APP_PORT = 3333;
-const APP_HTTPS_PORT = 3334;
+const APP_PORT = 3339;
+const APP_HTTPS_PORT = 3340;
 
 const DATABASE = "postgres://spr:XXXXXX@db.cs.brown.edu/iqsign";
 const DEV_DATABASE = "postgres://cs2340sense:XXXXXX@db.cs.brown.edu:5432/iqsignv2";
