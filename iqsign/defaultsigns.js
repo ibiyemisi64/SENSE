@@ -68,7 +68,7 @@ async function doUpdate() {
    let cnts = await fs.readFile(fn, 'utf8');
 
    // remove old definitions
-   await db.query("DELETE FROM iQsignDefines WHERE userid IS NULL");
+   //  await db.query("DELETE FROM iQsignDefines WHERE userid IS NULL");
    console.log("defaultSigns: doUpdate: remove old definitions");
    
    let cnts1 = cnts.toString();
