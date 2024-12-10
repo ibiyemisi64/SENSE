@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Container, TextField, Button, Typography, Link, Box, Checkbox, FormControlLabel } from '@mui/material';
 import { hasher } from './utils/utils';
 import axios from 'axios';
+import {useNavigate} from "react-router-dom";
 //import hasher from './web/iqsign'
 
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -112,6 +114,7 @@ const LoginPage = () => {
                 color="primary"
                 sx={{ mt: 3, backgroundColor: 'black', color: 'white' }}
                 type="submit"
+                onClick={()=>navigate("/home")} // temporarily disabling backend, remove when auth is working
             >
               Log in
             </Button>
@@ -121,8 +124,13 @@ const LoginPage = () => {
                 </Typography>
             )}
             <Box sx={{ mt: 2 }}>
-              <Link href="#" underline="hover" sx={{ color: 'black' }}>
+              <Link href="/forgotpw" underline="hover" sx={{ color: 'black' }}>
                 Forgot password?
+              </Link>
+            </Box>
+            <Box sx={{ mt: 2 }}>
+              <Link href="/register" underline="hover" sx={{ color: 'black' }}>
+                New Account
               </Link>
             </Box>
           </Box>

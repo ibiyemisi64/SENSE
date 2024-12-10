@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import RegistrationPage from './Auth/RegistrationPage.jsx';
-import LoginPage from './Auth/LoginPage.jsx';
-import ProfilePage from './ProfilePage.jsx';
-import SignEditor  from './Sign/Sign.jsx';
-import Gallery from "./Gallery/Gallery.jsx";
+import RegistrationPage from './Auth/RegistrationPage';
+import LoginPage from './Auth/LoginPage';
+import ProfilePage from './ProfilePage';
 import Home from './HomePage';
+import {SignEditor} from './Sign/Sign.jsx';
+import Gallery from "./Gallery/Gallery.jsx";
 import ForgotPassword from './Auth/ForgotPassword.jsx'
 import ResetPassword from './Auth/ResetPassword.jsx'
 

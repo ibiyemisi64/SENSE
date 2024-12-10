@@ -77,15 +77,25 @@ const RegistrationPage = () => {
     }
   };
 
-
   return (
       <Container maxWidth="sm">
         <Box sx={{ textAlign: 'center', mt: 4 }}>
-          <Typography variant="h3" component="h1" sx={{ mb: 4, fontWeight: 'bold' }}>
+          <Typography
+              variant="h3"
+              component="h1"
+              sx={{ mb: 4, fontWeight: 'bold' }}
+              role="heading"
+              aria-level="1"
+          >
             IQSign
           </Typography>
 
-          <Box component="form" onSubmit={handleRegister} sx={{ mt: 3 }}>
+          <Box
+              component="form"
+              onSubmit={handleRegister}
+              sx={{ mt: 3 }}
+              aria-label="Registration Form"
+          >
             <TextField
                 fullWidth
                 label="Username"
@@ -93,6 +103,7 @@ const RegistrationPage = () => {
                 margin="normal"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                required
             />
             <TextField
                 fullWidth
@@ -101,6 +112,7 @@ const RegistrationPage = () => {
                 margin="normal"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
             />
             <TextField
                 fullWidth
@@ -110,6 +122,7 @@ const RegistrationPage = () => {
                 margin="normal"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
             />
             <TextField
                 fullWidth
@@ -119,6 +132,7 @@ const RegistrationPage = () => {
                 margin="normal"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
+                required
             />
             <TextField
                 fullWidth
@@ -138,12 +152,21 @@ const RegistrationPage = () => {
               Register
             </Button>
             {error && (
-                <Typography color="error" variant="body2" sx={{ mt: 2 }}>
+                <Typography
+                    color="error"
+                    variant="body2"
+                    sx={{ mt: 2 }}
+                    role="alert"
+                >
                   {error}
                 </Typography>
             )}
             <Box sx={{ mt: 2 }}>
-              <Link href="/login" underline="hover" sx={{ color: 'black' }}>
+              <Link
+                  href="/login"
+                  underline="hover"
+                  sx={{ color: 'black' }}
+              >
                 Already have an account? Log in
               </Link>
             </Box>
