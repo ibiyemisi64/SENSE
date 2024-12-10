@@ -59,7 +59,6 @@ async function update() {
 
 
 async function doUpdate() {
-   console.log("defaultSign: doUpdate: start.");
    let fn = config.getDefaultSignsFile();
    let stat = await fs.stat(fn);
    let dlm = stat.mtimeMs;
@@ -69,7 +68,6 @@ async function doUpdate() {
 
    // remove old definitions
    await db.query("DELETE FROM iQsignDefines WHERE userid IS NULL");
-   console.log("defaultSigns: doUpdate: remove old definitions");
    
    let cnts1 = cnts.toString();
    let lines = cnts1.split("\n");
@@ -100,7 +98,6 @@ async function doUpdate() {
       body = null;
    }
    
-   console.log("defaultSign: doUpdate: done.");
 }
 
 
