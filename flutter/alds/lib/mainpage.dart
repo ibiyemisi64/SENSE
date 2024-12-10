@@ -119,7 +119,7 @@ class _AldsMainState extends State<AldsMain> {
           ),
       ),
       body: <Widget>[
-        const AldsMapPage(),
+        const AldsMapPage(isLoading: false, currentLat: 0.0, currentLng: 0.0), //Can we pass the current location here?
         const AldsSavedLocationsPage(),
         const AldsSettingsPage(),
       ][navBarIndex],

@@ -20,7 +20,7 @@ import 'storage.dart' as storage;
 import 'savedpage.dart';
 
 class AldsMapPage extends StatefulWidget {
-  const AldsMapPage({super.key});
+  const AldsMapPage({super.key, required bool isLoading, required double currentLat, required double currentLng});
 
   @override
   State<AldsMapPage> createState() => _AldsMapPageState();
@@ -237,7 +237,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
   }
 
   void _handleValidateLocation() async {
-    String txt = _controller.text;
+    String txt = _controller.text.trim();
 
     // Handle invalid input
     if (txt.isEmpty) {
@@ -247,7 +247,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
 
     // Validate location
     Locator loc = Locator();
-    loc.noteLocation(txt);
+    await loc.noteLocation(txt);
     util.log("VALIDATE location as $txt");
   }
 }
