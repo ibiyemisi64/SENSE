@@ -5,8 +5,8 @@
 # Last Modified By: Kelsie Edie on 29 OCT 2024
 
 # 1: Get current SENSE repository code
-cd ~/SENSE
-git pull --verbose
+# cd ~/SENSE
+# git pull --verbose
 
 # 2: Build updated SENSE repository code
 # Build iQsign
