@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, TextField, Button, Typography, Link, Box, Checkbox, FormControlLabel } from '@mui/material';
 //import { hasher } from './utils/utils'; // our hasher
 import axios from 'axios';
@@ -16,7 +16,6 @@ const LoginPage = () => {
   const [error, setError] = useState('');
   const serverUrl = 'https://sherpa.cs.brown.edu:3336/rest';
   //const serverUrl = 'http://csci2340.cs.brown.edu:3335'
-
 
   {/**
     const handleLogin = async (event) => {
@@ -83,6 +82,13 @@ const LoginPage = () => {
     };
   **/}
 
+  // Redirect to /home if session cookie exists
+  useEffect(() => {
+    if (Cookies.get("session")) {
+      navigate('/home');
+    }
+  }, [navigate]);
+
   const handleLogin = async () => {
     setError('');
       try {
@@ -99,16 +105,16 @@ const LoginPage = () => {
         });
 
         const loginData = await loginResponse.json();
-        Cookies.set('session', loginData.session)
 
         if (loginData.status === "OK") {
-          // Set session cookie
+          // Set session cookie to expire in 1 hour
           Cookies.set("session", loginData.session, {
-            expires: rememberMe ? 7 : undefined, // Set expiration to 7 days if 'Remember Me' is checked?
+            expires: 1 / 24, // 1 hour expiry
           });
+
           // Redirect or display success
           alert('Login successful!');
-          window.location.href = '/home';
+          navigate('/home');
         }else{
           setError(loginData.error || 'Invalid login credentials.');
         }
