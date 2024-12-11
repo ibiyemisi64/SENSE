@@ -2,6 +2,8 @@ import React from 'react';
 import { AppBar, Toolbar, Typography, Box, InputBase, Container } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
+import iqsignlogo from '../assets/icon/iqsignlogo.png';
+
 
 const TopBar = ({ showSearchBox = false }) => {
     return (
@@ -16,8 +18,8 @@ const TopBar = ({ showSearchBox = false }) => {
             <Toolbar sx={{ justifyContent: 'space-between', width: '100%' }}>
 
                 <Typography variant="h6" component="div" sx={{ flexGrow: 0 }}>
-                    <Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>
-                        iQSign
+                    <Link to="/home" style={{textDecoration: 'none', color: 'inherit'}}>
+                        <img src={iqsignlogo} alt="Logo" style={{height: '40px'}}/>
                     </Link>
                 </Typography>
 
