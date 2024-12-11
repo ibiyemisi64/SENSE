@@ -68,7 +68,7 @@ async function doUpdate() {
 
    // remove old definitions
    await db.query("DELETE FROM iQsignDefines WHERE userid IS NULL");
-
+   
    let cnts1 = cnts.toString();
    let lines = cnts1.split("\n");
    let name = null;
@@ -97,6 +97,7 @@ async function doUpdate() {
       await saveSign(name, body, dlm);
       body = null;
    }
+   
 }
 
 

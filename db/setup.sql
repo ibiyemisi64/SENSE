@@ -9,9 +9,8 @@ alias ENUM "source ./ENUM.csh"
 setenv sqlrun $run
 
 if (-e ../secret/dbdev) then
-   -- development mode
-   set db = iqsigndev
-   set host = "-h localhost -U spr"
+   set db = iqsignv2
+   set host = "-h db.cs.brown.edu -U cs2340sense"
 endif
 
 
