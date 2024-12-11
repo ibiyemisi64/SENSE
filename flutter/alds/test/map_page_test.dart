@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -7,6 +8,13 @@ import 'dart:convert';
 
 import 'package:alds/mappage.dart';
 import 'package:alds/storage.dart' as storage;
+
+// Widget testEnvironment(Widget child) {
+//   return MaterialApp(
+//     title: "ALDS Location Selector",
+//     home: child
+//   );
+// }
 
 void main() {
   late Directory testDir;
@@ -22,21 +30,25 @@ void main() {
     await storage.saveLocatorData(jsonEncode([]));
   });
 
-  tearDownAll(() {
+  tearDownAll(() async {
+    await Hive.close();
     testDir.deleteSync(recursive: true);
   });
+
   group('Map Page Tests', () {
     testWidgets('The page should render a "circular waiting animation" before data is loaded', (WidgetTester tester) async {
       // Assume AldsMapPage takes an isLoading parameter or loads asynchronously.
       await tester.pumpWidget(MaterialApp(home: AldsMapPage(isLoading: true, currentLat: 0.0, currentLng: 0.0)));
+      // await tester.pumpWidget(MaterialApp(home: AldsMapPage()));
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
     testWidgets('When local storage is successfully retrieved, a map, dropdown, and "Validate Location" button should render', (WidgetTester tester) async {
-      await tester.pumpWidget(MaterialApp(home: AldsMapPage(isLoading: false, currentLat: 0.0, currentLng: 0.0)));
+      // await tester.pumpWidget(MaterialApp(home: AldsMapPage(isLoading: false, currentLat: 0.0, currentLng: 0.0)));
+      await tester.pumpWidget(MaterialApp(home: Scaffold(body: AldsMapPage(isLoading: false, currentLat: 0.0, currentLng: 0.0))));
       await tester.pumpAndSettle();
-      expect(find.byKey(Key('map')), findsOneWidget);
-      expect(find.byType(DropdownButton), findsOneWidget);
+      expect(find.byType(FlutterMap), findsOneWidget);
+      expect(find.byType(DropdownMenu), findsOneWidget);
       expect(find.text('Validate Location'), findsOneWidget);
     });
 

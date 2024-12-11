@@ -49,6 +49,7 @@ class Locator {
   /// Then it validates the data and logs warnings for invalid entries.
   void setup() async {
     String? s = await storage.readLocationData();
+    util.log("LOCATOR SETUP data read: $s");
     if (s != null) {
       try {
         var x = jsonDecode(s) as List;

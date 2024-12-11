@@ -139,8 +139,24 @@ Future<void> saveLocatorData(String json) async {
 }
 
 Future<String?> readLocationData() async {
-  var appbox = Hive.box('appData');
-  return await appbox.get('locdata');
+  // late dynamic data;
+  // try {
+  //   var appbox = Hive.box('appData');
+  //   data = await appbox.get('locdata');
+  //   util.log("Successfully readLocationData(): $data");
+  //   return data;
+  // } catch (e) {
+  //   util.log("Error readLocationData(): $e");
+  //   return "";
+  // }
+
+  if (Hive.isBoxOpen('appData')) {
+    var appbox = Hive.box('appData');
+    return await appbox.get('locdata');
+  } else {
+    util.log("Error readLocationData(): Hive box not open");
+    return null;
+  }
 }
 
 
@@ -212,46 +228,46 @@ Future<void> updateLocation(SavedLocation location, String locName) async {
 
 
 // MOCK LOCATION DATA
-Future<void> mockLocationData() async {
-  await setupStorage();
-  var appbox = Hive.box('appData');
+// Future<void> mockLocationData() async {
+//   await setupStorage();
+//   var appbox = Hive.box('appData');
 
-  List<Map<String, dynamic>> jsonData = [
-    {
-      "location": "Office",
-      "position": {  // New Watson
-        "latitude": 41.82415891316371,
-        "longitude": -71.39895318840045,
-      },
-      "bluetooth": {},
-    },
-    {
-      "location": "Work",
-      "position": {  // CIT
-        "latitude": 41.826922607676,
-        "longitude": -71.3995623245632,
-      },
-      "bluetooth": {},
-    },
-    {
-      "location": "Gym",
-      "position": {  // Nelson Fitness Center
-        "latitude": 41.830156496801976,
-        "longitude": -71.39804070374443,
-      },
-      "bluetooth": {},
-    },
-    {
-      "location": "Home",
-      "position": {  // Brown Campus Center
-        "latitude": 41.826874886601985,
-        "longitude": -71.40318586689112,
-      },
-      "bluetooth": {},
-    }
-  ];
+//   List<Map<String, dynamic>> jsonData = [
+//     {
+//       "location": "Office",
+//       "position": {  // New Watson
+//         "latitude": 41.82415891316371,
+//         "longitude": -71.39895318840045,
+//       },
+//       "bluetooth": {},
+//     },
+//     {
+//       "location": "Work",
+//       "position": {  // CIT
+//         "latitude": 41.826922607676,
+//         "longitude": -71.3995623245632,
+//       },
+//       "bluetooth": {},
+//     },
+//     {
+//       "location": "Gym",
+//       "position": {  // Nelson Fitness Center
+//         "latitude": 41.830156496801976,
+//         "longitude": -71.39804070374443,
+//       },
+//       "bluetooth": {},
+//     },
+//     {
+//       "location": "Home",
+//       "position": {  // Brown Campus Center
+//         "latitude": 41.826874886601985,
+//         "longitude": -71.40318586689112,
+//       },
+//       "bluetooth": {},
+//     }
+//   ];
 
-  String json = jsonEncode(jsonData);
-  await appbox.put("locdata", json);
-}
+//   String json = jsonEncode(jsonData);
+//   await appbox.put("locdata", json);
+// }
 

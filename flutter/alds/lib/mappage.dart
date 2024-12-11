@@ -21,6 +21,7 @@ import 'savedpage.dart';
 
 class AldsMapPage extends StatefulWidget {
   const AldsMapPage({super.key, required bool isLoading, required double currentLat, required double currentLng});
+  // const AldsMapPage({super.key});
 
   @override
   State<AldsMapPage> createState() => _AldsMapPageState();
@@ -43,17 +44,19 @@ class _AldsMapPageState extends State<AldsMapPage> {
     
     // Initialize state variables
     Locator loc = Locator();
+    util.log("LOCATOR initialized");
     _curLocationText = loc.lastLocation ?? "Unsaved Location";
     _isLoading = true;
 
     // Async functions
+    util.log("calling async functions");
     _getSavedLocations();
     _getCurrentLocation();
   }
 
   Future<void> _getCurrentLocation() async {
     // Code adapted from: https://pub.dev/packages/geolocator#example
-
+    util.log("getCurrentLocation() called");
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -98,7 +101,10 @@ class _AldsMapPageState extends State<AldsMapPage> {
 
   Future<void> _getSavedLocations() async {
     // await storage.mockLocationData();
+    // util.log("getSavedLocations() called");
     String? locDataJson = await storage.readLocationData();
+    // util.log("Location data read from local storage");
+
     if (locDataJson != null) {
       try {
         List<dynamic> locDataParsed = List<dynamic>.from(jsonDecode(locDataJson));
@@ -114,6 +120,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
         });
       }
     } else {
+      util.log("No location data found in local storage");
       setState(() {
         locations = [];
         _isLoading = false;
@@ -126,6 +133,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
   Widget build(BuildContext context) {
     // If still fetching data, show loading indicator
     if (_isLoading) {
+      // return const Text("Loading...");
       return const CircularProgressIndicator();
     }
 

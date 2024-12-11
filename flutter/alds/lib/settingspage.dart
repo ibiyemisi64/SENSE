@@ -4,6 +4,9 @@
 ///  Settings page
 /// 
 /// 
+/// 
+
+library alds.settingspage;
 
 import 'package:alds/providers.dart';
 // Import storage
@@ -87,21 +90,6 @@ class _AldsSettingsPageState extends ConsumerState<AldsSettingsPage> {
           color: Colors.grey,
         ),
       ),
-    );
-  }
-
-  Widget _buildSwitchTile({
-    required String title,
-    required String subtitle,
-    required bool value,
-    required ValueChanged<bool> onChanged,
-  }) {
-    return SwitchListTile(
-      title: Text(title),
-      subtitle: Text(subtitle),
-      value: value,
-      onChanged: onChanged,
-      activeColor: Colors.blue,
     );
   }
 
