@@ -1,9 +1,9 @@
 describe("LoginPage Tests", () => {
-  const baseUrl = "http://localhost:3000"; // Adjust if running on a different port
-  const serverUrl = "https://sherpa.cs.brown.edu:3336";
+  const baseUrl = "http:
+  const serverUrl = "https:
 
   beforeEach(() => {
-    cy.visit("/login"); // Adjust the route if needed
+    cy.visit("/login");
   });
 
   it("renders the login form", () => {
@@ -52,7 +52,7 @@ describe("LoginPage Tests", () => {
   it("redirects to /home if session cookie exists", () => {
     cy.setCookie("session", "existing-session-id");
 
-    cy.visit("/login"); // Visiting login should redirect if cookie exists
+    cy.visit("/login");
     cy.url().should("include", "/home");
   });
 
