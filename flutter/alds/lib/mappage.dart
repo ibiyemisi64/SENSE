@@ -27,42 +27,32 @@ class AldsMapPage extends StatefulWidget {
 }
 
 class _AldsMapPageState extends State<AldsMapPage> {
-  // State variables
   String _curLocationText = "";
   Position? _curPosition;
   final TextEditingController _controller = TextEditingController();
   String? _selectedLocation;
   List<String> locations = [];
   late bool _isLoading;
-
-  _AldsMapPageState();
+  List<SavedLocation> savedLocations = [];
 
   @override
   void initState() {
     super.initState();
     
-    // Initialize state variables
     Locator loc = Locator();
     _curLocationText = loc.lastLocation ?? "Unsaved Location";
     _isLoading = true;
 
-    // Async functions
     _getSavedLocations();
     _getCurrentLocation();
   }
 
   Future<void> _getCurrentLocation() async {
-    // Code adapted from: https://pub.dev/packages/geolocator#example
-
     bool serviceEnabled;
     LocationPermission permission;
 
-    // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      // Location services are not enabled don't continue
-      // accessing the position and request users of the 
-      // App to enable the location services.
       return Future.error('Location services are disabled.');
     }
 
@@ -70,69 +60,59 @@ class _AldsMapPageState extends State<AldsMapPage> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        // Permissions are denied, next time you could try
-        // requesting permissions again (this is also where
-        // Android's shouldShowRequestPermissionRationale 
-        // returned true. According to Android guidelines
-        // your App should show an explanatory UI now.
         return Future.error('Location permissions are denied');
       }
     }
     
     if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately. 
-      return Future.error(
-        'Location permissions are permanently denied, we cannot request permissions.');
+      return Future.error('Location permissions are permanently denied');
     } 
 
-    // When we reach here, permissions are granted and we can
-    // continue accessing the position of the device.
     final pos = await Geolocator.getCurrentPosition();
-    double lat = pos.latitude;
-    double long = pos.longitude;
-    util.log("CURRENT LOCATION: ($lat, $long)");
     setState(() {
       _curPosition = pos;
     });
   }
 
   Future<void> _getSavedLocations() async {
-    await storage.mockLocationData();
     String? locDataJson = await storage.readLocationData();
     if (locDataJson != null) {
       try {
         List<dynamic> locDataParsed = List<dynamic>.from(jsonDecode(locDataJson));
         setState(() {
           locations = locDataParsed.map((locData) => locData['location'] as String).toList();
+          savedLocations = locDataParsed.map((locData) => SavedLocation(
+            locData['location'],
+            locData['position']['latitude'],
+            locData['position']['longitude']
+          )).toList();
           _isLoading = false;
         });
       } catch (e) {
         util.log("Error parsing location data: $e");
         setState(() {
           locations = [];
+          savedLocations = [];
           _isLoading = false;
         });
       }
     } else {
       setState(() {
         locations = [];
+        savedLocations = [];
         _isLoading = false;
       });
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    // If still fetching data, show loading indicator
     if (_isLoading) {
       return const CircularProgressIndicator();
     }
 
-    // Build this widget when the data is finishing loading
     return Column( 
       children: [
-        // Header
         SizedBox(
           height: 50,
           child: Center(
@@ -145,7 +125,6 @@ class _AldsMapPageState extends State<AldsMapPage> {
           ),
         ),
         widgets.fieldSeparator(),
-        // Map
         Expanded(
           child: _createLocationMap(),
         ),
@@ -166,16 +145,16 @@ class _AldsMapPageState extends State<AldsMapPage> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.deepPurpleAccent,
-                    padding: const EdgeInsets.symmetric(horizontal: 12), // Tighter padding
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                   ),
                   onPressed: _handleValidateLocation,
-                  child: FittedBox( // Helps text scale down if needed
+                  child: FittedBox(
                     child: Text(
                       "Validate Location",
                       style: GoogleFonts.anta(
                         textStyle: const TextStyle(
                           color: Colors.white,
-                          fontSize: 16, // Optional: control text size
+                          fontSize: 16,
                         ),
                       ),
                     ),
@@ -192,13 +171,15 @@ class _AldsMapPageState extends State<AldsMapPage> {
   Widget _createLocationMap() {
     return FlutterMap(
       options: MapOptions(
-        initialCenter: (_curPosition != null) ? LatLng(_curPosition!.latitude, _curPosition!.longitude) : LatLng(41.82674914418993, -71.40251841199533),  // defaults to Brown
+        initialCenter: (_curPosition != null) 
+          ? LatLng(_curPosition!.latitude, _curPosition!.longitude) 
+          : LatLng(41.82674914418993, -71.40251841199533),
         initialZoom: 13.0,
       ),
       children: <Widget>[
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: "edu.brown.alds",  // FIXME: Fix the package name when you know it
+          userAgentPackageName: "edu.brown.alds",
         ),
         CurrentLocationLayer(
           alignPositionOnUpdate: AlignOnUpdate.always,
@@ -214,40 +195,38 @@ class _AldsMapPageState extends State<AldsMapPage> {
   }
 
   List<Widget> _createSavedLocationMarkers() {
-    
-    // Mocked saved locations - (name, (lat, long))
-    List<SavedLocation> savedLocations = [
-      SavedLocation("Home", 41.826874886601985, -71.40318586689112),  // Brown Campus Center
-      SavedLocation("Gym", 41.830156496801976, -71.39804070374443), // Nelson Fitness Center
-      SavedLocation("Work", 41.826922607676, -71.3995623245632), // CIT
-      SavedLocation("Office", 41.82415891316371, -71.39895318840045), // New Watson
-    ];
-
-    List<LocationMarkerLayer> savedLocationMarkers = savedLocations.map((SavedLocation loc) => 
+    return savedLocations.map((SavedLocation loc) => 
       LocationMarkerLayer(
-        position: LocationMarkerPosition(latitude: loc.latitude, longitude: loc.longitude, accuracy: 0.5),
+        position: LocationMarkerPosition(
+          latitude: loc.latitude,
+          longitude: loc.longitude,
+          accuracy: 0.5
+        ),
         style: LocationMarkerStyle(
           marker: const Icon(Icons.location_on, color: Colors.red),
           markerSize: const Size(20, 20),
         ),
       )
     ).toList();
-
-    return savedLocationMarkers;
   }
 
   void _handleValidateLocation() async {
     String txt = _controller.text;
 
-    // Handle invalid input
-    if (txt.isEmpty) {
-      util.log("NO LOCATION ENTERED");
+    if (txt.isEmpty || _curPosition == null) {
+      util.log("NO LOCATION ENTERED OR CURRENT POSITION NOT AVAILABLE");
       return;
     }
 
-    // Validate location
+    await storage.addNewLocation(txt, _curPosition!.latitude, _curPosition!.longitude);
     Locator loc = Locator();
     loc.noteLocation(txt);
     util.log("VALIDATE location as $txt");
+    
+    // Refresh locations after adding new one
+    await _getSavedLocations();
+    setState(() {
+      _controller.clear();
+    });
   }
 }
