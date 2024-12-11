@@ -85,12 +85,16 @@ const LoginPage = () => {
   // Redirect to /home if session cookie exists
   useEffect(() => {
     if (Cookies.get("session")) {
+      console.log(Cookies.get("session"))
       navigate('/home');
     }
-  }, [navigate]);
+  }, []);
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault()
     setError('');
+
+    console.log("CALLED HANDLELOGIN")
       try {
         // Login request
         const loginResponse = await fetch(`${serverUrl}/login`, {
@@ -107,13 +111,11 @@ const LoginPage = () => {
         const loginData = await loginResponse.json();
 
         if (loginData.status === "OK") {
-          // Set session cookie to expire in 1 hour
           Cookies.set("session", loginData.session, {
             expires: 1 / 24, // 1 hour expiry
           });
 
-          // Redirect or display success
-          alert('Login successful!');
+
           navigate('/home');
         }else{
           setError(loginData.error || 'Invalid login credentials.');
@@ -129,7 +131,7 @@ const LoginPage = () => {
             IQSign
           </Typography>
 
-          <Box component="form" onSubmit={handleLogin} sx={{ mt: 3 }}>
+          <Box component="form"  sx={{ mt: 3 }}>
             <TextField
                 fullWidth
                 label="username"
@@ -159,7 +161,7 @@ const LoginPage = () => {
                 color="primary"
                 sx={{ mt: 3, backgroundColor: 'black', color: 'white' }}
                 type="submit"
-                //onClick={()=>navigate("/home")} // temporarily disabling backend, remove when auth is working
+                onClick={handleLogin}
             >
               Log in
             </Button>
