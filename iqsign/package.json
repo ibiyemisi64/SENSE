@@ -8,7 +8,7 @@
     "any-db-postgres": "^2.3.0",
     "any-db-promise": "^0.1.0",
     "any-db-transaction": "^2.3.0",
-    "axios": "^1.6.5",
+    "axios": "^1.7.7",
     "bluebird": "^3.0.5",
     "body-parser": "^1.19.0",
     "child-process-async": "^1.0.1",
@@ -18,7 +18,7 @@
     "cookieparser": "^0.1.0",
     "cors": "^2.8.5",
     "errorhandler": "^1.5.1",
-    "express": "^4.18.2",
+    "express": "^4.21.1",
     "express-bearer-token": "^2.4.0",
     "express-handlebars": "^6.0.6",
     "express-oauth-server": "^2.0.0",
@@ -43,16 +43,3 @@
     "xmlbuilder": "^15.1.1"
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
