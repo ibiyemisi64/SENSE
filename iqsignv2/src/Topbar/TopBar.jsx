@@ -8,18 +8,20 @@ import iqsignlogo from '../assets/icon/iqsignlogo.png';
 const TopBar = ({ showSearchBox = false }) => {
     return (
         <AppBar
+
             sx={{
                 backgroundColor: 'black',
                 width: '100vw',
                 margin: 0,
                 padding: 0,
             }}
+
         >
             <Toolbar sx={{ justifyContent: 'space-between', width: '100%' }}>
 
-                <Typography variant="h6" component="div" sx={{ flexGrow: 0 }}>
+                <Typography  variant="h6" component="div" sx={{ flexGrow: 0 }}>
                     <Link to="/home" style={{textDecoration: 'none', color: 'inherit'}}>
-                        <img src={iqsignlogo} alt="Logo" style={{height: '40px'}}/>
+                        <img data-testid='topbar' src={iqsignlogo} alt="Logo" style={{height: '40px'}}/>
                     </Link>
                 </Typography>
 
