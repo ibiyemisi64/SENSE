@@ -5,7 +5,7 @@ import { useGalleryStore } from '../hooks/galleryStore.jsx';
 import FileUpload from './FileUpload.jsx';
 import {useNavigate} from "react-router-dom";
 
-// Define scrollbar styles
+
 const scrollStyles = {
     '&::-webkit-scrollbar': {
         width: '6px',

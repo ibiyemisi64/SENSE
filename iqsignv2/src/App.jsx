@@ -8,6 +8,7 @@ import {SignEditor} from './Sign/Sign.jsx';
 import Gallery from "./Gallery/Gallery.jsx";
 import ForgotPassword from './Auth/ForgotPassword.jsx'
 import ResetPassword from './Auth/ResetPassword.jsx'
+import Testing from "./testing/Testing.jsx";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
         <Route path="/edit" element={<SignEditor />} />
         <Route path="/home" element={<Home />} />
         <Route path={"/gallery"} element={<Gallery/>}/>
+        <Route path={"/test"} element={<Testing/>}/>
       </Routes>
     </Router>
   );

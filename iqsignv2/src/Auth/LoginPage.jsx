@@ -97,7 +97,7 @@ const LoginPage = () => {
             />
             <TextField
                 fullWidth
-                label="Password"
+                label="Login-Code"
                 type="password"
                 variant="outlined"
                 margin="normal"
@@ -123,16 +123,16 @@ const LoginPage = () => {
                   {error}
                 </Typography>
             )}
-            <Box sx={{ mt: 2 }}>
-              <Link href="/forgotpw" underline="hover" sx={{ color: 'black' }}>
-                Forgot password?
-              </Link>
-            </Box>
-            <Box sx={{ mt: 2 }}>
-              <Link href="/register" underline="hover" sx={{ color: 'black' }}>
-                New Account
-              </Link>
-            </Box>
+            {/*<Box sx={{ mt: 2 }}>*/}
+            {/*  <Link href="/forgotpw" underline="hover" sx={{ color: 'black' }}>*/}
+            {/*    Forgot password?*/}
+            {/*  </Link>*/}
+            {/*</Box>*/}
+            {/*<Box sx={{ mt: 2 }}>*/}
+            {/*  <Link href="/register" underline="hover" sx={{ color: 'black' }}>*/}
+            {/*    New Account*/}
+            {/*  </Link>*/}
+            {/*</Box>*/}
           </Box>
         </Box>
       </Container>
