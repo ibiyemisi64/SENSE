@@ -19,13 +19,13 @@ export const hasher = async (msg) => {
     const hashBuffer = await crypto.subtle.digest('SHA-512', data); // Generate SHA-512 hash
     const hashArray = Array.from(new Uint8Array(hashBuffer)); // Convert buffer to byte array
     const hashBase64 = btoa(String.fromCharCode(...hashArray)); // Convert byte array to Base64
-    return hashBase64;
+    return String(hashBase64);
 };
 //symlink that file into the same directory
 ***/
 /***
 
-import crypto from 'crypto';
+//import crypto from 'crypto';
 
 // Replace Buffer with a browser-compatible alternative
 export const hasher = (msg) => {
