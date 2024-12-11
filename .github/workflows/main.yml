@@ -11,4 +11,4 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           start: npm start
-          project: ./iqsignv2
+          working-directory: iqsignv2
