@@ -35,11 +35,17 @@ export function HomeMenu() {
                 <ListItemButton>
                     <ListItemText primary="Sign: In Class" />
                 </ListItemButton>
-                <ListItemButton component={Link} to="/edit">
+                <ListItemButton component={Link} to="/edit-legacy">
                     <ListItemIcon>
                         <EditIcon />
                     </ListItemIcon>
                     <ListItemText primary="Edit" />
+                </ListItemButton>
+                <ListItemButton component={Link} to="/edit">
+                    <ListItemIcon>
+                        <EditIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Edit with SENSE" />
                 </ListItemButton>
                 <ListItemButton component={Link} to="/gallery">
                     <ListItemIcon>

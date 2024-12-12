@@ -8,6 +8,7 @@ import {SignEditor, SignImageLink} from './Sign/Sign.jsx';
 import Gallery from "./Gallery/Gallery.jsx";
 import ForgotPassword from './Auth/ForgotPassword.jsx'
 import ResetPassword from './Auth/ResetPassword.jsx'
+import  SignEditorLegacy from './Sign/SignLegacy.jsx';
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/" element={<LoginPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/edit" element={<SignEditor />} />
+        <Route path="/edit-legacy" element={<SignEditorLegacy />} />
         <Route path={"/preview"} element={<SignImageLink/>}/>
         <Route path="/home" element={<Home />} />
         <Route path={"/gallery"} element={<Gallery/>}/>
