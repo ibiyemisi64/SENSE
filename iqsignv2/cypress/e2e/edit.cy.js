@@ -1,7 +1,7 @@
 describe("Sign Editor Component", () => {
 
   beforeEach(() => {
-    // Visit the sign editor page before each test
+
     const serverUrl = "https://sherpa.cs.brown.edu:3336";
 
     const mockSignData = {
@@ -12,11 +12,12 @@ describe("Sign Editor Component", () => {
         }
       ]
     };
-    
+
+    // Visit the sign editor page before each test
     cy.visit("/edit");
 
     // Intercept the network request and return the mock data
-    cy.intercept("POST", `${serverUrl}/rest/signs`, {
+    cy.intercept("GET", `${serverUrl}/rest/signs?session=undefined`, {
       statusCode: 200,       
       body: mockSignData     
     });

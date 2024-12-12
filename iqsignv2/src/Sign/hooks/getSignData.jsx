@@ -13,7 +13,7 @@ export const getCurrentSignData = create((set) => ({
         const signData = await resp.json(); 
         console.log("current sign data");
         console.log(signData);
-        set({signData : signData, signImageUrl :  signData.data[0].imageurl, signPreviewUrl :  signData.data[0].signurl});
+        set({signData : signData, signImageUrl :  signData.data[0].imageurl, signPreviewUrl : signData.data[0].signurl});
     }
     
 }));
