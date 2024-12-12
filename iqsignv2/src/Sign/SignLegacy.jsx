@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid2, Box, Button, IconButton, MenuItem, Select, InputLabel, FormControl, Typography, TextField, Stack } from '@mui/material';
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
@@ -9,6 +9,7 @@ import TopBar from "../Topbar/TopBar.jsx";
 import EditIcon from '@mui/icons-material/Edit';
 import { Link } from 'react-router-dom';
 import Sign from './Sign.jsx'
+import getSignData from './hooks/getSignData.jsx'
 
 export function SignDisplayScaleItem() {
   const [scale, setScale] = useState('16 x 9');
@@ -111,6 +112,9 @@ export function SignFormatterMenuLegacy() {
 }
 
 export default function SignEditorLegacy() {
+
+  const { loadCurrentSign } = getSignData();
+
   return (
     <>
       <TopBar></TopBar>
