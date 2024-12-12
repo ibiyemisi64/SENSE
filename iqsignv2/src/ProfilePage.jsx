@@ -9,6 +9,7 @@ import {
   InputAdornment,
   Divider
 } from "@mui/material";
+import Cookies from "js-cookie";
 import EditIcon from "@mui/icons-material/Edit";
 //import SearchIcon from "@mui/icons-material/Search";
 //import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -18,8 +19,8 @@ import {useNavigate} from "react-router-dom";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("Myusername");
-  const [email, setEmail] = useState("username@gmail.com");
+  const [username, setUsername] = useState("jasonsilva2202@gmail.com");
+  const [email, setEmail] = useState("jasonsilva2202@gmail.com");
   const [password, setPassword] = useState("********");
   const [loginCode, setLoginCode] = useState("");
 
@@ -55,6 +56,7 @@ const ProfilePage = () => {
               <EditIcon/>
             </IconButton>
           </Box>
+
 
           {/* Email */}
           <Box display="flex" alignItems="center" mb={2}>
@@ -111,6 +113,10 @@ const ProfilePage = () => {
             *Please save this code as you will not be able to revisit it.
           </Typography>
         </Box>
+        <Button sx={{backgroundColor: 'black', color: 'white'}} variant="contained" onClick={()=> {
+          Cookies.remove("session")
+          navigate("/")
+        }}> Logout </Button>
       </Container>
   );
 };
