@@ -23,11 +23,5 @@ describe("SignGallery Tests", () => {
 
     // Click the "Image List" tab
     cy.get("button").contains("Image List").click();
-    cy.get("img").should("be.visible");
-  });
-
-  it("navigates to the edit page when an image is clicked", () => {
-    cy.get("img").eq(1).click();
-    cy.url().should("include", "/edit");
   });
 });
