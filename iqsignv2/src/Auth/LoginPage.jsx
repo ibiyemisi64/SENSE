@@ -138,16 +138,18 @@ const LoginPage = () => {
                 variant="outlined"
                 margin="normal"
                 value={username}
+                inputProps={{ 'data-testid': 'username-input' }}
                 onChange={(e) => setUsername(e.target.value)}
             />
             <TextField
                 fullWidth
                 //label="Password"
-                label={"Access-Token"}
+                label={"access-token"}
                 type="accessToken"
                 variant="outlined"
                 margin="normal"
                 value={accessToken}
+                inputProps={{ 'data-testid': 'access-token' }}
                 //onChange={(e) => setPassword(e.target.value)}
                 onChange={(e) => setAccessToken(e.target.value)}
             />
