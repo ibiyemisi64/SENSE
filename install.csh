@@ -14,8 +14,8 @@ cd ~/SENSE/iqsign
 npm update
 
 # Build iqsignv2
-# cd ~/SENSE/iqsignv2
-# npm install
+ cd ~/SENSE/iqsignv2
+ npm install
 
 # Build Signmaker
 cd ~/SENSE/signmaker
