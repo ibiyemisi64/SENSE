@@ -7,8 +7,8 @@ describe("Sign Editor Component", () => {
     const mockSignData = {
       data: [
         {
-          imageurl: "/preview",
-          signurl: "/preview"
+          imageurl: "https://sherpa.cs.brown.edu:3336/signimage/imageWjD99utE.png",
+          signurl: "https://sherpa.cs.brown.edu:3336/signimage/imageWjD99utE.png"
         }
       ]
     };
