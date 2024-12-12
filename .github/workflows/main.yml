@@ -1,14 +1,55 @@
 name: iQsign 2.0 Tests
-on: push
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
   cypress-run:
     runs-on: ubuntu-24.04
 
     steps:
+      # Step 1: Checkout the repository
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Cypress run
+
+      # Step 2: Install dependencies
+      - name: Install Dependencies
+        working-directory: iqsignv2
+        run: |
+          npm install
+
+      # Step 3: Start application and run Cypress tests
+      - name: Run Cypress Tests
         uses: cypress-io/github-action@v6
         with:
           start: npm run dev
+          wait-on: http://localhost:3000 # Adjust the port if needed
           working-directory: iqsignv2
+
+  dart-tests:
+    runs-on: ubuntu-24.04
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Dart environment
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+
+      # Step 3: Run Dart commands
+      - name: Run Dart Tests
+        working-directory: ./flutter/alds/test
+        run: |
+          dart pub get
+          dart format --output=none --set-exit-if-changed
+          dart analyze
+          dart test
+          dart map_page_test.dart
+          dart nav_bar_test.dart
+          dart saved_locations_test.dart
+          dart settings_test.dart
+          dart storage_test.dart
