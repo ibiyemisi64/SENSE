@@ -39,23 +39,8 @@ import 'util.dart' as util;
 import 'savedpage.dart';
 
 AuthData _authData = AuthData('*', "*");
-// List<String> _locations = defaultLocations;
 String _deviceId = "*";
-String _appTheme = "System"; // Initial default value
-
-// const List<String> defaultLocations = [
-//   'Office',
-//   'Home',
-//   'Dining',
-//   'Meeting',
-//   'Class',
-//   'Driving',
-//   'Gym',
-//   'Bed',
-//   'Shopping',
-//   'Home Office',
-//   'Other',
-// ];
+String _appTheme = "System";
 
 class AuthData {
   late String userId;
@@ -67,15 +52,11 @@ class AuthData {
 Future<void> setupStorage() async {
   await Hive.initFlutter();
   var appbox = await Hive.openBox('appData');
-  // appbox.clear(); // REMOVE IN PRODUCTION
   bool setup = await appbox.get("setup", defaultValue: false);
   String uid = await appbox.get("userid", defaultValue: util.randomString(12));
-  String upa =
-      await appbox.get("userpass", defaultValue: util.randomString(16));
+  String upa = await appbox.get("userpass", defaultValue: util.randomString(16));
   _authData = AuthData(uid, upa);
-  // _locations = appbox.get("locations", defaultValue: defaultLocations);
-  _deviceId =
-      appbox.get("deviceid", defaultValue: "ALDS_${util.randomString(20)}");
+  _deviceId = appbox.get("deviceid", defaultValue: "ALDS_${util.randomString(20)}");
   _appTheme = appbox.get("theme", defaultValue: _appTheme);
   if (!setup) {
     await saveData();
@@ -87,7 +68,6 @@ Future<void> saveData() async {
   await appbox.put('setup', true);
   await appbox.put('userid', _authData.userId);
   await appbox.put('userpass', _authData.userPass);
-  // await appbox.put('locations', _locations);
   await appbox.put('deviceid', _deviceId);
   await appbox.put('theme', _appTheme);
 }
@@ -95,10 +75,6 @@ Future<void> saveData() async {
 AuthData getAuthData() {
   return _authData;
 }
-
-// List<String> getLocations() {
-//   return _locations;
-// }
 
 String getDeviceId() {
   return _deviceId;
@@ -119,92 +95,76 @@ String readThemePref() {
 Future<void> saveLocatorData(String json) async {
   var appbox = Hive.box('appData');
   await appbox.put("locdata", json);
+  
+  util.log("Saving Locator Data: $json");
 }
 
 Future<String?> readLocationData() async {
   var appbox = Hive.box('appData');
-  return await appbox.get('locdata');
+  var data = await appbox.get('locdata');
+  util.log("Read data: $data");
+  return data;
 }
 
+Future<void> addNewLocation(String locationName, double latitude, double longitude) async {
+  util.log("Adding new location: $locationName, $latitude, $longitude");
+  var appbox = Hive.box('appData');
+  String? existingData = await readLocationData();
+  List<dynamic> locations = [];
+  
+  if (existingData != null) {
+    locations = json.decode(existingData);
+  }
+
+  Map<String, dynamic> newLocation = {
+    "location": locationName,
+    "position": {
+      "latitude": latitude,
+      "longitude": longitude,
+    },
+    "bluetooth": {},
+  };
+
+  locations.add(newLocation);
+  await saveLocatorData(json.encode(locations));
+}
 
 Future<void> removeLocation(SavedLocation location) async {
-  var appbox = Hive.box('appData');
   // WE ASSUME THAT LOC NAME IS UNIQUE
+  var appbox = Hive.box('appData');
   String? existingData = await readLocationData();
   if (existingData != null) {
     List<dynamic> locations = json.decode(existingData);
-    // util.log("BEFORE REMOVE CALLED: $locations");
     locations.removeWhere((loc) => loc['location'] == location.name);
-    // util.log ("REMOVE CALLED - $locations");
-    appbox.delete("locdata");
+    util.log("After removing locations: $locations");
     await saveLocatorData(json.encode(locations));
   }
 }
 
-Future<void> updateLocation(SavedLocation location, String locName) async {
+Future<void> updateLocationName(SavedLocation location, String locName) async {
   var appbox = Hive.box('appData');
-  
   String? existingData = await readLocationData();
   if (existingData != null) {
-
     List<dynamic> locations = json.decode(existingData);
     final currIndex = locations.indexWhere((loc) => loc['location'] == location.name);
-  
-    util.log("INDEXWHERE: $currIndex");
-    util.log("LOCS: $locations");    
     locations[currIndex]["location"] = locName;
-    util.log("Current Locs $locations");
-  
-    // appbox.delete("locdata");
-
     await saveLocatorData(json.encode(locations));
   }
-
-
 }
 
-
-// MOCK LOCATION DATA
-Future<void> mockLocationData() async {
-  await setupStorage();
-  var appbox = Hive.box('appData');
-
-  List<Map<String, dynamic>> jsonData = [
-    {
-      "location": "Office",
-      "position": {  // New Watson
-        "latitude": 41.82415891316371,
-        "longitude": -71.39895318840045,
-      },
-      "bluetooth": {},
-    },
-    {
-      "location": "Work",
-      "position": {  // CIT
-        "latitude": 41.826922607676,
-        "longitude": -71.3995623245632,
-      },
-      "bluetooth": {},
-    },
-    {
-      "location": "Gym",
-      "position": {  // Nelson Fitness Center
-        "latitude": 41.830156496801976,
-        "longitude": -71.39804070374443,
-      },
-      "bluetooth": {},
-    },
-    {
-      "location": "Home",
-      "position": {  // Brown Campus Center
-        "latitude": 41.826874886601985,
-        "longitude": -71.40318586689112,
-      },
-      "bluetooth": {},
+Future<List<String>> getLocations() async {
+  String? locDataJson = await readLocationData();
+  if (locDataJson != null) {
+    try {
+      List<dynamic> locDataParsed = List<dynamic>.from(jsonDecode(locDataJson));
+      return locDataParsed
+          .map((locData) => locData['location'] as String)
+          .toList();
+    } catch (e) {
+      util.log("Error parsing location data: $e");
+      return [];
     }
-  ];
-
-  String json = jsonEncode(jsonData);
-  await appbox.put("locdata", json);
+  }
+  return [];
 }
 

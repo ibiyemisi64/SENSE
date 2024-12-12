@@ -118,7 +118,7 @@ class _AldsSavedLocationsPageState extends State<AldsSavedLocationsPage> {
                   // util.log("BEFORE UPDATE - ${location.name}");
 
                   // UPDATE STORAGE
-                  await storage.updateLocation(location, nameController.text);
+                  await storage.updateLocationName(location, nameController.text);
 
                   // util.log("AFTER UPDATE - ${location.name}");
                   // UPDATE UI

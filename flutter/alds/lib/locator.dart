@@ -42,7 +42,8 @@ import "device.dart" as device;
 const btFraction = 0.7;
 const locFraction = 0.15;
 const altFraction = 0.15;
-const useThreshold = 0.75;
+// const useThreshold = 0.75;
+const useThreshold = 0.25;
 const stableCount = 3;
 
 class Locator {
@@ -98,6 +99,7 @@ class Locator {
     KnownLocation test = KnownLocation(ld, null);
     KnownLocation? best;
     double bestscore = -1;
+    util.log("BEFORE Known locations: ${_knownLocations.map((kl) => kl.toJson())}");
     for (KnownLocation kl in _knownLocations) {
       double score = kl.score(test);
       util.log("Compute score $score for ${kl.location}");
@@ -135,6 +137,8 @@ class Locator {
       "nextCount": _nextCount
     });
 
+    util.log("Returning $rslt");
+    util.log("AFTER Known locations: ${_knownLocations.map((kl) => kl.toJson())}");
     return rslt;
   }
 
@@ -147,12 +151,18 @@ class Locator {
   Future<void> noteLocation(String loc) async {
     LocationData ld = await recheck.recheck();
     String? s = await findLocation(location: ld, userset: true);
+    util.log("noteLocation comparison: $s vs. $loc");
     if (s == loc) {
       findLocation(); // merge
     } else {
-      KnownLocation nloc = KnownLocation(ld, loc);
-      _knownLocations.add(nloc);
-      lastLocation = loc;
+
+      // NOTE: Made this change so that we can guarantee uniqueness of names
+      List<String?> knownLocationNames = _knownLocations.map((kl) => kl.location).toList();
+      if (!knownLocationNames.contains(loc)) {
+        KnownLocation nloc = KnownLocation(ld, loc);
+        _knownLocations.add(nloc);
+        lastLocation = loc;
+      }
 
       // might want to force merge locations if there are too many
       // for a single room
