@@ -6,6 +6,8 @@ import FormatItalicIcon from '@mui/icons-material/FormatItalic';
 import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
 import DefaultClassSign from '../assets/backgrounds/class.png';
 import TopBar from "../Topbar/TopBar.jsx";
+import EditIcon from '@mui/icons-material/Edit';
+import { Link } from 'react-router-dom';
 
 export default function Sign() {
   return (
@@ -25,6 +27,12 @@ export default function Sign() {
       </>
   );
 }
+
+export const SignImageLink = () => {
+  return (
+    <Sign />
+  );
+};
 
 export function SignTextFormatterSizeMenuItem() {
   return (
@@ -102,6 +110,7 @@ export function SignTextFormatter() {
         rows={4}
         defaultValue="Default Sign Text"
         fullWidth
+        sx={{ mt: 4 }}
       />
       <Button
         variant="contained"
@@ -139,12 +148,14 @@ export function SignEditor() {
         </Grid2>
 
 
-        <Grid2 item>
+        <Grid2 item container direction="column" alignItems="flex-start">
           <Sign />
           <Button
             variant="contained"
             color="primary"
-            sx={{ mt: 4, backgroundColor: 'black', color: 'white' }}
+            sx={{ mt: 2, backgroundColor: 'black', color: 'white'}}
+            startIcon={<EditIcon />} 
+            component={Link} to="/gallery"
           >
             Edit Background
           </Button>

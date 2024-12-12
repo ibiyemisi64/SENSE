@@ -6,9 +6,25 @@ import CollectionsIcon from '@mui/icons-material/Collections';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import LinkIcon from '@mui/icons-material/Link';
 import PersonIcon from '@mui/icons-material/Person';
-import Sign from './Sign/Sign.jsx';
+import  Sign from './Sign/Sign.jsx';
 import TopBar from "./Topbar/TopBar.jsx";
 import { Link } from 'react-router-dom';
+
+const HomeMenuHandleCopyLink = () => {
+    const handleCopyClick = () => {
+      const previewLink = `${window.location.origin}/preview`;
+      navigator.clipboard.writeText(previewLink);
+    };
+  
+    return (
+      <div>
+        <ListItemText
+          primary="Copy Image Link"
+          onClick={handleCopyClick}
+        />
+      </div>
+    );
+  };
 
 export function HomeMenu() {
     return (
@@ -17,7 +33,7 @@ export function HomeMenu() {
                 className="list-group"
             >
                 <ListItemButton>
-                    <ListItemText primary="Current Status: In Class" />
+                    <ListItemText primary="Sign: In Class" />
                 </ListItemButton>
                 <ListItemButton component={Link} to="/edit">
                     <ListItemIcon>
@@ -31,7 +47,7 @@ export function HomeMenu() {
                     </ListItemIcon>
                     <ListItemText primary="Template Gallery" />
                 </ListItemButton>
-                <ListItemButton>
+                <ListItemButton  component={Link} to="/preview" >
                     <ListItemIcon>
                         <VisibilityIcon />
                     </ListItemIcon>
@@ -41,9 +57,9 @@ export function HomeMenu() {
                     <ListItemIcon>
                         <LinkIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Image Link" />
+                    < HomeMenuHandleCopyLink />
                 </ListItemButton>
-                <ListItemButton ListItemButton component={Link} to="/profile">
+                <ListItemButton component={Link} to="/profile">
                     <ListItemIcon>
                         <PersonIcon />
                     </ListItemIcon>

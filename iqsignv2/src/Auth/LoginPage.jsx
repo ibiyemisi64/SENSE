@@ -5,7 +5,7 @@ import axios from 'axios';
 import {useNavigate} from "react-router-dom";
 //import hasher from '../../../iqsign/web/iqsign' //original hasher
 import Cookies from 'js-cookie'
-
+import iqsignlogo from '../assets/icon/iqsignlogo.png';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -127,8 +127,10 @@ const LoginPage = () => {
   return (
       <Container maxWidth="sm">
         <Box sx={{ textAlign: 'center', mt: 4 }}>
-          <Typography variant="h3" component="h1" sx={{ mb: 4, fontWeight: 'bold' }}>
-            IQSign
+          <Typography  variant="h6" component="div" sx={{ flexGrow: 0 }}>
+              <Link to="/home" style={{textDecoration: 'none', color: 'inherit'}}>
+                  <img data-testid='topbar' src={iqsignlogo} alt="Logo" style={{height: '40px'}}/>
+              </Link>
           </Typography>
 
           <Box component="form"  sx={{ mt: 3 }}>
@@ -173,9 +175,11 @@ const LoginPage = () => {
                 </Typography>
             )}
             <Box sx={{ mt: 2 }}>
+              <Typography>
               <Link href="/forgotpw" underline="hover" sx={{ color: 'black' }}>
                 Forgot password?
               </Link>
+              </Typography>
             </Box>
             {/**
             <Box sx={{ mt: 2 }}>

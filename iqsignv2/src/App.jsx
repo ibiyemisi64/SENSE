@@ -4,7 +4,7 @@ import RegistrationPage from './Auth/RegistrationPage';
 import LoginPage from './Auth/LoginPage';
 import ProfilePage from './ProfilePage';
 import Home from './HomePage';
-import {SignEditor} from './Sign/Sign.jsx';
+import {SignEditor, SignImageLink} from './Sign/Sign.jsx';
 import Gallery from "./Gallery/Gallery.jsx";
 import ForgotPassword from './Auth/ForgotPassword.jsx'
 import ResetPassword from './Auth/ResetPassword.jsx'
@@ -20,8 +20,10 @@ const App = () => {
         <Route path="/" element={<LoginPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/edit" element={<SignEditor />} />
+        <Route path={"/preview"} element={<SignImageLink/>}/>
         <Route path="/home" element={<Home />} />
         <Route path={"/gallery"} element={<Gallery/>}/>
+        
       </Routes>
     </Router>
   );
