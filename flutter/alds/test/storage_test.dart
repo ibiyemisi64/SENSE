@@ -13,7 +13,6 @@ void main() {
   setUpAll(() {
     TestWidgetsFlutterBinding.ensureInitialized();
     testDir = Directory.systemTemp.createTempSync();
-    Hive.init(testDir.path);
   });
 
   setUp(() async {
@@ -21,7 +20,8 @@ void main() {
     await storage.saveLocatorData(jsonEncode([]));
   });
 
-  tearDownAll(() {
+  tearDownAll(() async {
+    await Hive.close();
     testDir.deleteSync(recursive: true);
   });
   group('Local Storage Tests', () {

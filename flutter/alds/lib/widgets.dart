@@ -184,11 +184,13 @@ DropdownMenuItem<String> createMenuItem(String value) {
 }
 
 DropdownMenu searchableDropdown(
+ String keyStr,
  TextEditingController textController,
  List<String> locations,
  Function(String?)? onSelected,
 ) {
   return DropdownMenu<String>(
+      key: Key(keyStr),
       controller: textController,
       enableFilter: true,
       requestFocusOnTap: true,

@@ -135,16 +135,16 @@ class _AldsMainState extends State<AldsMain> {
         selectedIndex: navBarIndex,
         destinations: const <Widget>[
           NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(key: Key('selected_home_icon'), Icons.home),
+            icon: Icon(key: Key('home_icon'), Icons.home_outlined),
             label: 'Home',
           ),
           NavigationDestination(
-            icon: Icon(Icons.location_on),
+            icon: Icon(key: Key('saved_locations_icon'), Icons.location_on),
             label: 'Saved',
           ),
           NavigationDestination(
-            icon: Icon(Icons.settings),
+            icon: Icon(key: Key("settings_icon"), Icons.settings),
             label: 'Settings',
           ),
         ],

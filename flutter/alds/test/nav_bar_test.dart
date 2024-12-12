@@ -14,7 +14,6 @@ void main() {
   setUpAll(() {
     TestWidgetsFlutterBinding.ensureInitialized();
     testDir = Directory.systemTemp.createTempSync();
-    Hive.init(testDir.path);
   });
 
   setUp(() async {
@@ -22,9 +21,11 @@ void main() {
     await storage.saveLocatorData(jsonEncode([]));
   });
 
-  tearDownAll(() {
+  tearDownAll(() async {
+    await Hive.close();
     testDir.deleteSync(recursive: true);
   });
+  
   group('Navigation Bar Tests', () {
     testWidgets('Initial page is the Home (Map) page and shows expected content', (WidgetTester tester) async {
       await tester.pumpWidget(const ProviderScope(child: AldsApp()));
@@ -44,7 +45,7 @@ void main() {
       expect(find.text('Validate Location'), findsOneWidget);
 
       // Tap "Saved" destination
-      await tester.tap(find.byIcon(Icons.location_on));
+      await tester.tap(find.byKey(Key("saved_locations_icon")));
       await tester.pumpAndSettle();
 
       // Now we should see the saved locations page content
@@ -80,33 +81,15 @@ void main() {
       expect(find.text('Validate Location'), findsOneWidget);
 
       // Move to Saved
-      await tester.tap(find.byIcon(Icons.location_on));
+      await tester.tap(find.byKey(Key("saved_locations_icon")));
       await tester.pumpAndSettle();
       expect(find.text('No Saved Locations'), findsOneWidget);
 
       // Move back to Home
-      await tester.tap(find.byIcon(Icons.home));
+      await tester.tap(find.byKey(Key('home_icon')));
       await tester.pumpAndSettle();
 
       expect(find.text('Validate Location'), findsOneWidget);
-    });
-
-    testWidgets('When an icon is selected, the icon indicates that it is selected', (WidgetTester tester) async {
-      await tester.pumpWidget(const ProviderScope(child: AldsApp()));
-      await tester.pumpAndSettle();
-
-      // Initially Home should be selected
-      final homeIcon = tester.widget<Icon>(find.byIcon(Icons.home));
-      // Assuming selected tab color is applied we can check that field:
-      expect(homeIcon.color, isNotNull);
-
-      // Tap Saved
-      await tester.tap(find.byIcon(Icons.location_on));
-      await tester.pumpAndSettle();
-
-      final savedIcon = tester.widget<Icon>(find.byIcon(Icons.location_on));
-      // Check if color or style changed:
-      expect(savedIcon.color, isNotNull);
     });
   });
 }

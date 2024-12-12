@@ -82,7 +82,6 @@ Future<void> setupStorage() async {
   }
 }
 
-// Create a separate function for testing
 Future<void> setupTestStorage(String testPath) async {
   // For tests, we bypass hive_flutter and path_provider by using Hive.init()
   Hive.init(testPath);
@@ -95,7 +94,7 @@ Future<void> setupTestStorage(String testPath) async {
   _appTheme = appbox.get("theme", defaultValue: _appTheme);
 
   if (!setup) {
-    await saveData();
+    saveData();
   }
 }
 
@@ -133,9 +132,10 @@ String readThemePref() {
 }
 
 // USER LOCATION DATA
+// FIXME: I think there's an issue with this function, in that all tests that run this function hang
 Future<void> saveLocatorData(String json) async {
-  var appbox = Hive.box('appData');
-  await appbox.put("locdata", json);
+    var appbox = Hive.box('appData');
+    await appbox.put("locdata", json);
 }
 
 Future<String?> readLocationData() async {

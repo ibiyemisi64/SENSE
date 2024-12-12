@@ -14,7 +14,6 @@ void main() {
   setUpAll(() {
     TestWidgetsFlutterBinding.ensureInitialized();
     testDir = Directory.systemTemp.createTempSync();
-    Hive.init(testDir.path);
   });
 
   setUp(() async {
@@ -22,9 +21,11 @@ void main() {
     await storage.saveLocatorData(jsonEncode([]));
   });
 
-  tearDownAll(() {
+  tearDownAll(() async {
+    await Hive.close();
     testDir.deleteSync(recursive: true);
   });
+  
   group('Saved Locations Page Tests', () {
     testWidgets('If no saved locations exist, the page should display "No Saved Locations"', (WidgetTester tester) async {
       await tester.pumpWidget(MaterialApp(home: AldsSavedLocationsPage()));

@@ -164,6 +164,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               widgets.searchableDropdown(
+                  "locations_dropdown",
                   _controller, 
                   locations, 
                   (String? value) => setState(() => _selectedLocation = value)
