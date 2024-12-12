@@ -54,11 +54,12 @@ export function SignTextFormatterFontMenuItem() {
         label="Font"
         value={font}
         onChange={handleChange}
+        inputprops={{'data-testid':'sign-component'}}
       >
-        <MenuItem value="Arial">Arial</MenuItem>
-        <MenuItem value="Times New Roman" >Times New Roman </MenuItem>
-        <MenuItem value="Courier">Courier</MenuItem>
-        <MenuItem value="Bradley Hand">Bradley Hand</MenuItem>
+        <MenuItem aria-label="Arial" value="Arial">Arial</MenuItem>
+        <MenuItem aria-label="Times New Roman" value="Times New Roman" >Times New Roman </MenuItem>
+        <MenuItem aria-label="Courier" value="Courier">Courier</MenuItem>
+        <MenuItem aria-label="Bradley Hand" value="Bradley Hand">Bradley Hand</MenuItem>
       </Select>
     </FormControl>
   )
@@ -71,16 +72,16 @@ export function SignTextFormatterMenu() {
       <SignTextFormatterFontMenuItem />
       <SignTextFormatterSizeMenuItem />
       <IconButton>
-        <FormatBoldIcon />
+        <FormatBoldIcon aria-label={"Bold"} />
       </IconButton>
       <IconButton>
-        <FormatItalicIcon />
+        <FormatItalicIcon aria-label={"Italic"} />
       </IconButton>
       <IconButton>
-        <FormatUnderlinedIcon />
+        <FormatUnderlinedIcon aria-label={"Underlined"} />
       </IconButton>
       <IconButton>
-        <FormatColorTextIcon />
+        <FormatColorTextIcon aria-label={"Text Color"} />
       </IconButton>
     </Stack>
   )
