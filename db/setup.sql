@@ -1,4 +1,4 @@
-\! /bin/csh -fx
+#! /bin/csh -fx
 
 set db = iqsign
 set host = "-h db.cs.brown.edu"
@@ -9,7 +9,8 @@ alias ENUM "source ./ENUM.csh"
 setenv sqlrun $run
 
 if (-e ../secret/dbdev) then
-   set db = iqsigndev
+   set db = iqsignv2
+   set host = "-h db.cs.brown.edu -U cs2340sense"
 endif
 
 

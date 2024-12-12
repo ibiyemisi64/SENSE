@@ -12,6 +12,11 @@ git pull --verbose
 # Build iQsign
 cd ~/SENSE/iqsign
 npm update
+
+# Build iqsignv2
+ cd ~/SENSE/iqsignv2
+ npm install
+
 # Build Signmaker
 cd ~/SENSE/signmaker
 ant
@@ -28,6 +33,9 @@ npm update
 # 3: Start SENSE services (server)
 # Start iQsign
 cd ~/SENSE/iqsign
+./start.csh
+# Start iqsignv2
+cd ~/SENSE/iqsignv2
 ./start.csh
 # Start CEDES
 cd ~/SENSE/cedes

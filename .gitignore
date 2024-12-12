@@ -1,4 +1,5 @@
 saveles to ignore
+**/.idea/
 .idea
 *.class
 bBUFFERS
@@ -71,3 +72,4 @@ RunnerTests
 
 # Ignore Gradle build output directory
 build
+iqsign/dump.rdb
