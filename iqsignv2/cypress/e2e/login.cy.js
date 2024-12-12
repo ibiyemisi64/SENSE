@@ -56,9 +56,9 @@ describe("LoginPage Tests", () => {
   });
 
   it("shows a link for forgot password", () => {
-    cy.get("a")
+    cy.get("div")
+      .find('a[href="/forgotpw"]')
       .contains("Forgot password?")
-      .should("be.visible")
-      .and("have.attr", "href", "/forgotpw");
+      .should("be.visible");
   });
 });
