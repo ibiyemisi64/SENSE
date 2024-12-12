@@ -71,6 +71,7 @@ export function HomeMenu() {
                     </ListItemIcon>
                     <ListItemText primary="Profile" />
                 </ListItemButton>
+
             </List>
         </>
     );
