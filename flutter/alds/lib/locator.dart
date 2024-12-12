@@ -43,7 +43,7 @@ const btFraction = 0.7;
 const locFraction = 0.15;
 const altFraction = 0.15;
 // const useThreshold = 0.75;
-const useThreshold = 0.25;
+const useThreshold = 0.25;  // NOTE: altered the threshold to demo
 const stableCount = 3;
 
 class Locator {
