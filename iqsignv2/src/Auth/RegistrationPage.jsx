@@ -4,6 +4,7 @@ import { hasher } from './utils/utils';
 import { useNavigate } from 'react-router-dom';
 //import { useEffect } from 'react';
 import axios from 'axios';
+import iqsignlogo from '../assets/icon/iqsignlogo.png';
 
 const RegistrationPage = () => {
   const [username, setUsername] = useState('');
@@ -80,14 +81,10 @@ const RegistrationPage = () => {
   return (
       <Container maxWidth="sm">
         <Box sx={{ textAlign: 'center', mt: 4 }}>
-          <Typography
-              variant="h3"
-              component="h1"
-              sx={{ mb: 4, fontWeight: 'bold' }}
-              role="heading"
-              aria-level="1"
-          >
-            IQSign
+          <Typography  variant="h6" component="div" sx={{ flexGrow: 0 }}>
+            <Link to="/home" style={{textDecoration: 'none', color: 'inherit'}}>
+                <img data-testid='topbar' src={iqsignlogo} alt="Logo" style={{height: '40px'}}/>
+            </Link>
           </Typography>
 
           <Box
@@ -162,13 +159,15 @@ const RegistrationPage = () => {
                 </Typography>
             )}
             <Box sx={{ mt: 2 }}>
+              <Typography>
               <Link
                   href="/login"
                   underline="hover"
                   sx={{ color: 'black' }}
               >
-                Already have an account? Log in
+                Already have an account? Log in.
               </Link>
+              </Typography>
             </Box>
           </Box>
         </Box>

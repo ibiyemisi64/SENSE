@@ -5,13 +5,10 @@ describe("LoginPage Tests", () => {
     cy.visit("/login");
   });
 
-  it("renders the login form", () => {
-    cy.contains("IQSign").should("be.visible");
-    cy.get('[data-testid="username-input"]').should("be.visible");
-    cy.get('[data-testid="access-token"]').should("be.visible");
-    cy.get("button").contains("Log in").should("be.visible");
+  it("renders the IQSign logo", () => {
+    cy.get('[data-testid="topbar"]').should("be.visible");
   });
-
+  
   it("allows the user to input username and access token", () => {
     cy.get('[data-testid="username-input"]')
       .type("testuser")
@@ -56,9 +53,9 @@ describe("LoginPage Tests", () => {
   });
 
   it("shows a link for forgot password", () => {
-    cy.get("a")
+    cy.get("div")
+      .find('a[href="/forgotpw"]')
       .contains("Forgot password?")
-      .should("be.visible")
-      .and("have.attr", "href", "/forgotpw");
+      .should("be.visible");
   });
 });

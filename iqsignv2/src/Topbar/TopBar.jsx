@@ -2,8 +2,10 @@ import React from 'react';
 import { AppBar, Toolbar, Typography, Box, InputBase, Container } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
-import iqsignlogo from '../assets/icon/iqsignlogo.png';
+
 import {useGalleryStore} from "../Gallery/hooks/galleryStore.jsx";
+
+import iqsignlogo from '../assets/icon/iqsignlogo-white.png';
 
 
 const TopBar = ({ showSearchBox = false }) => {
