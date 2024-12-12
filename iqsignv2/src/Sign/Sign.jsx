@@ -129,10 +129,10 @@ export function SignTextFormatter() {
       </Button>
     <Button
         variant="contained"
-        color="primary"
-        sx={{ ml: 2, mt: 3, backgroundColor: 'black', color: 'white' }}
+        color="black"
+        sx={{ ml: 2, mt: 3, backgroundColor: 'green', color: 'white' }}
     >
-        Set as Current
+        Display Sign
     </Button>
     </Box >
   );
