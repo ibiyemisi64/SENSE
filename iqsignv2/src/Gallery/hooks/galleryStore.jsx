@@ -40,5 +40,12 @@ export const useGalleryStore = create((set) => ({
         const signUrls = rslt.map((x) => `${serverUrl}/signimage/image${x}.png?y=${randKey}`);
 
         set({ images: signUrls, names:names });
+    },
+    namedSignMock: async ()=>{
+        const url = new URL(`${serverUrl}/rest/namedsigns`); // Replace with actual base URL
+        url.searchParams.append("session", Cookies.get('session'));
+        const data = await fetch(url);
+        const jsonData = await data.json()
+        const obj = jsonData[0];
     }
 }));

@@ -16,11 +16,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import TopBar from "./Topbar/TopBar.jsx";
 import {useNavigate} from "react-router-dom";
+import useUserStore from "./Auth/hooks/userStore.js";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("jasonsilva2202@gmail.com");
-  const [email, setEmail] = useState("jasonsilva2202@gmail.com");
+  const {username, setUsername} = useUserStore();
   const [password, setPassword] = useState("********");
   const [loginCode, setLoginCode] = useState("");
 
@@ -59,15 +59,15 @@ const ProfilePage = () => {
 
 
           {/* Email */}
-          <Box display="flex" alignItems="center" mb={2}>
-            <Typography variant="body1" sx={{width: "120px"}}>
-              Email
-            </Typography>
-            <Typography>{email}</Typography>
-            <IconButton sx={{marginLeft: "auto"}}>
-              <EditIcon/>
-            </IconButton>
-          </Box>
+          {/*<Box display="flex" alignItems="center" mb={2}>*/}
+          {/*  <Typography variant="body1" sx={{width: "120px"}}>*/}
+          {/*    Email*/}
+          {/*  </Typography>*/}
+          {/*  <Typography>{email}</Typography>*/}
+          {/*  <IconButton sx={{marginLeft: "auto"}}>*/}
+          {/*    <EditIcon/>*/}
+          {/*  </IconButton>*/}
+          {/*</Box>*/}
 
           {/* Password */}
           <Box display="flex" alignItems="center" mb={4}>

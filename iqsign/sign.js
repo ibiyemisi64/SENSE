@@ -281,7 +281,7 @@ async function handlePreviewSign(req,res)
    let s = req.body.signdata.trim();
    let ss = s;
    ss = ss.replace(/\r/g,"");
-   ss = ss.replace(/\t/g," ");
+   ss = ss.replace(/\t/g,"");
    
    let uid = req.body.signuser;
    let sid = req.params.signid;

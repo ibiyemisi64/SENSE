@@ -89,15 +89,15 @@ export default function Home() {
                        display: 'flex',
                        flexDirection: 'row',
                        gap: 4,
-                       alignItems: 'left',
+                       alignItems: 'center',
                        justifyContent: 'left',
                        marginTop: '100px'
                    }}
             >
-                <Grid2 item>
+                <Grid2 sx={{alignSelf:'flex-start'}} item>
                     <HomeMenu />
                 </Grid2>
-                <Grid2 item>
+                <Grid2 ml={5} item>
                     <Sign />
                 </Grid2>
 
