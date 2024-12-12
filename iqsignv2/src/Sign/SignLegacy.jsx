@@ -67,6 +67,13 @@ export function SignTextFormatterLegacy() {
       >
         SAVE
       </Button>
+    <Button
+        variant="contained"
+        color="primary"
+        sx={{ ml: 2, mt: 3, backgroundColor: 'black', color: 'white' }}
+    >
+        Set as Current
+    </Button>
     </Box >
   );
 
