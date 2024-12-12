@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid2, Box, Button, IconButton, MenuItem, Select, InputLabel, FormControl, Typography, TextField, Stack } from '@mui/material';
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
@@ -129,7 +129,7 @@ export default function SignEditorLegacy() {
       >
 
         <Grid2 item xs={12} sm={6}>
-          <SignTextFormatterLegacy />
+          <SignTextFormatterLegacy/>
         </Grid2>
 
 

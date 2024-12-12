@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import List from '@mui/material/List';
 import { Box, Grid2, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -9,10 +9,17 @@ import PersonIcon from '@mui/icons-material/Person';
 import  Sign from './Sign/Sign.jsx';
 import TopBar from "./Topbar/TopBar.jsx";
 import { Link } from 'react-router-dom';
+import { getCurrentSignData } from './Sign/hooks/getSignData.jsx'
 
 const HomeMenuHandleCopyLink = () => {
+    const { signData, loadCurrentSign, signImageUrl, signPreviewUrl } = getCurrentSignData();
+
+    useEffect(()=> {
+        loadCurrentSign();
+    },[])
+
     const handleCopyClick = () => {
-      const previewLink = `${window.location.origin}/preview`;
+      const previewLink = signImageUrl;
       navigator.clipboard.writeText(previewLink);
     };
   
@@ -26,7 +33,15 @@ const HomeMenuHandleCopyLink = () => {
     );
   };
 
+
 export function HomeMenu() {
+
+    const { signData, loadCurrentSign, signImageUrl, signPreviewUrl } = getCurrentSignData();
+
+    useEffect(()=> {
+        loadCurrentSign();
+    },[])
+    
     return (
         <>
             <List
@@ -53,7 +68,7 @@ export function HomeMenu() {
                     </ListItemIcon>
                     <ListItemText primary="Template Gallery" />
                 </ListItemButton>
-                <ListItemButton  component={Link} to="/preview" >
+                <ListItemButton  component={Link} to={signPreviewUrl} >
                     <ListItemIcon>
                         <VisibilityIcon />
                     </ListItemIcon>
