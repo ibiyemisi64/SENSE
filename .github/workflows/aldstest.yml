@@ -1,5 +1,6 @@
 name: Test ALDS
-on:
+on: 
+  pull_request:
   push:
     branches:
       - main
