@@ -126,6 +126,7 @@ Future<void> addNewLocation(String locationName, double latitude, double longitu
 }
 
 Future<void> removeLocation(SavedLocation location) async {
+  // WE ASSUME THAT LOC NAME IS UNIQUE
   var appbox = Hive.box('appData');
   String? existingData = await readLocationData();
   if (existingData != null) {

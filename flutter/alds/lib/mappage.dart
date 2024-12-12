@@ -27,6 +27,7 @@ class AldsMapPage extends StatefulWidget {
 }
 
 class _AldsMapPageState extends State<AldsMapPage> {
+  // State variables
   String _curLocationText = "";
   Position? _curPosition;
   final TextEditingController _controller = TextEditingController();
@@ -35,23 +36,30 @@ class _AldsMapPageState extends State<AldsMapPage> {
   late bool _isLoading;
   List<SavedLocation> savedLocations = [];
 
+  _AldsMapPageState();
+
   @override
   void initState() {
     super.initState();
     
+    // Initialize state variables
     Locator loc = Locator();
     _curLocationText = loc.lastLocation ?? "Unsaved Location";
     _isLoading = true;
 
+    // Async functions
     _getSavedLocations();
     _getCurrentLocation();
   }
 
   Future<void> _getCurrentLocation() async {
+    // Code adapted from: https://pub.dev/packages/geolocator#example
     bool serviceEnabled;
     LocationPermission permission;
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+    // If location services are not enabled don't continue
     if (!serviceEnabled) {
       return Future.error('Location services are disabled.');
     }
@@ -60,15 +68,28 @@ class _AldsMapPageState extends State<AldsMapPage> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale 
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
         return Future.error('Location permissions are denied');
       }
     }
     
     if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately. 
       return Future.error('Location permissions are permanently denied');
     } 
 
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
     final pos = await Geolocator.getCurrentPosition();
+    double lat = pos.latitude;
+    double long = pos.longitude;
+    util.log("CURRENT LOCATION: ($lat, $long)");
+
+    // Update the current position
     setState(() {
       _curPosition = pos;
     });
@@ -107,10 +128,12 @@ class _AldsMapPageState extends State<AldsMapPage> {
 
   @override
   Widget build(BuildContext context) {
+    // If still fetching data, show loading indicator
     if (_isLoading) {
       return const CircularProgressIndicator();
     }
 
+    // Build this widget when the data is finishing loading
     return Column( 
       children: [
         SizedBox(
@@ -148,7 +171,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                   ),
                   onPressed: _handleValidateLocation,
-                  child: FittedBox(
+                  child: FittedBox(  // Helps text scale down if needed
                     child: Text(
                       "Validate Location",
                       style: GoogleFonts.anta(
@@ -173,13 +196,13 @@ class _AldsMapPageState extends State<AldsMapPage> {
       options: MapOptions(
         initialCenter: (_curPosition != null) 
           ? LatLng(_curPosition!.latitude, _curPosition!.longitude) 
-          : LatLng(41.82674914418993, -71.40251841199533),
+          : LatLng(41.82674914418993, -71.40251841199533),  // defaults to Brown University
         initialZoom: 13.0,
       ),
       children: <Widget>[
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: "edu.brown.alds",
+          userAgentPackageName: "edu.brown.alds",  // FIXME: Fix the package name when you know it
         ),
         CurrentLocationLayer(
           alignPositionOnUpdate: AlignOnUpdate.always,
@@ -213,12 +236,18 @@ class _AldsMapPageState extends State<AldsMapPage> {
   void _handleValidateLocation() async {
     String txt = _controller.text;
 
+    // Handle invalid input
     if (txt.isEmpty || _curPosition == null) {
       util.log("NO LOCATION ENTERED OR CURRENT POSITION NOT AVAILABLE");
       return;
     }
 
-    await storage.addNewLocation(txt, _curPosition!.latitude, _curPosition!.longitude);
+    // Add location first if it doesn't already exist
+    if (!locations.contains(txt)) {
+      await storage.addNewLocation(txt, _curPosition!.latitude, _curPosition!.longitude);
+    }
+
+    // Validate the location using noteLocation()
     Locator loc = Locator();
     loc.noteLocation(txt);
     util.log("VALIDATE location as $txt");

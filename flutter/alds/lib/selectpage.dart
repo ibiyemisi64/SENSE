@@ -110,6 +110,7 @@ class _AldsSelectWidgetState extends State<AldsSelectWidget> {
     String? cur = _curController.text;
     if (cur == '') cur = null;
 
+    // @Prof. Reiss: We changed this return to resolve an error when waiting for an async call to getLocations()
     return FutureBuilder<List<String>>(
       future: storage.getLocations(),
       builder: (context, snapshot) {
