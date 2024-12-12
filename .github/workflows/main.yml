@@ -1,31 +1,17 @@
+
 name: iQsign 2.0 Tests
-
-on:
-  push:
-    branches:
-      - main
-
+on: push
 jobs:
   cypress-run:
     runs-on: ubuntu-24.04
 
     steps:
-      # Step 1: Checkout the repository
       - name: Checkout
         uses: actions/checkout@v4
-
-      # Step 2: Install dependencies
-      - name: Install Dependencies
-        working-directory: iqsignv2
-        run: |
-          npm install
-
-      # Step 3: Start application and run Cypress tests
-      - name: Run Cypress Tests
+      - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
           start: npm run dev
-          wait-on: http://localhost:3000 # Adjust the port if needed
           working-directory: iqsignv2
 
   dart-tests:
