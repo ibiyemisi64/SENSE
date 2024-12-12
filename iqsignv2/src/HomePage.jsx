@@ -48,7 +48,7 @@ export function HomeMenu() {
                 className="list-group"
             >
                 <ListItemButton>
-                    <ListItemText primary="Sign: In Class" />
+                    <ListItemText primary="Sign: Hello" />
                 </ListItemButton>
                 <ListItemButton component={Link} to="/edit-legacy">
                     <ListItemIcon>
