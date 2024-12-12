@@ -93,19 +93,44 @@ const SignGallery = () => {
                 {filteredImages.map((image, index) => (
                     <Grid item xs={4} key={index}>
                         <Box
-                            component="img"
-                            src={image}
-                            alt={`Sign ${index + 1}`}
                             sx={{
-                                width: '100%',
-                                height: '200px',
-                                borderRadius: 1,
-                                objectFit: 'cover',
-                                boxShadow: 3,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
                             }}
-                            onClick={()=>navigate("/edit")}
-                        />
+                        >
+                            {/* Image */}
+                            <Box
+                                component="img"
+                                src={image}
+                                alt={`${names[index]}`}
+                                sx={{
+                                    width: '100%',
+                                    height: '200px',
+                                    borderRadius: 1,
+                                    objectFit: 'cover',
+                                    boxShadow: 3,
+                                }}
+                                onClick={() => navigate("/edit")}
+                            />
+
+                            {/* Label */}
+                            <Box
+                                component="span"
+                                sx={{
+                                    mt: 1,
+                                    fontSize: '24px',
+                                    color: 'text.primary',
+                                    textAlign: 'center',
+                                    wordWrap: 'break-word',
+                                    width: '100%',
+                                }}
+                            >
+                                {names[index]}
+                            </Box>
+                        </Box>
                     </Grid>
+
                 ))}
             </Grid>
 
