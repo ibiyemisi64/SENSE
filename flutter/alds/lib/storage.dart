@@ -96,14 +96,19 @@ String readThemePref() {
 Future<void> saveLocatorData(String json) async {
   var appbox = Hive.box('appData');
   await appbox.put("locdata", json);
+  
+  util.log("Saving Locator Data: $json");
 }
 
 Future<String?> readLocationData() async {
   var appbox = Hive.box('appData');
-  return await appbox.get('locdata');
+  var data = await appbox.get('locdata');
+  util.log("Read data: $data");
+  return data;
 }
 
 Future<void> addNewLocation(String locationName, double latitude, double longitude) async {
+  util.log("Adding new location: $locationName, $latitude, $longitude");
   var appbox = Hive.box('appData');
   String? existingData = await readLocationData();
   List<dynamic> locations = [];
@@ -132,11 +137,12 @@ Future<void> removeLocation(SavedLocation location) async {
   if (existingData != null) {
     List<dynamic> locations = json.decode(existingData);
     locations.removeWhere((loc) => loc['location'] == location.name);
+    util.log("After removing locations: $locations");
     await saveLocatorData(json.encode(locations));
   }
 }
 
-Future<void> updateLocation(SavedLocation location, String locName) async {
+Future<void> updateLocationName(SavedLocation location, String locName) async {
   var appbox = Hive.box('appData');
   String? existingData = await readLocationData();
   if (existingData != null) {
