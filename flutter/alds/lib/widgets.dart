@@ -5,6 +5,7 @@
  * 
  */
 /*	Copyright 2023 Brown University -- Steven P. Reiss			*/
+
 /// *******************************************************************************
 ///  Copyright 2023, Brown University, Providence, RI.				 *
 ///										 *
@@ -29,8 +30,7 @@
 ///  OF THIS SOFTWARE.								 *
 ///										 *
 ///******************************************************************************
-
-
+  
 import 'package:flutter/material.dart';
 
 Widget textFormField({
@@ -184,11 +184,13 @@ DropdownMenuItem<String> createMenuItem(String value) {
 }
 
 DropdownMenu searchableDropdown(
- TextEditingController textController,
- List<String> locations,
- Function(String?)? onSelected,
+  double width,
+  TextEditingController textController,
+  List<String> locations,
+  Function(String?)? onSelected,
 ) {
   return DropdownMenu<String>(
+      width: width, 
       controller: textController,
       enableFilter: true,
       requestFocusOnTap: true,
