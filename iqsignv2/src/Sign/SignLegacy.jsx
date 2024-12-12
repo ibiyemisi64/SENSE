@@ -55,11 +55,21 @@ export function SignTextFormatterLegacy() {
         fullWidth
         sx={{ mt: 4 }}
       />
-      <Typography sx={{ mt: 1 }}>
+      <Typography sx={{ ml: 1, mt: 1 }}>
         <Link to="https://sherpa.cs.brown.edu:3336/instructions" underline="hover" sx={{ color: 'black' }}>
           View Instructions
         </Link>
       </Typography>
+        <Typography sx={{ ml: 1, mt: 1 }}>
+            <Link to="https://fontawesome.com/search?o=r&m=free&s=solid" underline="hover" sx={{ color: 'black' }}>
+                Browse font-awesome icons
+            </Link>
+        </Typography>
+        <Typography sx={{ ml: 1, mt: 1 }}>
+            <Link to="https://sherpa.cs.brown.edu:3336/svgimages" underline="hover" sx={{ color: 'black' }}>
+                Browse svg library
+            </Link>
+        </Typography>
       <Button
         variant="contained"
         color="primary"
@@ -67,6 +77,13 @@ export function SignTextFormatterLegacy() {
       >
         SAVE
       </Button>
+    <Button
+        variant="contained"
+        color="black"
+        sx={{ ml: 2, mt: 3, backgroundColor: 'green', color: 'white' }}
+    >
+        Display Sign
+    </Button>
     </Box >
   );
 
