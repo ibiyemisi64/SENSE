@@ -155,7 +155,19 @@ class _AldsMapPageState extends State<AldsMapPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              // SizedBox(
+              //   width: MediaQuery.of(context).size.width * 0.4, 
+              //   child: locations.isEmpty
+              //     ? TextField(controller: _controller, readOnly: false, decoration: InputDecoration(prefixIcon: Icon(Icons.location_on)))
+              //     : widgets.searchableDropdown(
+              //         MediaQuery.of(context).size.width * 0.4,
+              //         _controller, 
+              //         locations, 
+              //         (String? value) => setState(() => _selectedLocation = value)
+              //     ),
+              // ), 
               widgets.searchableDropdown(
+                  MediaQuery.of(context).size.width * 0.4,
                   _controller, 
                   locations, 
                   (String? value) => setState(() => _selectedLocation = value)
