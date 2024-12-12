@@ -35,8 +35,8 @@ npm update
 cd ~/SENSE/iqsign
 ./start.csh
 # Start iqsignv2
-# cd ~/SENSE/iqsignv2
-# ./start.csh
+cd ~/SENSE/iqsignv2
+./start.csh
 # Start CEDES
 cd ~/SENSE/cedes
 ./start.csh
