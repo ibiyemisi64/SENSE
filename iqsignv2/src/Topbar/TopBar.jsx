@@ -49,7 +49,7 @@ const TopBar = ({ showSearchBox = false }) => {
                         }}
                     >
                         {showSearchBox && <InputBase
-                            placeholder="Search…"
+                            placeholder="Filter..."
                             value={filter}
                             onChange={(e)=> setFilter(e.target.value)}
                             inputProps={{ 'aria-label': 'search' }}
