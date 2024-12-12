@@ -24,6 +24,8 @@
 ///										 *
 ///******************************************************************************
 
+library alds.main;
+
 // ALDS Dart Files
 import 'storage.dart' as storage;
 import 'globals.dart' as globals;
@@ -58,6 +60,7 @@ void initialize(bool flag) async {
       const Duration(seconds: globals.pingEverySeconds), _handleDevice);
 
   PhoneState.stream.forEach(handlePhoneStream);
+  util.log("MAIN INITIALIZED");
 }
 
 void _handleRecheck(Timer timer) async {

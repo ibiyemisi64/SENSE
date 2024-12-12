@@ -30,7 +30,7 @@
 ///  OF THIS SOFTWARE.								 *
 ///										 *
 ///******************************************************************************
-  
+
 import 'package:flutter/material.dart';
 
 Widget textFormField({
@@ -184,12 +184,14 @@ DropdownMenuItem<String> createMenuItem(String value) {
 }
 
 DropdownMenu searchableDropdown(
-  double width,
-  TextEditingController textController,
-  List<String> locations,
-  Function(String?)? onSelected,
+ String keyStr,
+ double width,
+ TextEditingController textController,
+ List<String> locations,
+ Function(String?)? onSelected,
 ) {
   return DropdownMenu<String>(
+      key: Key(keyStr),
       width: width, 
       controller: textController,
       enableFilter: true,

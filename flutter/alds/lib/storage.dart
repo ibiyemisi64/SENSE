@@ -63,6 +63,22 @@ Future<void> setupStorage() async {
   }
 }
 
+Future<void> setupTestStorage(String testPath) async {
+  // For tests, we bypass hive_flutter and path_provider by using Hive.init()
+  Hive.init(testPath);
+  var appbox = await Hive.openBox('appData');
+  bool setup = await appbox.get("setup", defaultValue: false);
+  String uid = await appbox.get("userid", defaultValue: util.randomString(12));
+  String upa = await appbox.get("userpass", defaultValue: util.randomString(16));
+  _authData = AuthData(uid, upa);
+  _deviceId = appbox.get("deviceid", defaultValue: "ALDS_${util.randomString(20)}");
+  _appTheme = appbox.get("theme", defaultValue: _appTheme);
+
+  if (!setup) {
+    saveData();
+  }
+}
+
 Future<void> saveData() async {
   var appbox = Hive.box('appData');
   await appbox.put('setup', true);
@@ -92,18 +108,35 @@ String readThemePref() {
 }
 
 // USER LOCATION DATA
+// FIXME: I think there's an issue with this function, in that all tests that run this function hang
 Future<void> saveLocatorData(String json) async {
-  var appbox = Hive.box('appData');
-  await appbox.put("locdata", json);
+    var appbox = Hive.box('appData');
+    await appbox.put("locdata", json);
   
-  util.log("Saving Locator Data: $json");
+    util.log("Saving Locator Data: $json");
 }
 
 Future<String?> readLocationData() async {
-  var appbox = Hive.box('appData');
-  var data = await appbox.get('locdata');
-  util.log("Read data: $data");
-  return data;
+  // late dynamic data;
+  // try {
+  //   var appbox = Hive.box('appData');
+  //   data = await appbox.get('locdata');
+  //   util.log("Successfully readLocationData(): $data");
+  //   return data;
+  // } catch (e) {
+  //   util.log("Error readLocationData(): $e");
+  //   return "";
+  // }
+
+  if (Hive.isBoxOpen('appData')) {
+    var appbox = Hive.box('appData');
+    var data = await appbox.get('locdata');
+    util.log("Read data: $data");
+    return data;
+  } else {
+    util.log("Error readLocationData(): Hive box not open");
+    return null;
+  }
 }
 
 Future<void> addNewLocation(String locationName, double latitude, double longitude) async {
@@ -129,26 +162,70 @@ Future<void> addNewLocation(String locationName, double latitude, double longitu
   await saveLocatorData(json.encode(locations));
 }
 
+// Future<void> removeLocation(SavedLocation location) async {
+//   var appbox = Hive.box('appData');
+//   // WE ASSUME THAT LOC NAME IS UNIQUE
+//   String? existingData = await readLocationData();
+//   if (existingData != null) {
+//     List<dynamic> locations = json.decode(existingData);
+//     // util.log("BEFORE REMOVE CALLED: $locations");
+//     locations.removeWhere((loc) => loc['location'] == location.name);
+//     // util.log ("REMOVE CALLED - $locations");
+//     appbox.delete("locdata");
+//     await saveLocatorData(json.encode(locations));
+//   }
+// }
+
 Future<void> removeLocation(SavedLocation location) async {
-  // WE ASSUME THAT LOC NAME IS UNIQUE
-  var appbox = Hive.box('appData');
   String? existingData = await readLocationData();
   if (existingData != null) {
     List<dynamic> locations = json.decode(existingData);
+
+    int initialLength = locations.length;
     locations.removeWhere((loc) => loc['location'] == location.name);
+    
     util.log("After removing locations: $locations");
-    await saveLocatorData(json.encode(locations));
+
+    if (locations.length != initialLength) {
+      await saveLocatorData(json.encode(locations));
+    }
   }
 }
 
-Future<void> updateLocationName(SavedLocation location, String locName) async {
-  var appbox = Hive.box('appData');
+// Future<void> updateLocation(SavedLocation location, String locName) async {
+//   var appbox = Hive.box('appData');
+  
+//   String? existingData = await readLocationData();
+//   if (existingData != null) {
+
+//     List<dynamic> locations = json.decode(existingData);
+//     final currIndex = locations.indexWhere((loc) => loc['location'] == location.name);
+  
+//     util.log("INDEXWHERE: $currIndex");
+//     util.log("LOCS: $locations");    
+//     locations[currIndex]["location"] = locName;
+//     util.log("Current Locs $locations");
+  
+//     // appbox.delete("locdata");
+
+//     await saveLocatorData(json.encode(locations));
+//   }
+
+// }
+
+Future<void> updateLocation(SavedLocation location, String locName) async {
   String? existingData = await readLocationData();
   if (existingData != null) {
     List<dynamic> locations = json.decode(existingData);
     final currIndex = locations.indexWhere((loc) => loc['location'] == location.name);
-    locations[currIndex]["location"] = locName;
-    await saveLocatorData(json.encode(locations));
+
+    // Ensure location actually exists before updating
+    if (currIndex != -1) {
+      locations[currIndex]["location"] = locName;
+      await saveLocatorData(json.encode(locations));
+    } else {
+      util.log("Location to update not found: ${location.name}");
+    }
   }
 }
 

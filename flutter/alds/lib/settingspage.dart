@@ -4,6 +4,9 @@
 ///  Settings page
 /// 
 /// 
+/// 
+
+library alds.settingspage;
 
 import 'package:alds/providers.dart';
 // Import storage
@@ -48,6 +51,7 @@ class _AldsSettingsPageState extends ConsumerState<AldsSettingsPage> {
               },
               items: ["English"].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
+                  key: Key("language_dropdown"),
                   value: value,
                   child: Text(value),
                 );
@@ -58,6 +62,7 @@ class _AldsSettingsPageState extends ConsumerState<AldsSettingsPage> {
             title: "Theme",
             subtitle: "Switch between light and dark themes",
             trailing: DropdownButton<String>(
+              key: Key("theme_dropdown"),
               value: currentTheme,
               onChanged: (String? newValue) async {
                 if (newValue != null) {
@@ -67,6 +72,7 @@ class _AldsSettingsPageState extends ConsumerState<AldsSettingsPage> {
               },
               items: ["System", "Light", "Dark"].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
+                  key: Key("${value.toLowerCase()}_item"),
                   value: value,
                   child: Text(value),
                 );
@@ -87,21 +93,6 @@ class _AldsSettingsPageState extends ConsumerState<AldsSettingsPage> {
           color: Colors.grey,
         ),
       ),
-    );
-  }
-
-  Widget _buildSwitchTile({
-    required String title,
-    required String subtitle,
-    required bool value,
-    required ValueChanged<bool> onChanged,
-  }) {
-    return SwitchListTile(
-      title: Text(title),
-      subtitle: Text(subtitle),
-      value: value,
-      onChanged: onChanged,
-      activeColor: Colors.blue,
     );
   }
 

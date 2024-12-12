@@ -20,7 +20,8 @@ import 'storage.dart' as storage;
 import 'savedpage.dart';
 
 class AldsMapPage extends StatefulWidget {
-  const AldsMapPage({super.key});
+  const AldsMapPage({super.key, required bool isLoading, required double currentLat, required double currentLng});
+  // const AldsMapPage({super.key});
 
   @override
   State<AldsMapPage> createState() => _AldsMapPageState();
@@ -44,16 +45,19 @@ class _AldsMapPageState extends State<AldsMapPage> {
     
     // Initialize state variables
     Locator loc = Locator();
+    util.log("LOCATOR initialized");
     _curLocationText = loc.lastLocation ?? "Unsaved Location";
     _isLoading = true;
 
     // Async functions
+    util.log("calling async functions");
     _getSavedLocations();
     _getCurrentLocation();
   }
 
   Future<void> _getCurrentLocation() async {
     // Code adapted from: https://pub.dev/packages/geolocator#example
+    util.log("getCurrentLocation() called");
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -97,6 +101,8 @@ class _AldsMapPageState extends State<AldsMapPage> {
 
   Future<void> _getSavedLocations() async {
     String? locDataJson = await storage.readLocationData();
+    // util.log("Location data read from local storage");
+
     if (locDataJson != null) {
       try {
         List<dynamic> locDataParsed = List<dynamic>.from(jsonDecode(locDataJson));
@@ -118,6 +124,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
         });
       }
     } else {
+      util.log("No location data found in local storage");
       setState(() {
         locations = [];
         savedLocations = [];
@@ -130,6 +137,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
   Widget build(BuildContext context) {
     // If still fetching data, show loading indicator
     if (_isLoading) {
+      // return const Text("Loading...");
       return const CircularProgressIndicator();
     }
 
@@ -169,6 +177,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
               //     ),
               // ), 
               widgets.searchableDropdown(
+                  "locations_dropdown",
                   MediaQuery.of(context).size.width * 0.4,
                   _controller, 
                   locations, 
@@ -246,7 +255,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
   }
 
   void _handleValidateLocation() async {
-    String txt = _controller.text;
+    String txt = _controller.text.trim();
 
     // Handle invalid input
     if (txt.isEmpty || _curPosition == null) {
@@ -261,7 +270,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
 
     // Validate the location using noteLocation()
     Locator loc = Locator();
-    loc.noteLocation(txt);
+    await loc.noteLocation(txt);
     util.log("VALIDATE location as $txt");
     
     // Refresh locations after adding new one
