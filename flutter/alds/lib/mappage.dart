@@ -8,26 +8,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 
+import 'providers.dart';
 import 'widgets.dart' as widgets;
 import 'util.dart' as util;
-import 'locator.dart';
+import 'locator.dart' as alds_loc;
 import 'storage.dart' as storage;
 import 'savedpage.dart';
 
-class AldsMapPage extends StatefulWidget {
+class AldsMapPage extends ConsumerStatefulWidget {
   const AldsMapPage({super.key, required bool isLoading, required double currentLat, required double currentLng});
   // const AldsMapPage({super.key});
 
   @override
-  State<AldsMapPage> createState() => _AldsMapPageState();
+  ConsumerState<AldsMapPage> createState() => _AldsMapPageState();
 }
 
-class _AldsMapPageState extends State<AldsMapPage> {
+class _AldsMapPageState extends ConsumerState<AldsMapPage> {
   // State variables
   String _curLocationText = "";
   Position? _curPosition;
@@ -44,8 +46,10 @@ class _AldsMapPageState extends State<AldsMapPage> {
     super.initState();
     
     // Initialize state variables
-    Locator loc = Locator();
+    alds_loc.Locator loc = alds_loc.Locator();
     util.log("LOCATOR initialized");
+    // ref.watch(curLocationNameProvider).setLocationName();
+    // _curLocationText = ref.read(curLocationNameProvider).locationName;
     _curLocationText = loc.lastLocation ?? "Unsaved Location";
     _isLoading = true;
 
@@ -269,7 +273,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
     }
 
     // Validate the location using noteLocation()
-    Locator loc = Locator();
+    alds_loc.Locator loc = alds_loc.Locator();
     await loc.noteLocation(txt);
     util.log("VALIDATE location as $txt");
     
@@ -277,6 +281,9 @@ class _AldsMapPageState extends State<AldsMapPage> {
     await _getSavedLocations();
     setState(() {
       _controller.clear();
+      // _curLocationText = loc.lastLocation ?? "Unsaved Location";
+      ref.read(curLocationNameProvider).setLocationName();
+      _curLocationText = ref.watch(curLocationNameProvider).locationName;
     });
   }
 }

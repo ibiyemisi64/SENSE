@@ -9,7 +9,6 @@
 library alds.settingspage;
 
 import 'package:alds/providers.dart';
-// Import storage
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

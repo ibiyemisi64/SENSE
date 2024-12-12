@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
+import 'locator.dart';
 import 'storage.dart' as storage;
 import 'util.dart' as util;
 
@@ -66,6 +67,10 @@ class _AldsSavedLocationsPageState extends State<AldsSavedLocationsPage> {
       _savedLocations[index]['position']['latitude'], 
       _savedLocations[index]['position']['longitude']
     ));
+
+    // Remove from Locator's known locations
+    Locator loc = Locator();
+    loc.removeLocation(locName);
 
     await _loadSavedLocations();
   }

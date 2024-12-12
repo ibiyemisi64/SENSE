@@ -37,15 +37,14 @@ class AldsApp extends ConsumerWidget {
   }
 }
 
-class AldsMain extends StatefulWidget {
+class AldsMain extends ConsumerStatefulWidget {
   const AldsMain({super.key});
 
   @override
-  State<AldsMain> createState() => _AldsMainState();
+  ConsumerState<AldsMain> createState() => _AldsMainState();
 }
 
-class _AldsMainState extends State<AldsMain> {
-  String _curLocationText = "";  // FIXME: Remove this code???
+class _AldsMainState extends ConsumerState<AldsMain> {
   Position? _curPosition;
   late int navBarIndex; // use of the `late` keyword denotes a non-nullable variable that will be initialized later
 
@@ -57,8 +56,6 @@ class _AldsMainState extends State<AldsMain> {
     
     // Initial state
     navBarIndex = 0;
-    alds_loc.Locator loc = alds_loc.Locator();
-    _curLocationText = loc.lastLocation ?? "N/A";
     _getCurrentLocation();
   }
 
@@ -106,7 +103,7 @@ class _AldsMainState extends State<AldsMain> {
       _curPosition = pos;
     });
 
-    _handleUpdate();
+    // _handleUpdate();
   }
 
   @override
@@ -126,6 +123,10 @@ class _AldsMainState extends State<AldsMain> {
       bottomNavigationBar: NavigationBar(  // NOTE: Code structure from demo on https://api.flutter.dev/flutter/material/NavigationBar-class.html
         onDestinationSelected: (int index) {
           if (index == 0) {  // mapPage index
+            // Update the current location name
+            ref.read(curLocationNameProvider).setLocationName();
+
+            // Update the current position
             _getCurrentLocation();
           }
 
@@ -152,14 +153,14 @@ class _AldsMainState extends State<AldsMain> {
     );
   }
 
-  void _locationSelected(String? value) {
-    util.log("SET CURRENT TO $value");
-    setState(() => _curLocationText = value ?? "");
-  }
+  // void _locationSelected(String? value) {
+  //   util.log("SET CURRENT TO $value");
+  //   setState(() => _curLocationText = value ?? "");
+  // }
 
-  Future<void> _handleUpdate() async {
-    alds_loc.Locator loc = alds_loc.Locator();
-    String? where = await loc.findLocation();
-    _locationSelected(where);
-  }
+  // Future<void> _handleUpdate() async {
+  //   alds_loc.Locator loc = alds_loc.Locator();
+  //   String? where = await loc.findLocation();
+  //   _locationSelected(where);
+  // }
 }

@@ -45,7 +45,7 @@ class Locator {
 
   Locator._internal() : config = const LocatorConfig();
 
-    void setup() async {
+  void setup() async {
     String? s = await storage.readLocationData();
     if (s != null) {
       var x = jsonDecode(s) as List;
@@ -79,7 +79,13 @@ class Locator {
   //   }
   // }
   
-  
+  // Remove location from KnownLocations
+  void removeLocation(String location) {
+    util.log("Removing location: $location");
+    _knownLocations.removeWhere((kl) => kl.location == location);
+    lastLocation = null;  // reset the last location
+    util.log("AFTER removing: $_knownLocations");
+  }
 
   /// Update the current location data with a new GPS position and its corresponding Bluetooth data.
   /// Attempts to merge with the existing location if consistent. Otherwise sets new.
@@ -234,9 +240,11 @@ class Locator {
       // for a single room
     }
 
-    String data = jsonEncode(_knownLocations);
-    util.log("Location data: $data");
-    storage.saveLocatorData(data);
+    // String data = jsonEncode(_knownLocations);
+    // util.log("Location data: $data");
+    // storage.saveLocatorData(data);
+
+    Locator._internal();
   }
 }
 
