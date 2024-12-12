@@ -42,6 +42,23 @@ web site that updates automatically and an image that it updates as requested fo
 each sign.  Users can register and control their signs.  iQsign is currently
 available at `https://sherpa.cs.brown.edu:3336`
 
+
+### Developer Guide
+
+To start the program, run the following command in the iqsignv2 directory:
+```
+npm run dev
+```
+
+src directory breakdown:
+* Auth: User authentication pages. Currently replaced with a workedaround with access code due to issues with existing authentication methods.
+* Gallery: Displays signs in a gallery style.
+* Sign: Page to edit sign.
+* Topbar: Topbar for all the pages in iQsign.
+* App.jsx: Entry point for the program, contains routes to all pages.
+* Homepage.jsx: Homepage of the application, where user can view the current sign and navigate to edit sign, gallery, and profile.
+* Profile.jsx: Displays user information, generation of access code, and routes edit user info and logout.
+
 ## Signmaker
 
 This is the utility that creates the sign images for iQsign from descriptions.
