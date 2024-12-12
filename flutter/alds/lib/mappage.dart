@@ -35,6 +35,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
   String? _selectedLocation;
   List<String> locations = [];
   late bool _isLoading;
+  List<SavedLocation> savedLocations = [];
 
   _AldsMapPageState();
 
@@ -60,12 +61,10 @@ class _AldsMapPageState extends State<AldsMapPage> {
     bool serviceEnabled;
     LocationPermission permission;
 
-    // Test if location services are enabled.
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+    // If location services are not enabled don't continue
     if (!serviceEnabled) {
-      // Location services are not enabled don't continue
-      // accessing the position and request users of the 
-      // App to enable the location services.
       return Future.error('Location services are disabled.');
     }
 
@@ -84,8 +83,7 @@ class _AldsMapPageState extends State<AldsMapPage> {
     
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately. 
-      return Future.error(
-        'Location permissions are permanently denied, we cannot request permissions.');
+      return Future.error('Location permissions are permanently denied');
     } 
 
     // When we reach here, permissions are granted and we can
@@ -94,14 +92,14 @@ class _AldsMapPageState extends State<AldsMapPage> {
     double lat = pos.latitude;
     double long = pos.longitude;
     util.log("CURRENT LOCATION: ($lat, $long)");
+
+    // Update the current position
     setState(() {
       _curPosition = pos;
     });
   }
 
   Future<void> _getSavedLocations() async {
-    // await storage.mockLocationData();
-    // util.log("getSavedLocations() called");
     String? locDataJson = await storage.readLocationData();
     // util.log("Location data read from local storage");
 
@@ -110,12 +108,18 @@ class _AldsMapPageState extends State<AldsMapPage> {
         List<dynamic> locDataParsed = List<dynamic>.from(jsonDecode(locDataJson));
         setState(() {
           locations = locDataParsed.map((locData) => locData['location'] as String).toList();
+          savedLocations = locDataParsed.map((locData) => SavedLocation(
+            locData['location'],
+            locData['position']['latitude'],
+            locData['position']['longitude']
+          )).toList();
           _isLoading = false;
         });
       } catch (e) {
         util.log("Error parsing location data: $e");
         setState(() {
           locations = [];
+          savedLocations = [];
           _isLoading = false;
         });
       }
@@ -123,11 +127,11 @@ class _AldsMapPageState extends State<AldsMapPage> {
       util.log("No location data found in local storage");
       setState(() {
         locations = [];
+        savedLocations = [];
         _isLoading = false;
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +144,6 @@ class _AldsMapPageState extends State<AldsMapPage> {
     // Build this widget when the data is finishing loading
     return Column( 
       children: [
-        // Header
         SizedBox(
           height: 50,
           child: Center(
@@ -153,7 +156,6 @@ class _AldsMapPageState extends State<AldsMapPage> {
           ),
         ),
         widgets.fieldSeparator(),
-        // Map
         Expanded(
           child: _createLocationMap(),
         ),
@@ -163,8 +165,20 @@ class _AldsMapPageState extends State<AldsMapPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              // SizedBox(
+              //   width: MediaQuery.of(context).size.width * 0.4, 
+              //   child: locations.isEmpty
+              //     ? TextField(controller: _controller, readOnly: false, decoration: InputDecoration(prefixIcon: Icon(Icons.location_on)))
+              //     : widgets.searchableDropdown(
+              //         MediaQuery.of(context).size.width * 0.4,
+              //         _controller, 
+              //         locations, 
+              //         (String? value) => setState(() => _selectedLocation = value)
+              //     ),
+              // ), 
               widgets.searchableDropdown(
                   "locations_dropdown",
+                  MediaQuery.of(context).size.width * 0.4,
                   _controller, 
                   locations, 
                   (String? value) => setState(() => _selectedLocation = value)
@@ -175,16 +189,16 @@ class _AldsMapPageState extends State<AldsMapPage> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.deepPurpleAccent,
-                    padding: const EdgeInsets.symmetric(horizontal: 12), // Tighter padding
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                   ),
                   onPressed: _handleValidateLocation,
-                  child: FittedBox( // Helps text scale down if needed
+                  child: FittedBox(  // Helps text scale down if needed
                     child: Text(
                       "Validate Location",
                       style: GoogleFonts.anta(
                         textStyle: const TextStyle(
                           color: Colors.white,
-                          fontSize: 16, // Optional: control text size
+                          fontSize: 16,
                         ),
                       ),
                     ),
@@ -201,7 +215,9 @@ class _AldsMapPageState extends State<AldsMapPage> {
   Widget _createLocationMap() {
     return FlutterMap(
       options: MapOptions(
-        initialCenter: (_curPosition != null) ? LatLng(_curPosition!.latitude, _curPosition!.longitude) : LatLng(41.82674914418993, -71.40251841199533),  // defaults to Brown
+        initialCenter: (_curPosition != null) 
+          ? LatLng(_curPosition!.latitude, _curPosition!.longitude) 
+          : LatLng(41.82674914418993, -71.40251841199533),  // defaults to Brown University
         initialZoom: 13.0,
       ),
       children: <Widget>[
@@ -223,40 +239,44 @@ class _AldsMapPageState extends State<AldsMapPage> {
   }
 
   List<Widget> _createSavedLocationMarkers() {
-    
-    // Mocked saved locations - (name, (lat, long))
-    List<SavedLocation> savedLocations = [
-      SavedLocation("Home", 41.826874886601985, -71.40318586689112),  // Brown Campus Center
-      SavedLocation("Gym", 41.830156496801976, -71.39804070374443), // Nelson Fitness Center
-      SavedLocation("Work", 41.826922607676, -71.3995623245632), // CIT
-      SavedLocation("Office", 41.82415891316371, -71.39895318840045), // New Watson
-    ];
-
-    List<LocationMarkerLayer> savedLocationMarkers = savedLocations.map((SavedLocation loc) => 
+    return savedLocations.map((SavedLocation loc) => 
       LocationMarkerLayer(
-        position: LocationMarkerPosition(latitude: loc.latitude, longitude: loc.longitude, accuracy: 0.5),
+        position: LocationMarkerPosition(
+          latitude: loc.latitude,
+          longitude: loc.longitude,
+          accuracy: 0.5
+        ),
         style: LocationMarkerStyle(
           marker: const Icon(Icons.location_on, color: Colors.red),
           markerSize: const Size(20, 20),
         ),
       )
     ).toList();
-
-    return savedLocationMarkers;
   }
 
   void _handleValidateLocation() async {
     String txt = _controller.text.trim();
 
     // Handle invalid input
-    if (txt.isEmpty) {
-      util.log("NO LOCATION ENTERED");
+    if (txt.isEmpty || _curPosition == null) {
+      util.log("NO LOCATION ENTERED OR CURRENT POSITION NOT AVAILABLE");
       return;
     }
 
-    // Validate location
+    // Add location first if it doesn't already exist
+    if (!locations.contains(txt)) {
+      await storage.addNewLocation(txt, _curPosition!.latitude, _curPosition!.longitude);
+    }
+
+    // Validate the location using noteLocation()
     Locator loc = Locator();
     await loc.noteLocation(txt);
     util.log("VALIDATE location as $txt");
+    
+    // Refresh locations after adding new one
+    await _getSavedLocations();
+    setState(() {
+      _controller.clear();
+    });
   }
 }

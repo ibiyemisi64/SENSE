@@ -5,6 +5,7 @@
  * 
  */
 /*	Copyright 2023 Brown University -- Steven P. Reiss			*/
+
 /// *******************************************************************************
 ///  Copyright 2023, Brown University, Providence, RI.				 *
 ///										 *
@@ -29,7 +30,6 @@
 ///  OF THIS SOFTWARE.								 *
 ///										 *
 ///******************************************************************************
-
 
 import 'package:flutter/material.dart';
 
@@ -185,12 +185,14 @@ DropdownMenuItem<String> createMenuItem(String value) {
 
 DropdownMenu searchableDropdown(
  String keyStr,
+ double width,
  TextEditingController textController,
  List<String> locations,
  Function(String?)? onSelected,
 ) {
   return DropdownMenu<String>(
       key: Key(keyStr),
+      width: width, 
       controller: textController,
       enableFilter: true,
       requestFocusOnTap: true,

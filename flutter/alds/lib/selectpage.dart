@@ -109,8 +109,31 @@ class _AldsSelectWidgetState extends State<AldsSelectWidget> {
   Widget _createLocationSelector() {
     String? cur = _curController.text;
     if (cur == '') cur = null;
-    return widgets.dropDown(storage.getLocations(),
-        value: cur, onChanged: _locationSelected);
+
+    // @Prof. Reiss: We changed this return to resolve an error when waiting for an async call to getLocations()
+    return FutureBuilder<List<String>>(
+      future: storage.getLocations(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
+
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+
+        final locations = snapshot.data ?? [];
+        return widgets.searchableDropdown(
+          _curController,
+          locations,
+          (String? value) {
+            setState(() {
+              _curController.text = value ?? '';
+            });
+          },
+        );
+      },
+    );
   }
 
   Future<void> _locationSelected(String? value) async {
