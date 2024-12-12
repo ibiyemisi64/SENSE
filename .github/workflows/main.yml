@@ -1,4 +1,4 @@
-name: With server
+name: iQsign 2.0 Tests
 on: push
 jobs:
   cypress-run:
