@@ -181,13 +181,13 @@ const LoginPage = () => {
               </Link>
               </Typography>
             </Box>
-            {/**
             <Box sx={{ mt: 2 }}>
-              <Link href="/register" underline="hover" sx={{ color: 'black' }}>
-                New Account
-              </Link>
+              <Typography>
+                <Link href="/register" underline="hover" sx={{ color: 'black' }}>
+                  New Account
+                </Link>
+              </Typography>
             </Box>
-          **/}
           </Box>
         </Box>
       </Container>
