@@ -5,7 +5,7 @@ import { useGalleryStore } from '../hooks/galleryStore.jsx';
 import FileUpload from './FileUpload.jsx';
 import {useNavigate} from "react-router-dom";
 
-// Define scrollbar styles
+// styles
 const scrollStyles = {
     '&::-webkit-scrollbar': {
         width: '6px',
@@ -24,12 +24,12 @@ const scrollStyles = {
 };
 
 const SignGallery = () => {
-    const { images, addImage,loadImages, loadMockImages } = useGalleryStore();
+    const { images, addImage,loadImages, loadMockImages,names, filter } = useGalleryStore();
     const [open, setOpen] = useState(false);
     const [tabIndex, setTabIndex] = useState(0);
     const navigate = useNavigate();
     useEffect(()=> {
-        loadMockImages();
+        loadImages();
     },[])
     console.log(images);
     const handleOpen = () => setOpen(true);
@@ -41,6 +41,14 @@ const SignGallery = () => {
         addImage(fileUrl);
         handleClose();
     };
+
+
+    const filteredImages = images.filter((_, index) =>
+        names[index]?.toLowerCase().includes(filter.toLowerCase())
+    );
+
+    console.log("FILTERED IMAGES", filteredImages);
+    console.log("NAMES", names);
 
     return (
         <Box
@@ -82,7 +90,7 @@ const SignGallery = () => {
                         </IconButton>
                     </Box>
                 </Grid>
-                {images.map((image, index) => (
+                {filteredImages.map((image, index) => (
                     <Grid item xs={4} key={index}>
                         <Box
                             component="img"

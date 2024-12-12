@@ -3,9 +3,11 @@ import { AppBar, Toolbar, Typography, Box, InputBase, Container } from '@mui/mat
 import { alpha } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import iqsignlogo from '../assets/icon/iqsignlogo.png';
+import {useGalleryStore} from "../Gallery/hooks/galleryStore.jsx";
 
 
 const TopBar = ({ showSearchBox = false }) => {
+    const {filter, setFilter} = useGalleryStore();
     return (
         <AppBar
 
@@ -48,6 +50,8 @@ const TopBar = ({ showSearchBox = false }) => {
                     >
                         {showSearchBox && <InputBase
                             placeholder="Search…"
+                            value={filter}
+                            onChange={(e)=> setFilter(e.target.value)}
                             inputProps={{ 'aria-label': 'search' }}
                             sx={{
                                 color: 'inherit',
