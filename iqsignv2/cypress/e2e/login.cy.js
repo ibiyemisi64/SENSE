@@ -8,9 +8,10 @@ describe("LoginPage Tests", () => {
   it("renders the IQSign logo", () => {
     cy.get('[data-testid="topbar"]').should("be.visible");
   });
-  
+
   it("allows the user to input username and access token", () => {
     cy.get('[data-testid="username-input"]')
+      .clear()
       .type("testuser")
       .should("have.value", "testuser");
 

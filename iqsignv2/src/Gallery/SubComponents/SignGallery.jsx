@@ -24,12 +24,13 @@ const scrollStyles = {
 };
 
 const SignGallery = () => {
-    const { images, addImage,loadImages, loadMockImages,names, filter } = useGalleryStore();
+    const { namedSignMock, images, addImage,loadImages, loadMockImages,names, filter } = useGalleryStore();
     const [open, setOpen] = useState(false);
     const [tabIndex, setTabIndex] = useState(0);
     const navigate = useNavigate();
     useEffect(()=> {
         loadImages();
+        namedSignMock();
     },[])
     console.log(images);
     const handleOpen = () => setOpen(true);

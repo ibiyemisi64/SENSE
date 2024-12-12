@@ -6,10 +6,11 @@ import {useNavigate} from "react-router-dom";
 //import hasher from '../../../iqsign/web/iqsign' //original hasher
 import Cookies from 'js-cookie'
 import iqsignlogo from '../assets/icon/iqsignlogo.png';
+import useUserStore from "./hooks/userStore.js";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
+  const {username,setUsername} = useUserStore();
   //const [password, setPassword] = useState('');
   const [accessToken, setAccessToken] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
