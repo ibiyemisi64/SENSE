@@ -56,7 +56,7 @@ export function SignTextFormatterLegacy() {
         sx={{ mt: 4 }}
       />
       <Typography sx={{ mt: 1 }}>
-        <Link href="https://sherpa.cs.brown.edu:3336/instructions" underline="hover" sx={{ color: 'black' }}>
+        <Link to="https://sherpa.cs.brown.edu:3336/instructions" underline="hover" sx={{ color: 'black' }}>
           View Instructions
         </Link>
       </Typography>
