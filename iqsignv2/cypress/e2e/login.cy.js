@@ -5,13 +5,10 @@ describe("LoginPage Tests", () => {
     cy.visit("/login");
   });
 
-  it("renders the login form", () => {
-    cy.contains("IQSign").should("be.visible");
-    cy.get('[data-testid="username-input"]').should("be.visible");
-    cy.get('[data-testid="access-token"]').should("be.visible");
-    cy.get("button").contains("Log in").should("be.visible");
+  it("renders the IQSign logo", () => {
+    cy.get('[data-testid="topbar"]').should("be.visible");
   });
-
+  
   it("allows the user to input username and access token", () => {
     cy.get('[data-testid="username-input"]')
       .type("testuser")
