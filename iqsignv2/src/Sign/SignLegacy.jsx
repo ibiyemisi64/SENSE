@@ -51,7 +51,7 @@ export function SignTextFormatterLegacy() {
         label="Sign Contents"
         multiline
         rows={4}
-        defaultValue="Default Sign Text"
+        defaultValue="%bg cyan #bold #red Stepped in %fg blue @ sv-comic-char-rolled @ sv-comic-char-away @ sv-seagull"
         fullWidth
         sx={{ mt: 4 }}
       />
@@ -78,14 +78,14 @@ export function SignDimensionMenuItem() {
     <TextField
       id="outlined-uncontrolled"
       label="Width"
-      defaultValue="14"
+      defaultValue="2048"
       size="small"
       sx={{ m: 1, minWidth: 70, maxWidth: 70 }}
     />
     <TextField
       id="outlined-uncontrolled"
       label="Height"
-      defaultValue="14"
+      defaultValue="1152"
       size="small"
       sx={{ m: 1, minWidth: 70, maxWidth: 70 }}
     />
@@ -100,7 +100,7 @@ export function SignFormatterMenuLegacy() {
       <TextField
       id="outlined-uncontrolled"
       label="Sign Name"
-      defaultValue="In Class"
+      defaultValue="Hello"
       size="small"
       sx={{ m: 1, minWidth: 140, maxWidth: 140 }}
       />
