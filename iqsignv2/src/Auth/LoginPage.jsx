@@ -184,7 +184,7 @@ const LoginPage = () => {
             <Box sx={{ mt: 2 }}>
               <Typography>
                 <Link href="/register" underline="hover" sx={{ color: 'black' }}>
-                  New Account
+                  Create New Account
                 </Link>
               </Typography>
             </Box>
