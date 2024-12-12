@@ -72,3 +72,4 @@ RunnerTests
 
 # Ignore Gradle build output directory
 build
+iqsign/dump.rdb
