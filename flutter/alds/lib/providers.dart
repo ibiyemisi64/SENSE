@@ -39,13 +39,15 @@ class ThemeProvider extends ChangeNotifier {
   }
 }
 
+// We might need this for current position
 class PositionProvider extends ChangeNotifier {
   Position? pos;
 
   PositionProvider({required this.pos});
 
-  void setPosition(Position? pos) {
-    this.pos = pos;
+  void setPosition() async {
+    pos = await util.getCurrentLocation();
+    // this.pos = pos;
     notifyListeners();
   }
 }

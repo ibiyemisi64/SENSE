@@ -48,60 +48,63 @@ class _AldsMapPageState extends ConsumerState<AldsMapPage> {
     // Initialize state variables
     alds_loc.Locator loc = alds_loc.Locator();
     util.log("LOCATOR initialized");
-    // ref.watch(curLocationNameProvider).setLocationName();
-    // _curLocationText = ref.read(curLocationNameProvider).locationName;
     _curLocationText = loc.lastLocation ?? "Unsaved Location";
     _isLoading = true;
+    _initializeCurPosition();
 
     // Async functions
     util.log("calling async functions");
     _getSavedLocations();
-    _getCurrentLocation();
+    // _getCurrentLocation();
   }
 
-  Future<void> _getCurrentLocation() async {
-    // Code adapted from: https://pub.dev/packages/geolocator#example
-    util.log("getCurrentLocation() called");
-    bool serviceEnabled;
-    LocationPermission permission;
+  Future<void> _initializeCurPosition() async {
+    _curPosition = await util.getCurrentLocation();
+  }
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  // Future<void> _getCurrentLocation() async {
+  //   // Code adapted from: https://pub.dev/packages/geolocator#example
+  //   util.log("getCurrentLocation() called");
+  //   bool serviceEnabled;
+  //   LocationPermission permission;
 
-    // If location services are not enabled don't continue
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
+  //   serviceEnabled = await Geolocator.isLocationServiceEnabled();
 
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        // Permissions are denied, next time you could try
-        // requesting permissions again (this is also where
-        // Android's shouldShowRequestPermissionRationale 
-        // returned true. According to Android guidelines
-        // your App should show an explanatory UI now.
-        return Future.error('Location permissions are denied');
-      }
-    }
+  //   // If location services are not enabled don't continue
+  //   if (!serviceEnabled) {
+  //     return Future.error('Location services are disabled.');
+  //   }
+
+  //   permission = await Geolocator.checkPermission();
+  //   if (permission == LocationPermission.denied) {
+  //     permission = await Geolocator.requestPermission();
+  //     if (permission == LocationPermission.denied) {
+  //       // Permissions are denied, next time you could try
+  //       // requesting permissions again (this is also where
+  //       // Android's shouldShowRequestPermissionRationale 
+  //       // returned true. According to Android guidelines
+  //       // your App should show an explanatory UI now.
+  //       return Future.error('Location permissions are denied');
+  //     }
+  //   }
     
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately. 
-      return Future.error('Location permissions are permanently denied');
-    } 
+  //   if (permission == LocationPermission.deniedForever) {
+  //     // Permissions are denied forever, handle appropriately. 
+  //     return Future.error('Location permissions are permanently denied');
+  //   } 
 
-    // When we reach here, permissions are granted and we can
-    // continue accessing the position of the device.
-    final pos = await Geolocator.getCurrentPosition();
-    double lat = pos.latitude;
-    double long = pos.longitude;
-    util.log("CURRENT LOCATION: ($lat, $long)");
+  //   // When we reach here, permissions are granted and we can
+  //   // continue accessing the position of the device.
+  //   final pos = await Geolocator.getCurrentPosition();
+  //   double lat = pos.latitude;
+  //   double long = pos.longitude;
+  //   util.log("CURRENT LOCATION: ($lat, $long)");
 
-    // Update the current position
-    setState(() {
-      _curPosition = pos;
-    });
-  }
+  //   // Update the current position
+  //   setState(() {
+  //     _curPosition = pos;
+  //   });
+  // }
 
   Future<void> _getSavedLocations() async {
     String? locDataJson = await storage.readLocationData();
