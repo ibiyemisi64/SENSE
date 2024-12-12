@@ -9,7 +9,6 @@ import TopBar from "../Topbar/TopBar.jsx";
 import EditIcon from '@mui/icons-material/Edit';
 import { Link } from 'react-router-dom';
 import Sign from './Sign.jsx'
-import getSignData from './hooks/getSignData.jsx'
 
 export function SignDisplayScaleItem() {
   const [scale, setScale] = useState('16 x 9');
@@ -112,9 +111,6 @@ export function SignFormatterMenuLegacy() {
 }
 
 export default function SignEditorLegacy() {
-
-  const { loadCurrentSign } = getSignData();
-
   return (
     <>
       <TopBar></TopBar>
@@ -133,7 +129,7 @@ export default function SignEditorLegacy() {
       >
 
         <Grid2 item xs={12} sm={6}>
-          <SignTextFormatterLegacy />
+          <SignTextFormatterLegacy/>
         </Grid2>
 
 

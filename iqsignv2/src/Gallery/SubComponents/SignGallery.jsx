@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { Box, Grid, IconButton, Modal, Tabs, Tab, Stack } from '@mui/material';
+import { Box, Grid, IconButton, Modal, Tabs, Tab, Stack, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useGalleryStore } from '../hooks/galleryStore.jsx';
 import FileUpload from './FileUpload.jsx';
@@ -126,7 +126,9 @@ const SignGallery = () => {
                                     width: '100%',
                                 }}
                             >
+                                <Typography>
                                 {names[index]}
+                                </Typography>
                             </Box>
                         </Box>
                     </Grid>

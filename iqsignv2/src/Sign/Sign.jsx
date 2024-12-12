@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid2, Box, Button, IconButton, MenuItem, Select, InputLabel, FormControl, Typography, TextField, Stack } from '@mui/material';
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
@@ -8,8 +8,16 @@ import DefaultClassSign from '../assets/backgrounds/class.png';
 import TopBar from "../Topbar/TopBar.jsx";
 import EditIcon from '@mui/icons-material/Edit';
 import { Link } from 'react-router-dom';
+import { getCurrentSignData } from './hooks/getSignData.jsx'
 
 export default function Sign() {
+
+  const { signData, loadCurrentSign, signImageUrl, signPreviewUrl } = getCurrentSignData();
+
+  useEffect(()=> {
+    loadCurrentSign();
+  },[])
+
   return (
       <>
     <Box
@@ -20,7 +28,7 @@ export default function Sign() {
         boxShadow: 3
       }}
       alt="User's current sign."
-      src={DefaultClassSign}
+      src={signImageUrl}
     >
 
     </Box>
