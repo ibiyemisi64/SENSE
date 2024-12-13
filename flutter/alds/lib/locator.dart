@@ -1,49 +1,56 @@
 /*
- *      locator.dart
- * 
- *    Code to store/update current location information
- * 
+ * locator.dart
+ *
+ * Purpose:
+ *   Code to store and update current location information based on GPS and Bluetooth data.
+ *
+ * Copyright 2024 Brown University -- Steven Reiss, Kelsie Edie, and Micheal Tu
+ *
+ * All Rights Reserved
+ *
+ * Permission to use, copy, modify, and distribute this software and its
+ * documentation for any purpose other than its incorporation into a
+ * commercial product is hereby granted without fee, provided that the
+ * above copyright notice appear in all copies and that both that
+ * copyright notice and this permission notice appear in supporting
+ * documentation, and that the name of Brown University not be used in
+ * advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.
+ *
+ * BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR ANY PARTICULAR PURPOSE. IN NO EVENT SHALL BROWN UNIVERSITY
+ * BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY
+ * DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+ * WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+ * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+ * OF THIS SOFTWARE.
  */
-/*	Copyright 2023 Brown University -- Steven P. Reiss			*/
-/// *******************************************************************************
-///  Copyright 2023, Brown University, Providence, RI.				 *
-///										 *
-///			  All Rights Reserved					 *
-///										 *
-///  Permission to use, copy, modify, and distribute this software and its	 *
-///  documentation for any purpose other than its incorporation into a		 *
-///  commercial product is hereby granted without fee, provided that the 	 *
-///  above copyright notice appear in all copies and that both that		 *
-///  copyright notice and this permission notice appear in supporting		 *
-///  documentation, and that the name of Brown University not be used in 	 *
-///  advertising or publicity pertaining to distribution of the software 	 *
-///  without specific, written prior permission. 				 *
-///										 *
-///  BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS		 *
-///  SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND		 *
-///  FITNESS FOR ANY PARTICULAR PURPOSE.  IN NO EVENT SHALL BROWN UNIVERSITY	 *
-///  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY 	 *
-///  DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,		 *
-///  WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS		 *
-///  ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 	 *
-///  OF THIS SOFTWARE.								 *
-///										 *
-///******************************************************************************
-
 
 import 'package:geolocator/geolocator.dart';
-import 'util.dart' as util;
 import 'dart:math';
-import "recheck.dart" as recheck;
-import "dart:convert";
-import "storage.dart" as storage;
-import "device.dart" as device;
+import 'dart:convert';
 
-const btFraction = 0.7;
-const locFraction = 0.15;
-const altFraction = 0.15;
-const useThreshold = 0.75;
-const stableCount = 3;
+import 'util.dart' as util;
+import 'recheck.dart' as recheck;
+import 'storage.dart' as storage;
+import 'device.dart' as device;
+
+class LocatorConfig {
+  final double btFraction;
+  final double locFraction;
+  final double altFraction;
+  final double useThreshold;
+  final int stableCount;
+
+  const LocatorConfig({
+    this.btFraction = 0.7,
+    this.locFraction = 0.15,
+    this.altFraction = 0.15,
+    this.useThreshold = 0.25, // Threshold altered for demonstration purposes
+    this.stableCount = 3,
+  });
+}
 
 class Locator {
   LocationData? _curLocationData;
@@ -52,116 +59,195 @@ class Locator {
   String? _nextLocation;
   int _nextCount = 0;
 
+  final LocatorConfig config;
+
   static final Locator _locator = Locator._internal();
 
-  factory Locator() {
+  factory Locator({LocatorConfig config = const LocatorConfig()}) {
     return _locator;
   }
 
-  void setup() async {
+  Locator._internal() : config = const LocatorConfig();
+
+  /// Initializes the Locator by reading stored location data.
+  Future<void> setup() async {
     String? s = await storage.readLocationData();
     if (s != null) {
-      var x = jsonDecode(s) as List;
-      List<KnownLocation> klst =
-          x.map((json) => KnownLocation.fromJson(json)).toList();
-      _knownLocations = klst;
+      var decoded = jsonDecode(s) as List;
+      _knownLocations = decoded
+          .map((json) => KnownLocation.fromJson(json))
+          .whereType<KnownLocation>()
+          .toList();
+    } else {
       _knownLocations = [];
     }
   }
 
-  LocationData updateLocation(Position? pos, List<BluetoothData> btdata) {
-    LocationData nloc = LocationData(pos, btdata);
-    LocationData? cloc = _curLocationData;
-    if (cloc != null) {
-      // returns _curLocationData or null
-      LocationData? rloc = cloc.update(pos, btdata);
-      if (rloc == cloc) return cloc;
-    }
-    _curLocationData = nloc;
-
-    findLocation();
-    return nloc;
+  /// Removes a location from the known locations list.
+  void removeLocation(String location) {
+    util.log("Removing location: $location");
+    _knownLocations.removeWhere((kl) => kl.location == location);
+    lastLocation = null; // Reset the last location
+    util.log("AFTER removing: $_knownLocations");
   }
 
-  Future<String?> findLocation(
-      {LocationData? location,
-      bool userset = false,
-      bool update = false}) async {
-    String? rslt;
+  /// Updates the current location data with new GPS and Bluetooth data.
+  /// Attempts to merge with existing location if consistent; otherwise, sets new.
+  LocationData updateLocation(Position? pos, List<BluetoothData> btdata) {
+    if (btdata.isEmpty && pos == null) {
+      util.log("No position or BT data provided for updateLocation.");
+      return _curLocationData ?? LocationData(null, []);
+    }
+
+    LocationData newLocation = LocationData(pos, btdata);
+    LocationData? currentLocation = _curLocationData;
+
+    if (currentLocation != null) {
+      LocationData? updatedLocation = currentLocation.update(pos, btdata);
+      if (updatedLocation == currentLocation) return currentLocation; // Successfully merged
+      util.log("Current location data not merged; using new data set.");
+    }
+
+    _curLocationData = newLocation;
+    findLocation();
+    return newLocation;
+  }
+
+  /// Attempts to find a known location that matches the current data.
+  /// If found above threshold, updates lastLocation accordingly.
+  Future<String?> findLocation({
+    LocationData? location,
+    bool userset = false,
+    bool update = false,
+  }) async {
+    String? result;
     LocationData? ld = location;
+
     if (update) ld = await recheck.recheck();
     ld ??= _curLocationData;
-    util.log("FIND ${ld?._bluetoothData} ${ld?._gpsPosition}");
 
-    if (ld == null) return rslt;
+    util.log("FIND ${ld?._bluetoothData} ${ld?._gpsPosition}");
+    if (ld == null) return result;
 
     KnownLocation test = KnownLocation(ld, null);
     KnownLocation? best;
-    double bestscore = -1;
+    double bestScore = -1;
+
+    util.log("BEFORE Known locations: ${_knownLocations.map((kl) => kl.toJson())}");
+
     for (KnownLocation kl in _knownLocations) {
-      double score = kl.score(test);
+      double score = _scoreMatch(kl, test);
       util.log("Compute score $score for ${kl.location}");
-      if (score > bestscore) {
-        bestscore = score;
+      if (score > bestScore) {
+        bestScore = score;
         best = kl;
       }
     }
-    if (best != null && bestscore > useThreshold) {
-      if (!userset) best.merge(test);
-      rslt = best.location as String;
+
+    if (best != null && bestScore > config.useThreshold) {
+      if (!userset) {
+        _mergeLocation(best, test);
+      }
+      result = best.location;
     }
 
-    if (lastLocation == null || userset || rslt == lastLocation) {
-      await _changeLocation(rslt);
+    await _handleStableLocationChange(result, userset, ld);
+    return result;
+  }
+
+  /// Handles the stability of location changes before committing.
+  Future<void> _handleStableLocationChange(
+      String? result, bool userset, LocationData ld) async {
+    if (lastLocation == null || userset || result == lastLocation) {
+      await _changeLocation(result);
       _nextLocation = null;
       _nextCount = 0;
-    } else if (rslt == _nextLocation) {
-      if (++_nextCount >= stableCount) {
-        await _changeLocation(rslt);
+    } else if (result == _nextLocation) {
+      if (++_nextCount >= config.stableCount) {
+        await _changeLocation(result);
         _nextLocation = null;
         _nextCount = 0;
       }
     } else {
-      _nextLocation = rslt;
+      _nextLocation = result;
       _nextCount = 1;
     }
 
     util.sendDataToCedes({
       "type": "DATA",
       "data": ld.toJson(),
-      "location": rslt,
+      "location": result,
       "set": userset,
       "next": _nextLocation,
       "nextCount": _nextCount
     });
-
-    return rslt;
   }
 
+  /// Merges two known locations to improve data quality.
+  void _mergeLocation(KnownLocation base, KnownLocation newKl) {
+    base.merge(newKl);
+  }
+
+  /// Calculates a match score between two known locations.
+  double _scoreMatch(KnownLocation kl, KnownLocation test) {
+    // Bluetooth vector similarity
+    double btScore = kl.btScore(test);
+    util.log("BLUETOOTH SCORE $btScore");
+
+    double score = btScore * config.btFraction;
+
+    // Position/Altitude scoring if available
+    Position? p0 = kl.position;
+    Position? p1 = test.position;
+    if (p0 != null && p1 != null) {
+      // Distance check
+      double distance = util.calculateDistance(
+          p0.latitude, p0.longitude, p1.latitude, p1.longitude);
+      double maxAccuracy = max(p0.accuracy, p1.accuracy);
+      double locScore = (1.0 - (distance / (2 * maxAccuracy)));
+      locScore = locScore.clamp(0, 1);
+
+      // Altitude check
+      double altDifference = (p0.altitude - p1.altitude).abs() / 5;
+      double altScore = (1.0 - altDifference).clamp(0, 1);
+
+      util.log("GPS SCORES loc:$locScore alt:$altScore");
+      score += locScore * config.locFraction + altScore * config.altFraction;
+    }
+
+    return score;
+  }
+
+  /// Changes the current location if it differs from the last known location.
   Future<void> _changeLocation(String? loc) async {
     if (lastLocation == loc || loc == null) return;
     lastLocation = loc;
     device.Cedes().updateLocation(loc);
   }
 
+  /// Notes a user-set location. Merges if it matches an existing location; otherwise, adds a new one.
   Future<void> noteLocation(String loc) async {
     LocationData ld = await recheck.recheck();
-    String? s = await findLocation(location: ld, userset: true);
-    if (s == loc) {
-      findLocation(); // merge
+    String? existingLoc = await findLocation(location: ld, userset: true);
+
+    util.log("noteLocation comparison: $existingLoc vs. $loc");
+    if (existingLoc == loc) {
+      // Already known location - merge it in
+      await findLocation();
     } else {
-      KnownLocation nloc = KnownLocation(ld, loc);
-      _knownLocations.add(nloc);
-      lastLocation = loc;
-
-      // might want to force merge locations if there are too many
-      // for a single room
+      // Ensure uniqueness of location names
+      List<String?> knownLocationNames =
+          _knownLocations.map((kl) => kl.location).toList();
+      if (!knownLocationNames.contains(loc)) {
+        KnownLocation newLoc = KnownLocation(ld, loc);
+        _knownLocations.add(newLoc);
+        lastLocation = loc;
+      }
     }
-    String data = jsonEncode(_knownLocations);
-    storage.saveLocatorData(data);
-  }
 
-  Locator._internal();
+    // Reinitialize the Locator singleton
+    Locator._internal();
+  }
 }
 
 class LocationData {
@@ -169,62 +255,96 @@ class LocationData {
   Position? _gpsPosition;
   int _count = 1;
 
-  LocationData(this._gpsPosition, List<BluetoothData> bts) {
-    _bluetoothData = {for (BluetoothData bt in bts) bt._id: bt};
+  LocationData(this._gpsPosition, List<BluetoothData> btList) {
+    // Normalize and store Bluetooth data
+    for (BluetoothData bt in btList) {
+      if (bt.rssi == 127) bt.rssi = -127; // Fix invalid RSSI
+      _bluetoothData[bt.id] = bt;
+    }
   }
 
+  /// Updates current location with new data. Returns null if inconsistent.
   LocationData? update(Position? pos, List<BluetoothData> btdata) {
-    int ct = 0;
-    Map<String, BluetoothData> nmap = {};
-    for (BluetoothData bd in btdata) {
-      if (bd._rssi == 127) bd._rssi = -127;
-      BluetoothData? match = _bluetoothData[bd._id];
-      if (match == null) return null; // new bluetooth item
-      int delta = (match._rssi - bd._rssi).abs();
-      if (delta > 4) return null;
-      int nrssi = ((match._rssi * _count + bd._rssi) ~/ (_count + 1));
-      nmap[bd._id] = BluetoothData(bd._id, nrssi, bd._name);
-      ++ct;
-    }
-    if (ct != _bluetoothData.length) return null;
-    Position? gpos = _gpsPosition;
-    Position? npos;
-    if (pos != null && gpos != null) {
-      if (_gpsPosition != null) {
-        double d1 = (pos.latitude - gpos.latitude).abs();
-        if (d1 > pos.accuracy / 2) return null;
-        double d2 = (pos.longitude - gpos.longitude).abs();
-        if (d2 > pos.accuracy / 2) return null;
-        double d3 = (pos.altitude - gpos.altitude).abs();
-        if (d3 > pos.accuracy / 4) return null;
-        double d4 = (pos.speed - gpos.speed).abs();
-        if (d4 > pos.speedAccuracy / 2) return null;
-      }
-      npos = Position(
-        latitude: (gpos.latitude * _count + pos.latitude) / (_count + 1),
-        longitude: (gpos.longitude * _count + pos.longitude) / (_count + 1),
-        accuracy: max(gpos.accuracy, pos.accuracy),
-        timestamp: gpos.timestamp,
-        altitude: (gpos.altitude * _count + pos.altitude) / (_count + 1),
-        altitudeAccuracy: 20,  // FIXME: Added after upgrading packages, adjust later
-        heading: gpos.heading,
-        headingAccuracy: 20,  // FIXME: Added after upgrading packages, adjust later
-        speed: max(gpos.speed, pos.speed),
-        speedAccuracy: max(gpos.speedAccuracy, pos.speedAccuracy),
-      );
+    // Create a map of new Bluetooth data and compare
+    Map<String, BluetoothData> newMap = {};
+    int count = 0;
+
+    // Check for new or missing Bluetooth IDs
+    Set<String> oldKeys = _bluetoothData.keys.toSet();
+    Set<String> newKeys = btdata.map((e) => e.id).toSet();
+
+    if (oldKeys != newKeys) {
+      util.log("Bluetooth set changed; can't merge. Old: $oldKeys New: $newKeys");
+      return null;
     }
 
-    _bluetoothData = nmap;
-    _gpsPosition = npos;
+    for (BluetoothData bd in btdata) {
+      BluetoothData? match = _bluetoothData[bd.id];
+      if (match == null) return null;
+      int delta = (match.rssi - bd.rssi).abs();
+      if (delta > 4) return null;
+      int mergedRssi = ((match.rssi * _count + bd.rssi) ~/ (_count + 1));
+      newMap[bd.id] = BluetoothData(bd.id, mergedRssi, bd.name);
+      ++count;
+    }
+
+    if (count != _bluetoothData.length) {
+      util.log("Bluetooth count mismatch after merge attempt");
+      return null;
+    }
+
+    // Check GPS consistency
+    Position? existingPos = _gpsPosition;
+    Position? newPos;
+    if (pos != null && existingPos != null) {
+      if (!_isGpsConsistent(existingPos, pos)) return null;
+
+      newPos = Position(
+        latitude: (existingPos.latitude * _count + pos.latitude) / (_count + 1),
+        longitude: (existingPos.longitude * _count + pos.longitude) / (_count + 1),
+        accuracy: max(existingPos.accuracy, pos.accuracy),
+        timestamp: existingPos.timestamp,
+        altitude: (existingPos.altitude * _count + pos.altitude) / (_count + 1),
+        altitudeAccuracy: 20,
+        heading: existingPos.heading,
+        headingAccuracy: 20,
+        speed: max(existingPos.speed, pos.speed),
+        speedAccuracy: max(existingPos.speedAccuracy, pos.speedAccuracy),
+      );
+    } else {
+      // If no previous GPS or new GPS, keep the existing
+      newPos = pos ?? existingPos;
+    }
+
+    _bluetoothData = newMap;
+    _gpsPosition = newPos;
     _count++;
     return this;
   }
 
+  /// Checks if the new GPS position is consistent with the existing one.
+  bool _isGpsConsistent(Position oldPos, Position newPos) {
+    double latDiff = (newPos.latitude - oldPos.latitude).abs();
+    if (latDiff > newPos.accuracy / 2) return false;
+
+    double lonDiff = (newPos.longitude - oldPos.longitude).abs();
+    if (lonDiff > newPos.accuracy / 2) return false;
+
+    double altDiff = (newPos.altitude - oldPos.altitude).abs();
+    if (altDiff > newPos.accuracy / 4) return false;
+
+    double speedDiff = (newPos.speed - oldPos.speed).abs();
+    if (speedDiff > newPos.speedAccuracy / 2) return false;
+
+    return true;
+  }
+
+  /// Converts the LocationData to JSON format.
   Map<String, dynamic> toJson() {
-    List btdata =
+    List btDataList =
         _bluetoothData.values.map((BluetoothData bd) => bd.toJson()).toList();
     return {
-      "bluetoothData": btdata,
+      "bluetoothData": btDataList,
       "gpsPosition": _gpsPosition?.toJson(),
       "count": _count,
     };
@@ -232,19 +352,20 @@ class LocationData {
 }
 
 class BluetoothData {
-  final String _id;
-  int _rssi;
-  final String _name;
+  final String id;
+  int rssi;
+  final String name;
 
-  BluetoothData(this._id, this._rssi, this._name);
+  BluetoothData(this.id, this.rssi, this.name);
 
   @override
   String toString() {
-    return "BT:$_id = $_rssi ($_name)";
+    return "BT:$id = $rssi ($name)";
   }
 
+  /// Converts the BluetoothData to JSON format.
   Map<String, dynamic> toJson() {
-    return {"id": _id, "rssi": _rssi, "name": _name};
+    return {"id": id, "rssi": rssi, "name": name};
   }
 }
 
@@ -254,89 +375,87 @@ class KnownLocation {
   String? location;
   int _count = 1;
 
+  Position? get position => _position;
+
   KnownLocation(LocationData ldata, this.location) {
+    _initFromLocationData(ldata);
+  }
+
+  /// Initializes KnownLocation from LocationData.
+  void _initFromLocationData(LocationData ldata) {
     _position = ldata._gpsPosition;
-    Map<String, double> bmap = {};
-    double totsq = 0;
-    for (MapEntry<String, BluetoothData> ent in ldata._bluetoothData.entries) {
-      double v = ent.value._rssi.toDouble();
-      v = (v + 128) / 100;
-      if (v < 0) continue;
-      if (v > 1) v = 1;
-      totsq += v * v;
-      bmap[ent.key] = v;
-    }
-    totsq = sqrt(totsq);
-    _bluetoothMap = bmap.map((k, v) => MapEntry(k, v / totsq));
-  }
+    Map<String, double> bMap = {};
+    double totalSquare = 0;
 
-  double score(KnownLocation kl) {
-    double score = _btScore(kl);
-    util.log("BLUETOOTH SCORE $score");
-    Position? p0 = _position;
-    Position? p1 = kl._position;
-    if (p0 != null && p1 != null) {
-      double d0 = util.calculateDistance(
-          p0.latitude, p0.longitude, p1.latitude, p1.longitude);
-      double d1 = max(p0.accuracy, p1.accuracy);
-      util.log("GPS DISTANCE $d0 $d1 $p0 $p1");
-      double d2 = d0 / (2 * d1);
-      d2 = (1.0 - d2);
-      if (d2 < 0) d2 = 0;
-      double a0 = (p0.altitude - p1.altitude).abs() / 5;
-      double a1 = (1.0 - a0);
-      if (a1 < 0) a1 = 0;
-      util.log("GPS SCORES $d2 $a1");
-      score = d2 * locFraction + a1 * altFraction + score * btFraction;
+    for (MapEntry<String, BluetoothData> entry in ldata._bluetoothData.entries) {
+      double value = (entry.value.rssi + 128) / 100;
+      if (value < 0) continue;
+      value = value.clamp(0, 1);
+      totalSquare += value * value;
+      bMap[entry.key] = value;
     }
 
-    return score;
+    double norm = totalSquare > 0 ? sqrt(totalSquare) : 1.0;
+    _bluetoothMap = bMap.map((k, v) => MapEntry(k, v / norm));
   }
 
-  double _btScore(KnownLocation kl) {
+  /// Calculates the Bluetooth score between two KnownLocations.
+  double btScore(KnownLocation kl) {
     double score = 0;
-    for (MapEntry<String, double> ent in _bluetoothMap.entries) {
-      double? kval = kl._bluetoothMap[ent.key];
-      if (kval != null) score += kval * ent.value;
+    for (MapEntry<String, double> entry in _bluetoothMap.entries) {
+      double? klValue = kl._bluetoothMap[entry.key];
+      if (klValue != null) score += klValue * entry.value;
     }
     return score;
   }
 
+  /// Merges another KnownLocation into this one to improve data quality.
   void merge(KnownLocation kl) {
-    Map<String, double> btmap = {};
-    double ct = _count.toDouble();
-    double kct = kl._count.toDouble();
-    double tct = ct + kct;
-    for (MapEntry<String, double> ent in _bluetoothMap.entries) {
-      double dv = kl._bluetoothMap[ent.key] ?? 0;
-      btmap[ent.key] = (ent.value * ct + dv * kct) / tct;
+    Map<String, double> mergedMap = {};
+    double currentCount = _count.toDouble();
+    double klCount = kl._count.toDouble();
+    double totalCount = currentCount + klCount;
+
+    // Merge Bluetooth signatures
+    for (MapEntry<String, double> entry in _bluetoothMap.entries) {
+      double klValue = kl._bluetoothMap[entry.key] ?? 0;
+      mergedMap[entry.key] =
+          (entry.value * currentCount + klValue * klCount) / totalCount;
     }
-    for (MapEntry<String, double> ent in kl._bluetoothMap.entries) {
-      if (btmap[ent.key] == null) {
-        btmap[ent.key] = ent.value * kct / tct;
+
+    for (MapEntry<String, double> entry in kl._bluetoothMap.entries) {
+      if (!mergedMap.containsKey(entry.key)) {
+        mergedMap[entry.key] = entry.value * klCount / totalCount;
       }
     }
+
+    // Merge positions
     Position? p0 = _position;
     Position? p1 = kl._position;
     if (p0 != null && p1 != null) {
-      // accuracy should include max distance as well
       _position = Position(
-        latitude: (p0.latitude * ct + p1.latitude * kct) / tct,
-        longitude: (p0.longitude * ct + p1.longitude * kct) / tct,
+        latitude: (p0.latitude * currentCount + p1.latitude * klCount) / totalCount,
+        longitude: (p0.longitude * currentCount + p1.longitude * klCount) / totalCount,
         accuracy: max(p0.accuracy, p1.accuracy),
         timestamp: p0.timestamp,
-        altitude: (p0.altitude * ct + p1.altitude * kct) / tct,
-        altitudeAccuracy: 20,  // FIXME: Added after upgrading packages, adjust later
+        altitude: (p0.altitude * currentCount + p1.altitude * klCount) / totalCount,
+        altitudeAccuracy: 20,
         heading: p0.heading,
-        headingAccuracy: 20,  // FIXME: Added after upgrading packages, adjust later
+        headingAccuracy: 20,
         speed: max(p0.speed, p1.speed),
         speedAccuracy: max(p0.speedAccuracy, p1.speedAccuracy),
       );
+    } else if (p1 != null && p0 == null) {
+      // If no previous position, adopt p1
+      _position = p1;
     }
+
+    _bluetoothMap = mergedMap;
     _count++;
   }
 
-  Map toJson() {
+  /// Converts the KnownLocation to JSON format.
+  Map<String, dynamic> toJson() {
     return {
       "bluetooth": jsonEncode(_bluetoothMap),
       "position": _position?.toJson(),
@@ -345,26 +464,22 @@ class KnownLocation {
     };
   }
 
+  /// Creates a KnownLocation instance from JSON data.
   KnownLocation.fromJson(Map<String, dynamic> json) {
-    _count = json['count'];
+    _count = json['count'] ?? 1;
     location = json['location'];
-    _position = Position.fromMap(json['position']);
-    Map<String, dynamic> dmap = jsonDecode(json['bluetooth']);
-    for (MapEntry<String, dynamic> ent in dmap.entries) {
-      double d = ent.value;
-      _bluetoothMap[ent.key] = d;
+    if (json['position'] != null) {
+      _position = Position.fromMap(json['position']);
+    }
+
+    Map<String, dynamic> decodedBluetooth = jsonDecode(json['bluetooth']);
+    for (MapEntry<String, dynamic> entry in decodedBluetooth.entries) {
+      double? value = double.tryParse(entry.value.toString());
+      if (value != null) {
+        _bluetoothMap[entry.key] = value;
+      } else {
+        util.log("Invalid Bluetooth value for key ${entry.key}");
+      }
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-

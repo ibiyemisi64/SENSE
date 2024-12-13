@@ -1,128 +1,181 @@
 /*
- *    mainpage.dart 
- *    
- *    New Main page for displaying room
- * 
+ * mainpage.dart
+ *
+ * Purpose:
+ *   Defines the map page for the ALDS (Automatic Location Detection System) Flutter application.
+ *   Displays the current location on a map, allows users to validate and save locations,
+ *   and shows saved locations with markers.
+ *
+ * Copyright 2024 Brown University -- Michael Tu and Kelsie Edie
+ *
+ * All Rights Reserved
+ *
+ * Permission to use, copy, modify, and distribute this software and its
+ * documentation for any purpose other than its incorporation into a
+ * commercial product is hereby granted without fee, provided that the
+ * above copyright notice appear in all copies and that both that
+ * copyright notice and this permission notice appear in supporting
+ * documentation, and that the name of Brown University not be used in
+ * advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.
+ *
+ * BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR ANY PARTICULAR PURPOSE. IN NO EVENT SHALL BROWN UNIVERSITY
+ * BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY
+ * DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+ * WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+ * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+ * OF THIS SOFTWARE.
  */
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:convert';
 
+import 'providers.dart';
 import 'widgets.dart' as widgets;
 import 'util.dart' as util;
-import 'locator.dart';
+import 'locator.dart' as alds_loc;
+import 'storage.dart' as storage;
+import 'savedpage.dart';
 
-class AldsMapPage extends StatefulWidget {
-  const AldsMapPage({super.key});
+class AldsMapPage extends ConsumerStatefulWidget {
+  const AldsMapPage({super.key, required bool isLoading, required double currentLat, required double currentLng});
 
   @override
-  State<AldsMapPage> createState() => _AldsMapPageState();
+  ConsumerState<AldsMapPage> createState() => _AldsMapPageState();
 }
 
-class _AldsMapPageState extends State<AldsMapPage> {
+class _AldsMapPageState extends ConsumerState<AldsMapPage> {
   String _curLocationText = "";
   Position? _curPosition;
+  final TextEditingController _controller = TextEditingController();
+  // ignore: unused_field
+  String? _selectedLocation;
+  List<String> locations = [];
+  late bool _isLoading;
+  List<SavedLocation> savedLocations = [];
 
   _AldsMapPageState();
 
   @override
   void initState() {
     super.initState();
-    
-    // Initial state
-    Locator loc = Locator();
+
+    alds_loc.Locator loc = alds_loc.Locator();
+    util.log("LOCATOR initialized");
     _curLocationText = loc.lastLocation ?? "Unsaved Location";
-    _getCurrentLocation();
+    _isLoading = true;
+    _initializeCurPosition();
+
+    util.log("calling async functions");
+    _getSavedLocations();
   }
 
-  _getCurrentLocation() async {
-    // Code adapted from: https://pub.dev/packages/geolocator#example
+  Future<void> _initializeCurPosition() async {
+    _curPosition = await util.getCurrentLocation();
+  }
 
-    bool serviceEnabled;
-    LocationPermission permission;
+  Future<void> _getSavedLocations() async {
+    String? locDataJson = await storage.readLocationData();
 
-    // Test if location services are enabled.
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      // Location services are not enabled don't continue
-      // accessing the position and request users of the 
-      // App to enable the location services.
-      return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        // Permissions are denied, next time you could try
-        // requesting permissions again (this is also where
-        // Android's shouldShowRequestPermissionRationale 
-        // returned true. According to Android guidelines
-        // your App should show an explanatory UI now.
-        return Future.error('Location permissions are denied');
+    if (locDataJson != null) {
+      try {
+        List<dynamic> locDataParsed = List<dynamic>.from(jsonDecode(locDataJson));
+        setState(() {
+          locations = locDataParsed.map((locData) => locData['location'] as String).toList();
+          savedLocations = locDataParsed.map((locData) => SavedLocation(
+            locData['location'],
+            locData['position']['latitude'],
+            locData['position']['longitude']
+          )).toList();
+          _isLoading = false;
+        });
+      } catch (e) {
+        util.log("Error parsing location data: $e");
+        setState(() {
+          locations = [];
+          savedLocations = [];
+          _isLoading = false;
+        });
       }
+    } else {
+      util.log("No location data found in local storage");
+      setState(() {
+        locations = [];
+        savedLocations = [];
+        _isLoading = false;
+      });
     }
-    
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately. 
-      return Future.error(
-        'Location permissions are permanently denied, we cannot request permissions.');
-    } 
-
-    // When we reach here, permissions are granted and we can
-    // continue accessing the position of the device.
-    final pos = await Geolocator.getCurrentPosition();
-    double lat = pos.latitude;
-    double long = pos.longitude;
-    util.log("CURRENT LOCATION: ($lat, $long)");
-    setState(() {
-      _curPosition = pos;
-    });
   }
-
 
   @override
   Widget build(BuildContext context) {
-    return Column( 
+    if (_isLoading) {
+      return const CircularProgressIndicator();
+    }
+
+    return Column(
       children: [
-        // Header
         SizedBox(
           height: 50,
           child: Center(
             child: Text(
               "Current Location: $_curLocationText",
               style: GoogleFonts.anta(
-                textStyle: const TextStyle(color: Colors.black, fontSize: 20),
+                textStyle: const TextStyle(fontSize: 20),
               ),
             ),
           ),
         ),
         widgets.fieldSeparator(),
-        // Map
         Expanded(
           child: _createLocationMap(),
         ),
-        SizedBox(
-          height: 50,
-          child: Center(
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              widgets.searchableDropdown(
+                  "locations_dropdown",
+                  MediaQuery.of(context).size.width * 0.4,
+                  _controller,
+                  locations,
+                  (String? value) => setState(() => _selectedLocation = value)
               ),
-              onPressed: _handleValidateLocation, 
-              child: Text(
-                "Validate Location",
-                style: GoogleFonts.anta(
-                  textStyle: const TextStyle(color: Colors.white),
+              const SizedBox(width: 20,),
+              SizedBox(
+                height: 50,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurpleAccent,
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                  ),
+                  onPressed: _handleValidateLocation,
+                  child: FittedBox(
+                    child: Text(
+                      "Validate Location",
+                      style: GoogleFonts.anta(
+                        textStyle: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               )
-            ),
+            ],
           )
-        )
+        ),
       ],
     );
   }
@@ -130,10 +183,12 @@ class _AldsMapPageState extends State<AldsMapPage> {
   Widget _createLocationMap() {
     return FlutterMap(
       options: MapOptions(
-        initialCenter: (_curPosition != null) ? LatLng(_curPosition!.latitude, _curPosition!.longitude) : LatLng(51.509364, -0.128928),  // defaults to London
-        initialZoom: 9.2,
+        initialCenter: (_curPosition != null)
+          ? LatLng(_curPosition!.latitude, _curPosition!.longitude)
+          : LatLng(41.82674914418993, -71.40251841199533),  // defaults to Brown University
+        initialZoom: 13.0,
       ),
-      children: [
+      children: <Widget>[
         TileLayer(
           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
           userAgentPackageName: "edu.brown.alds",  // FIXME: Fix the package name when you know it
@@ -146,14 +201,48 @@ class _AldsMapPageState extends State<AldsMapPage> {
             markerDirection: MarkerDirection.heading,
           ),
         ),
+        ..._createSavedLocationMarkers(),
       ]
     );
   }
 
+  List<Widget> _createSavedLocationMarkers() {
+    return savedLocations.map((SavedLocation loc) =>
+      LocationMarkerLayer(
+        position: LocationMarkerPosition(
+          latitude: loc.latitude,
+          longitude: loc.longitude,
+          accuracy: 0.5
+        ),
+        style: LocationMarkerStyle(
+          marker: const Icon(Icons.location_on, color: Colors.red),
+          markerSize: const Size(20, 20),
+        ),
+      )
+    ).toList();
+  }
+
   void _handleValidateLocation() async {
-    String txt = _curLocationText;
-    Locator loc = Locator();
-    loc.noteLocation(txt);
+    String txt = _controller.text.trim();
+
+    if (txt.isEmpty || _curPosition == null) {
+      util.log("NO LOCATION ENTERED OR CURRENT POSITION NOT AVAILABLE");
+      return;
+    }
+
+    if (!locations.contains(txt)) {
+      await storage.addNewLocation(txt, _curPosition!.latitude, _curPosition!.longitude);
+    }
+
+    alds_loc.Locator loc = alds_loc.Locator();
+    await loc.noteLocation(txt);
     util.log("VALIDATE location as $txt");
+
+    await _getSavedLocations();
+    setState(() {
+      _controller.clear();
+      ref.read(curLocationNameProvider).setLocationName();
+      _curLocationText = ref.watch(curLocationNameProvider).locationName;
+    });
   }
 }

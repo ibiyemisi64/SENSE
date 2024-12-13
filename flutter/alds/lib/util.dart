@@ -36,6 +36,7 @@ import 'dart:convert' as convert;
 import 'package:crypto/crypto.dart' as crypto;
 import 'package:flutter/material.dart';
 import 'package:flutter_logs/flutter_logs.dart';
+import 'package:geolocator/geolocator.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
@@ -72,6 +73,21 @@ ThemeData getTheme() {
   );
 }
 
+// Convert theme mode string to ThemeMode
+ThemeMode getThemeMode(String themeMode) {
+  switch (themeMode.toLowerCase()) {
+    case 'light':
+      return ThemeMode.light;
+    case 'dark':
+      return ThemeMode.dark;
+    case 'system':
+      return ThemeMode.system;
+    default:
+      log("ERROR: Couldn't retrieve theme mode: $themeMode");
+      return ThemeMode.system;
+  }
+}
+
 String randomString(int len) {
   var r = Random();
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
@@ -102,6 +118,46 @@ Future<void> sendDataToCedes(dynamic d) async {
   await http.post(url, body: d1);
 }
 
+Future<Position> getCurrentLocation() async {
+    // Code adapted from: https://pub.dev/packages/geolocator#example
+    log("getCurrentLocation() called");
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+    // If location services are not enabled don't continue
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale 
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
+      }
+    }
+    
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately. 
+      return Future.error('Location permissions are permanently denied');
+    } 
+
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    final pos = await Geolocator.getCurrentPosition();
+    double lat = pos.latitude;
+    double long = pos.longitude;
+    log("CURRENT LOCATION: ($lat, $long)");
+
+    return pos;
+  }
 
 
 
