@@ -151,7 +151,7 @@ Future<void> removeLocation(SavedLocation location) async {
     int initialLength = locations.length;
     locations.removeWhere((loc) => loc['location'] == location.name);
     
-    util.log("After removing locations: $locations");
+    // util.log("After removing locations: $locations");
 
     if (locations.length != initialLength) {
       await saveLocatorData(json.encode(locations));
