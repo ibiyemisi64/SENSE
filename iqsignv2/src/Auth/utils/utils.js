@@ -25,10 +25,10 @@
  * WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
  * OF THIS SOFTWARE.
-***/
+ ***/
 import CryptoJS from "crypto-js";
 
 export const hasher = (value) => {
   const hash = CryptoJS.SHA512(value);
   return CryptoJS.enc.Base64.stringify(hash);
-
+};
