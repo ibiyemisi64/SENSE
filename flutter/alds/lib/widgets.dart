@@ -1,35 +1,32 @@
 /*
- *        widgets.dart  
- * 
- *    Common code for creating widgets
- * 
+ * widgets.dart
+ *
+ * Purpose:
+ *   Provides common reusable widget functions for the ALDS (Automatic Location Detection System) Flutter application.
+ *   Includes text fields, buttons, dropdowns, and other UI elements.
+ *
+ * Copyright 2023 Brown University -- Steven P. Reiss and Michael Tu
+ *
+ * All Rights Reserved
+ *
+ * Permission to use, copy, modify, and distribute this software and its
+ * documentation for any purpose other than its incorporation into a
+ * commercial product is hereby granted without fee, provided that the
+ * above copyright notice appear in all copies and that both that
+ * copyright notice and this permission notice appear in supporting
+ * documentation, and that the name of Brown University not be used in
+ * advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.
+ *
+ * BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR ANY PARTICULAR PURPOSE. IN NO EVENT SHALL BROWN UNIVERSITY
+ * BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY
+ * DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+ * WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+ * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+ * OF THIS SOFTWARE.
  */
-/*	Copyright 2023 Brown University -- Steven P. Reiss			*/
-
-/// *******************************************************************************
-///  Copyright 2023, Brown University, Providence, RI.				 *
-///										 *
-///			  All Rights Reserved					 *
-///										 *
-///  Permission to use, copy, modify, and distribute this software and its	 *
-///  documentation for any purpose other than its incorporation into a		 *
-///  commercial product is hereby granted without fee, provided that the 	 *
-///  above copyright notice appear in all copies and that both that		 *
-///  copyright notice and this permission notice appear in supporting		 *
-///  documentation, and that the name of Brown University not be used in 	 *
-///  advertising or publicity pertaining to distribution of the software 	 *
-///  without specific, written prior permission. 				 *
-///										 *
-///  BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS		 *
-///  SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND		 *
-///  FITNESS FOR ANY PARTICULAR PURPOSE.  IN NO EVENT SHALL BROWN UNIVERSITY	 *
-///  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY 	 *
-///  DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,		 *
-///  WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS		 *
-///  ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 	 *
-///  OF THIS SOFTWARE.								 *
-///										 *
-///******************************************************************************
 
 import 'package:flutter/material.dart';
 
@@ -83,8 +80,7 @@ TextField textField({
   hint ??= label;
   maxLines ??= 1;
   readOnly ??= false;
-  keyboardType ??=
-      (maxLines == 1 ? TextInputType.text : TextInputType.multiline);
+  keyboardType ??= (maxLines == 1 ? TextInputType.text : TextInputType.multiline);
   if (readOnly) showCursor = false;
 
   return TextField(
@@ -114,11 +110,12 @@ Widget errorField(String text) {
 
 Widget submitButton(String name, void Function()? action) {
   return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
-      child: ElevatedButton(
-        onPressed: action,
-        child: Text(name),
-      ));
+    padding: const EdgeInsets.symmetric(vertical: 16.0),
+    child: ElevatedButton(
+      onPressed: action,
+      child: Text(name),
+    ),
+  );
 }
 
 Widget textButton(String label, void Function()? action) {
@@ -134,8 +131,7 @@ Widget textButton(String label, void Function()? action) {
 Widget topMenu(void Function(String)? handler, List labels) {
   return PopupMenuButton(
     icon: const Icon(Icons.menu_sharp),
-    itemBuilder: (context) =>
-        labels.map<PopupMenuItem<String>>(_menuItem).toList(),
+    itemBuilder: (context) => labels.map<PopupMenuItem<String>>(_menuItem).toList(),
     onSelected: handler,
   );
 }
@@ -149,7 +145,7 @@ PopupMenuItem<String> _menuItem(dynamic val) {
   } else if (val is Map<String, String>) {
     for (String k in val.keys) {
       value = k;
-      label = val[k] as String;
+      label = val[k]!;
     }
   }
   return PopupMenuItem<String>(
@@ -162,9 +158,7 @@ Widget fieldSeparator() {
   return const SizedBox(height: 8);
 }
 
-Widget dropDown(List<String> items,
-    {String? value, Function(String?)? onChanged}) {
-  // value ??= items[0];
+Widget dropDown(List<String> items, {String? value, Function(String?)? onChanged}) {
   return DropdownButton<String>(
     value: value,
     onChanged: onChanged,
@@ -191,67 +185,28 @@ DropdownMenu searchableDropdown(
  Function(String?)? onSelected,
 ) {
   return DropdownMenu<String>(
-      key: Key(keyStr),
-      width: width, 
-      controller: textController,
-      enableFilter: true,
-      requestFocusOnTap: true,
-      leadingIcon: Icon(Icons.location_on),
-      inputDecorationTheme: const InputDecorationTheme(
-        filled: true, 
-        contentPadding: EdgeInsets.symmetric(vertical: 5.0),
-      ),
-      onSelected: onSelected,
-      dropdownMenuEntries: createMenuEntries(locations),
+    key: Key(keyStr),
+    width: width,
+    controller: textController,
+    enableFilter: true,
+    requestFocusOnTap: true,
+    leadingIcon: const Icon(Icons.location_on),
+    inputDecorationTheme: const InputDecorationTheme(
+      filled: true,
+      contentPadding: EdgeInsets.symmetric(vertical: 5.0),
+    ),
+    onSelected: onSelected,
+    dropdownMenuEntries: createMenuEntries(locations),
   );
 }
 
 List<DropdownMenuEntry<String>> createMenuEntries(List<String> locations) {
-    return locations.map((String loc) => DropdownMenuEntry<String>(value: loc, label: loc)).toList();
-  }
-
-Text heading(String text, {int? headingLevel}) {
-
-  /* With multiple levels of heading, this function can take a heading level. The idea is that we can use a switch statement to output the correctly-formatted heading. */
-
-  return Text(
-    text,
-    style: TextStyle(
-      fontSize: 24.0,
-    ),
-  );
+  return locations.map((String loc) => DropdownMenuEntry<String>(value: loc, label: loc)).toList();
 }
 
-// class SwitchExample extends StatefulWidget {
-//   const SwitchExample({
-//       super.key, 
-//       required this.initVal, 
-//       required this.color, 
-//       required this.onChanged
-//     }
-//   );
-
-//   final bool initVal;
-//   final MaterialColor? color;
-//   final Function(bool)? onChanged;
-
-//   @override
-//   State<SwitchExample> createState() => _SwitchExampleState();
-// }
-
-// class _SwitchExampleState extends State<SwitchExample> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Switch(
-//       // This bool value toggles the switch.
-//       value: widget.initVal,
-//       activeColor: widget.color,
-//       onChanged: widget.onChanged,
-//     );
-//   }
-// }
-
-
-
-
-
+Text heading(String text, {int? headingLevel}) {
+  return Text(
+    text,
+    style: const TextStyle(fontSize: 24.0),
+  );
+}

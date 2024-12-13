@@ -1,34 +1,32 @@
 /*
- *      storage.dart
- * 
- *    Persistent storage for ALDS
- * 
+ * storage.dart
+ *
+ * Purpose:
+ *   Provides persistent storage capabilities for the ALDS (Automatic Location Detection System) application.
+ *   Handles user authentication, device ID, theme preferences, and saved location data using Hive.
+ *
+ * Copyright 2023 Brown University -- Michael Tu, Kelsie Edie, and Muhiim Ali
+ *
+ * All Rights Reserved
+ *
+ * Permission to use, copy, modify, and distribute this software and its
+ * documentation for any purpose other than its incorporation into a
+ * commercial product is hereby granted without fee, provided that the
+ * above copyright notice appear in all copies and that both that
+ * copyright notice and this permission notice appear in supporting
+ * documentation, and that the name of Brown University not be used in
+ * advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.
+ *
+ * BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR ANY PARTICULAR PURPOSE. IN NO EVENT SHALL BROWN UNIVERSITY
+ * BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY
+ * DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+ * WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+ * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+ * OF THIS SOFTWARE.
  */
-/* 	Copyright 2023 Brown University -- Steven P. Reiss			*/
-/// *******************************************************************************
-///  Copyright 2023, Brown University, Providence, RI.				 *
-///										 *
-///			  All Rights Reserved					 *
-///										 *
-///  Permission to use, copy, modify, and distribute this software and its	 *
-///  documentation for any purpose other than its incorporation into a		 *
-///  commercial product is hereby granted without fee, provided that the 	 *
-///  above copyright notice appear in all copies and that both that		 *
-///  copyright notice and this permission notice appear in supporting		 *
-///  documentation, and that the name of Brown University not be used in 	 *
-///  advertising or publicity pertaining to distribution of the software 	 *
-///  without specific, written prior permission. 				 *
-///										 *
-///  BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS		 *
-///  SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND		 *
-///  FITNESS FOR ANY PARTICULAR PURPOSE.  IN NO EVENT SHALL BROWN UNIVERSITY	 *
-///  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY 	 *
-///  DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,		 *
-///  WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS		 *
-///  ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 	 *
-///  OF THIS SOFTWARE.								 *
-///										 *
-///******************************************************************************
 
 library alds.storage;
 
@@ -64,7 +62,6 @@ Future<void> setupStorage() async {
 }
 
 Future<void> setupTestStorage(String testPath) async {
-  // For tests, we bypass hive_flutter and path_provider by using Hive.init()
   Hive.init(testPath);
   var appbox = await Hive.openBox('appData');
   bool setup = await appbox.get("setup", defaultValue: false);
@@ -96,7 +93,6 @@ String getDeviceId() {
   return _deviceId;
 }
 
-// THEME DATA
 Future<void> saveThemePref(String theme) async {
   var appbox = Hive.box('appData');
   await appbox.put('theme', theme);
@@ -107,27 +103,13 @@ String readThemePref() {
   return _appTheme;
 }
 
-// USER LOCATION DATA
-// FIXME: I think there's an issue with this function, in that all tests that run this function hang
 Future<void> saveLocatorData(String json) async {
-    var appbox = Hive.box('appData');
-    await appbox.put("locdata", json);
-  
-    util.log("Saving Locator Data: $json");
+  var appbox = Hive.box('appData');
+  await appbox.put("locdata", json);
+  util.log("Saving Locator Data: $json");
 }
 
 Future<String?> readLocationData() async {
-  // late dynamic data;
-  // try {
-  //   var appbox = Hive.box('appData');
-  //   data = await appbox.get('locdata');
-  //   util.log("Successfully readLocationData(): $data");
-  //   return data;
-  // } catch (e) {
-  //   util.log("Error readLocationData(): $e");
-  //   return "";
-  // }
-
   if (Hive.isBoxOpen('appData')) {
     var appbox = Hive.box('appData');
     var data = await appbox.get('locdata');
@@ -141,7 +123,6 @@ Future<String?> readLocationData() async {
 
 Future<void> addNewLocation(String locationName, double latitude, double longitude) async {
   util.log("Adding new location: $locationName, $latitude, $longitude");
-  var appbox = Hive.box('appData');
   String? existingData = await readLocationData();
   List<dynamic> locations = [];
   
@@ -162,20 +143,6 @@ Future<void> addNewLocation(String locationName, double latitude, double longitu
   await saveLocatorData(json.encode(locations));
 }
 
-// Future<void> removeLocation(SavedLocation location) async {
-//   var appbox = Hive.box('appData');
-//   // WE ASSUME THAT LOC NAME IS UNIQUE
-//   String? existingData = await readLocationData();
-//   if (existingData != null) {
-//     List<dynamic> locations = json.decode(existingData);
-//     // util.log("BEFORE REMOVE CALLED: $locations");
-//     locations.removeWhere((loc) => loc['location'] == location.name);
-//     // util.log ("REMOVE CALLED - $locations");
-//     appbox.delete("locdata");
-//     await saveLocatorData(json.encode(locations));
-//   }
-// }
-
 Future<void> removeLocation(SavedLocation location) async {
   String? existingData = await readLocationData();
   if (existingData != null) {
@@ -192,34 +159,12 @@ Future<void> removeLocation(SavedLocation location) async {
   }
 }
 
-// Future<void> updateLocation(SavedLocation location, String locName) async {
-//   var appbox = Hive.box('appData');
-  
-//   String? existingData = await readLocationData();
-//   if (existingData != null) {
-
-//     List<dynamic> locations = json.decode(existingData);
-//     final currIndex = locations.indexWhere((loc) => loc['location'] == location.name);
-  
-//     util.log("INDEXWHERE: $currIndex");
-//     util.log("LOCS: $locations");    
-//     locations[currIndex]["location"] = locName;
-//     util.log("Current Locs $locations");
-  
-//     // appbox.delete("locdata");
-
-//     await saveLocatorData(json.encode(locations));
-//   }
-
-// }
-
 Future<void> updateLocation(SavedLocation location, String locName) async {
   String? existingData = await readLocationData();
   if (existingData != null) {
     List<dynamic> locations = json.decode(existingData);
     final currIndex = locations.indexWhere((loc) => loc['location'] == location.name);
 
-    // Ensure location actually exists before updating
     if (currIndex != -1) {
       locations[currIndex]["location"] = locName;
       await saveLocatorData(json.encode(locations));
@@ -234,9 +179,7 @@ Future<List<String>> getLocations() async {
   if (locDataJson != null) {
     try {
       List<dynamic> locDataParsed = List<dynamic>.from(jsonDecode(locDataJson));
-      return locDataParsed
-          .map((locData) => locData['location'] as String)
-          .toList();
+      return locDataParsed.map((locData) => locData['location'] as String).toList();
     } catch (e) {
       util.log("Error parsing location data: $e");
       return [];
@@ -244,4 +187,3 @@ Future<List<String>> getLocations() async {
   }
   return [];
 }
-

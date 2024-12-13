@@ -1,8 +1,32 @@
 /*
- *    mainpage.dart 
- *    
- *    New Main page for displaying room
- * 
+ * mainpage.dart
+ *
+ * Purpose:
+ *   Defines the map page for the ALDS (Automatic Location Detection System) Flutter application.
+ *   Displays the current location on a map, allows users to validate and save locations,
+ *   and shows saved locations with markers.
+ *
+ * Copyright 2024 Brown University -- Michael Tu and Kelsie Edie
+ *
+ * All Rights Reserved
+ *
+ * Permission to use, copy, modify, and distribute this software and its
+ * documentation for any purpose other than its incorporation into a
+ * commercial product is hereby granted without fee, provided that the
+ * above copyright notice appear in all copies and that both that
+ * copyright notice and this permission notice appear in supporting
+ * documentation, and that the name of Brown University not be used in
+ * advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.
+ *
+ * BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR ANY PARTICULAR PURPOSE. IN NO EVENT SHALL BROWN UNIVERSITY
+ * BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY
+ * DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+ * WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+ * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+ * OF THIS SOFTWARE.
  */
 
 import 'package:flutter/material.dart';
@@ -23,17 +47,16 @@ import 'savedpage.dart';
 
 class AldsMapPage extends ConsumerStatefulWidget {
   const AldsMapPage({super.key, required bool isLoading, required double currentLat, required double currentLng});
-  // const AldsMapPage({super.key});
 
   @override
   ConsumerState<AldsMapPage> createState() => _AldsMapPageState();
 }
 
 class _AldsMapPageState extends ConsumerState<AldsMapPage> {
-  // State variables
   String _curLocationText = "";
   Position? _curPosition;
   final TextEditingController _controller = TextEditingController();
+  // ignore: unused_field
   String? _selectedLocation;
   List<String> locations = [];
   late bool _isLoading;
@@ -44,71 +67,23 @@ class _AldsMapPageState extends ConsumerState<AldsMapPage> {
   @override
   void initState() {
     super.initState();
-    
-    // Initialize state variables
+
     alds_loc.Locator loc = alds_loc.Locator();
     util.log("LOCATOR initialized");
     _curLocationText = loc.lastLocation ?? "Unsaved Location";
     _isLoading = true;
     _initializeCurPosition();
 
-    // Async functions
     util.log("calling async functions");
     _getSavedLocations();
-    // _getCurrentLocation();
   }
 
   Future<void> _initializeCurPosition() async {
     _curPosition = await util.getCurrentLocation();
   }
 
-  // Future<void> _getCurrentLocation() async {
-  //   // Code adapted from: https://pub.dev/packages/geolocator#example
-  //   util.log("getCurrentLocation() called");
-  //   bool serviceEnabled;
-  //   LocationPermission permission;
-
-  //   serviceEnabled = await Geolocator.isLocationServiceEnabled();
-
-  //   // If location services are not enabled don't continue
-  //   if (!serviceEnabled) {
-  //     return Future.error('Location services are disabled.');
-  //   }
-
-  //   permission = await Geolocator.checkPermission();
-  //   if (permission == LocationPermission.denied) {
-  //     permission = await Geolocator.requestPermission();
-  //     if (permission == LocationPermission.denied) {
-  //       // Permissions are denied, next time you could try
-  //       // requesting permissions again (this is also where
-  //       // Android's shouldShowRequestPermissionRationale 
-  //       // returned true. According to Android guidelines
-  //       // your App should show an explanatory UI now.
-  //       return Future.error('Location permissions are denied');
-  //     }
-  //   }
-    
-  //   if (permission == LocationPermission.deniedForever) {
-  //     // Permissions are denied forever, handle appropriately. 
-  //     return Future.error('Location permissions are permanently denied');
-  //   } 
-
-  //   // When we reach here, permissions are granted and we can
-  //   // continue accessing the position of the device.
-  //   final pos = await Geolocator.getCurrentPosition();
-  //   double lat = pos.latitude;
-  //   double long = pos.longitude;
-  //   util.log("CURRENT LOCATION: ($lat, $long)");
-
-  //   // Update the current position
-  //   setState(() {
-  //     _curPosition = pos;
-  //   });
-  // }
-
   Future<void> _getSavedLocations() async {
     String? locDataJson = await storage.readLocationData();
-    // util.log("Location data read from local storage");
 
     if (locDataJson != null) {
       try {
@@ -142,14 +117,11 @@ class _AldsMapPageState extends ConsumerState<AldsMapPage> {
 
   @override
   Widget build(BuildContext context) {
-    // If still fetching data, show loading indicator
     if (_isLoading) {
-      // return const Text("Loading...");
       return const CircularProgressIndicator();
     }
 
-    // Build this widget when the data is finishing loading
-    return Column( 
+    return Column(
       children: [
         SizedBox(
           height: 50,
@@ -172,22 +144,11 @@ class _AldsMapPageState extends ConsumerState<AldsMapPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // SizedBox(
-              //   width: MediaQuery.of(context).size.width * 0.4, 
-              //   child: locations.isEmpty
-              //     ? TextField(controller: _controller, readOnly: false, decoration: InputDecoration(prefixIcon: Icon(Icons.location_on)))
-              //     : widgets.searchableDropdown(
-              //         MediaQuery.of(context).size.width * 0.4,
-              //         _controller, 
-              //         locations, 
-              //         (String? value) => setState(() => _selectedLocation = value)
-              //     ),
-              // ), 
               widgets.searchableDropdown(
                   "locations_dropdown",
                   MediaQuery.of(context).size.width * 0.4,
-                  _controller, 
-                  locations, 
+                  _controller,
+                  locations,
                   (String? value) => setState(() => _selectedLocation = value)
               ),
               const SizedBox(width: 20,),
@@ -199,7 +160,7 @@ class _AldsMapPageState extends ConsumerState<AldsMapPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                   ),
                   onPressed: _handleValidateLocation,
-                  child: FittedBox(  // Helps text scale down if needed
+                  child: FittedBox(
                     child: Text(
                       "Validate Location",
                       style: GoogleFonts.anta(
@@ -222,8 +183,8 @@ class _AldsMapPageState extends ConsumerState<AldsMapPage> {
   Widget _createLocationMap() {
     return FlutterMap(
       options: MapOptions(
-        initialCenter: (_curPosition != null) 
-          ? LatLng(_curPosition!.latitude, _curPosition!.longitude) 
+        initialCenter: (_curPosition != null)
+          ? LatLng(_curPosition!.latitude, _curPosition!.longitude)
           : LatLng(41.82674914418993, -71.40251841199533),  // defaults to Brown University
         initialZoom: 13.0,
       ),
@@ -246,7 +207,7 @@ class _AldsMapPageState extends ConsumerState<AldsMapPage> {
   }
 
   List<Widget> _createSavedLocationMarkers() {
-    return savedLocations.map((SavedLocation loc) => 
+    return savedLocations.map((SavedLocation loc) =>
       LocationMarkerLayer(
         position: LocationMarkerPosition(
           latitude: loc.latitude,
@@ -264,27 +225,22 @@ class _AldsMapPageState extends ConsumerState<AldsMapPage> {
   void _handleValidateLocation() async {
     String txt = _controller.text.trim();
 
-    // Handle invalid input
     if (txt.isEmpty || _curPosition == null) {
       util.log("NO LOCATION ENTERED OR CURRENT POSITION NOT AVAILABLE");
       return;
     }
 
-    // Add location first if it doesn't already exist
     if (!locations.contains(txt)) {
       await storage.addNewLocation(txt, _curPosition!.latitude, _curPosition!.longitude);
     }
 
-    // Validate the location using noteLocation()
     alds_loc.Locator loc = alds_loc.Locator();
     await loc.noteLocation(txt);
     util.log("VALIDATE location as $txt");
-    
-    // Refresh locations after adding new one
+
     await _getSavedLocations();
     setState(() {
       _controller.clear();
-      // _curLocationText = loc.lastLocation ?? "Unsaved Location";
       ref.read(curLocationNameProvider).setLocationName();
       _curLocationText = ref.watch(curLocationNameProvider).locationName;
     });

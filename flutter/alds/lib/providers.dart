@@ -1,8 +1,32 @@
-///  providers.dart
-/// 
-///  Providers for state management
-/// 
-/// 
+/*
+ * providers.dart
+ *
+ * Purpose:
+ *   Provides state management for the ALDS (Automatic Location Detection System) Flutter application.
+ *   Defines providers and ChangeNotifier classes for theme, current position, and location name management.
+ *
+ * Copyright 2023 Brown University -- Michael Tu and Kelsie Edie
+ *
+ * All Rights Reserved
+ *
+ * Permission to use, copy, modify, and distribute this software and its
+ * documentation for any purpose other than its incorporation into a
+ * commercial product is hereby granted without fee, provided that the
+ * above copyright notice appear in all copies and that both that
+ * copyright notice and this permission notice appear in supporting
+ * documentation, and that the name of Brown University not be used in
+ * advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.
+ *
+ * BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR ANY PARTICULAR PURPOSE. IN NO EVENT SHALL BROWN UNIVERSITY
+ * BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY
+ * DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+ * WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+ * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+ * OF THIS SOFTWARE.
+ */
 
 library alds.providers;
 
@@ -22,7 +46,7 @@ final curPositionProvider = ChangeNotifierProvider<PositionProvider>(
 );
 
 final curLocationNameProvider = ChangeNotifierProvider<LocationNameProvider>(
-  (ref) => LocationNameProvider(locationName: "Unsaved Location")
+  (ref) => LocationNameProvider(locationName: "Unsaved Location"),
 );
 
 class ThemeProvider extends ChangeNotifier {
@@ -33,13 +57,10 @@ class ThemeProvider extends ChangeNotifier {
   void setTheme(String newTheme) async {
     themeMode = newTheme;
     notifyListeners();
-
-    // Save the updated theme to local storage
     await saveThemePref(newTheme);
   }
 }
 
-// We might need this for current position
 class PositionProvider extends ChangeNotifier {
   Position? pos;
 
@@ -47,7 +68,6 @@ class PositionProvider extends ChangeNotifier {
 
   void setPosition() async {
     pos = await util.getCurrentLocation();
-    // this.pos = pos;
     notifyListeners();
   }
 }
@@ -59,7 +79,7 @@ class LocationNameProvider extends ChangeNotifier {
 
   void setLocationName() {
     alds_loc.Locator loc = alds_loc.Locator();
-    loc.findLocation();  // find the location first in order to initialize the lastLocation variable
+    loc.findLocation();  
     locationName = loc.lastLocation ?? "Unsaved Location";
     util.log("LOCATION NAME SET TO $locationName");
     notifyListeners();
