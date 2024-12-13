@@ -1,3 +1,4 @@
+
 name: iQsign 2.0 Tests
 on: push
 jobs:
@@ -12,3 +13,29 @@ jobs:
         with:
           start: npm run dev
           working-directory: iqsignv2
+
+  dart-tests:
+    runs-on: ubuntu-24.04
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Dart environment
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+
+      # Step 3: Run Dart commands
+      - name: Run Dart Tests
+        working-directory: ./flutter/alds/test
+        run: |
+          dart pub get
+          dart format --output=none --set-exit-if-changed
+          dart analyze
+          dart test
+          dart map_page_test.dart
+          dart nav_bar_test.dart
+          dart saved_locations_test.dart
+          dart settings_test.dart
+          dart storage_test.dart
