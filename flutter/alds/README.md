@@ -1,5 +1,6 @@
 # ALDS
-ALDS is a Flutter-based mobile application designed to allow users to report their current location and other relevant information to Catre. 
+
+ALDS is a Flutter-based mobile application designed to allow users to report their current location and other relevant information to Catre.
 The app offers functionalities such as saving locations, validating current positions, and customizing theme settings to enhance user experience.
 
 ## Getting Started
@@ -42,8 +43,8 @@ If you run into issues during setup, see [setup troubleshooting](#setup-troubles
   - As a result, one issue arose in the code as a library added some parameters to a constructor. I just added some default values to get rid of the error. These lines are marked by a `FIXME` comment in the `locator.dart`.
 
 #### iOS Emulator on Windows??
-- [Flutter Inspector](https://docs.flutter.dev/tools/devtools/inspector)
 
+- [Flutter Inspector](https://docs.flutter.dev/tools/devtools/inspector)
 
 ## Unit Testing Plan
 
@@ -97,12 +98,12 @@ If you run into issues during setup, see [setup troubleshooting](#setup-troubles
 - [ ] The same user's saved locations + settings should persist across several logins
 
 ## User Testing *(might be a stretch)*
+
 ### Map Page User Testing
 
 - [ ] User's current location is marked on the map
 - [ ] User's saved locations are marked on the map
 - [ ] The map should be centered on the user's current location
-
 
 ## Future Work
 
@@ -115,7 +116,7 @@ If we were able to continue to develop the **ALDS** application, the following t
   
 - **Conduct Comprehensive Testing:**
   - Expand unit tests to cover more edge cases and ensure all functionalities work as expected.
-  - Implement integration tests to verify the interaction between different components of the app.
+  - Implement integration tests to verify the interaction between different components of the app and with CEDES.
   - Perform user acceptance testing (UAT) to gather feedback and make necessary adjustments.
 
 - **Deploy the App to Users:**
