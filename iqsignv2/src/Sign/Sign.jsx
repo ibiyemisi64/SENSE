@@ -4,11 +4,10 @@ import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
 import FormatItalicIcon from '@mui/icons-material/FormatItalic';
 import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
-import DefaultClassSign from '../assets/backgrounds/class.png';
 import TopBar from "../Topbar/TopBar.jsx";
 import EditIcon from '@mui/icons-material/Edit';
 import { Link } from 'react-router-dom';
-import { getCurrentSignData } from './hooks/getSignData.jsx'
+import { useSignData } from './hooks/getSignData.jsx'
 
 const Sign = ({ signData }) => {
 
@@ -96,6 +95,7 @@ export function SignTextFormatterMenu() {
     </Stack>
   )
 }
+
 export function SignTextFormatter() {
 
   return (
@@ -111,7 +111,7 @@ export function SignTextFormatter() {
         multiline
         rows={4}
         defaultValue="Default Sign Text"
-        sx={{ mt: 4 }}
+        sx={{ mt: 4, width: "100%"}}
       />
       <Button
         variant="contained"
@@ -133,6 +133,11 @@ export function SignTextFormatter() {
 }
 
 export function SignEditor() {
+  const { signData, isLoading } = useSignData(); 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  } 
+
   return (
     <>
       <TopBar></TopBar>
@@ -154,9 +159,8 @@ export function SignEditor() {
           <SignTextFormatter />
         </Grid2>
 
-
         <Grid2 item container direction="column" alignItems="flex-start">
-          <Sign />
+          <Sign signData={signData}/>
           <Button
             variant="contained"
             color="primary"
@@ -170,6 +174,10 @@ export function SignEditor() {
       </Grid2>
     </>
   );
+}
+
+export function SignEditorPage() {
+  return SignEditor();
 }
 
 export default Sign;

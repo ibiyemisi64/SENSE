@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Grid2, Box, Button, IconButton, MenuItem, Select, InputLabel, FormControl, Typography, TextField, Stack } from '@mui/material';
+import React, { useState } from 'react';
+import { Grid2, Box, Button, MenuItem, Select, InputLabel, FormControl, Typography, TextField, Stack } from '@mui/material';
 import TopBar from "../Topbar/TopBar.jsx";
 import { Link } from 'react-router-dom';
 import Sign from './Sign.jsx'
-import { getCurrentSignData } from './hooks/getSignData.jsx'
+import { useSignData } from './hooks/getSignData.jsx'
 
 export const SignDisplayScaleItem = ({ signData }) => {
   const [scale, setScale] = useState(signData?.dim);
@@ -23,9 +23,9 @@ export const SignDisplayScaleItem = ({ signData }) => {
         onChange={handleChange}
         inputprops={{'data-testid':'sign-component'}}
       >
-        <MenuItem aria-label="16 x 9" value="16 x 9">16 x 9</MenuItem>
-        <MenuItem aria-label="3 x 4" value="3 x 4" >3 x 4 </MenuItem>
-        <MenuItem aria-label="16 x 10" value="16 x 10">16 x 10</MenuItem>
+        <MenuItem aria-label="16 x 9" value="16by9">16 x 9</MenuItem>
+        <MenuItem aria-label="3 x 4" value="3by4" >3 x 4 </MenuItem>
+        <MenuItem aria-label="16 x 10" value="16by10">16 x 10</MenuItem>
         <MenuItem aria-label="other" value="other">other</MenuItem>
       </Select>
     </FormControl>
@@ -36,7 +36,6 @@ export const SignDisplayScaleItem = ({ signData }) => {
 export const SignDimensionMenuItem = ({ signData }) => {
 
   return (
-    signData && 
     <>
     <TextField
       id="outlined-uncontrolled"
@@ -74,7 +73,6 @@ export const LegacySignFormatterMenu = ({ signData }) => {
 }
 
 export const LegacySignFormatterContents = ({ signData }) => {
-
   return (
     <>
     <TextField
@@ -97,7 +95,7 @@ export const LegacySignEditor = ({ signData }) => {
       }}
     >
       <LegacySignFormatterMenu signData={signData} />
-      <LegacySignFormatterContents />
+      <LegacySignFormatterContents signData={signData}/>
       <Typography sx={{ ml: 1, mt: 1 }}>
         <Link to="https://sherpa.cs.brown.edu:3336/instructions" underline="hover" sx={{ color: 'black' }}>
           View Instructions
@@ -133,16 +131,10 @@ export const LegacySignEditor = ({ signData }) => {
 }
 
 export function LegacySignEditorPage(){
-  const { signData, loadCurrentSign } = getCurrentSignData();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      await loadCurrentSign();
-    };
-  
-    fetchData();
-  
-  }, []);
+  const { signData, isLoading } = useSignData(); 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  } 
 
   return (
     <>
