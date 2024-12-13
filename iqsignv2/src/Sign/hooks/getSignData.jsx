@@ -1,16 +1,17 @@
 import { serverUrl } from "../../utils/utils.js";
 import { create } from 'zustand';
 import Cookies from "js-cookie"
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+
+
+
+
+
+
 
 /**
  * Zustand store for managing and fetching the current sign data.
- * 
- * This store defines a state that holds the current sign data (`signData`) 
- * and the loading state (`loading`). The `loadCurrentSign` function asynchronously 
- * fetches the sign data from the backend API (`/rest/signs`), and upon success, 
- * it updates the state with the fetched sign data.
- * 
+ *
  * The `signData` object includes the following keys:
  * - dim: The dimensions of the sign (e.g., width and height).
  * - displayname: The display name of the sign.
@@ -34,6 +35,7 @@ import React, { useEffect, useState } from 'react';
  * Example:
  * const { signData, loading, loadCurrentSign } = getCurrentSignData();
  */
+
 export const getCurrentSignData = create((set) => ({
     signData: {},
     loading: true,
@@ -82,18 +84,80 @@ export const getCurrentSignData = create((set) => ({
  */
 export const useSignData = () => {
     const { signData, loadCurrentSign, loading } = getCurrentSignData();
-    
+
     const [isLoading, setIsLoading] = useState(true);
-  
+
     useEffect(() => {
-      const fetchData = async () => {
-        await loadCurrentSign(); 
-        setIsLoading(false);
-      };
-  
-      fetchData();
+        const fetchData = async () => {
+            await loadCurrentSign();
+            setIsLoading(false);
+        };
+
+        fetchData();
     }, [loadCurrentSign]);
-  
+
     return { signData, isLoading };
-  };
+};
+
+export const useUpdateSign = async ({ signData, loading, setLoading }) => {
+    // const [loading, setLoading] = useState(false);
+    // const [error, setError] = useState(null);
+
+    if (!signData) {
+        console.error('Sign data not available');
+        return;
+    }
+
+    setLoading(true);
+
+    const {
+        dim,
+        height,
+        name,
+        namekey,
+        signbody,
+        signid,
+        signuser,
+        width
+    } = signData;
+
+    const updateData = {
+        signid,
+        name,
+        signuser,
+        signkey: namekey,
+        signbody,
+        signname: name,
+        signwidth: width,
+        signheight: height,
+        signdim: dim
+    };
+
+    try {
+        const path = "/rest/signs"
+        const url = new URL(`${serverUrl}${path}`);
+        url.searchParams.append("session", Cookies.get('session'));
+        const resp = await fetch(url.toString(), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updateData),
+        });
+
+        if (resp.status != 200) {
+            console.error(`backend API call /rest/signs failed with status: ${resp.status}`);
+            setLoading(false);
+        }
+
+        const {loadCurrentSign} = getCurrentSignData();
+        await loadCurrentSign();
+        setLoading(false);
+    } catch (error) {
+        console.error("Failed to fetch data /rest/signs:", error);
+        setLoading(false);
+    }
+    return
+};
+
 export default getCurrentSignData;

@@ -1,15 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { Grid2, Box, Button, MenuItem, Select, InputLabel, FormControl, Typography, TextField, Stack } from '@mui/material';
 import TopBar from "../Topbar/TopBar.jsx";
 import { Link } from 'react-router-dom';
 import Sign from './Sign.jsx'
-import { useSignData } from './hooks/getSignData.jsx'
+import { useSignData, useUpdateSign } from './hooks/getSignData.jsx'
 
-export const SignDisplayScaleItem = ({ signData }) => {
-  const [scale, setScale] = useState(signData?.dim);
-
+export const SignDisplayScaleItem = ({ dim, setDim }) => {
   const handleChange = (event) => {
-    setScale(event.target.value);
+    setDim(event.target.value);
   };
 
   return (
@@ -19,7 +17,7 @@ export const SignDisplayScaleItem = ({ signData }) => {
         labelId="demo-select-small-label"
         id="demo-select-small"
         label="Scale"
-        value={scale}
+        value={dim}
         onChange={handleChange}
         inputprops={{'data-testid':'sign-component'}}
       >
@@ -33,46 +31,66 @@ export const SignDisplayScaleItem = ({ signData }) => {
 }
 
 
-export const SignDimensionMenuItem = ({ signData }) => {
+export const SignDimensionMenuItem = ({ width, setWidth, height, setHeight }) => {
+
+  const handleChangeHeight = (event) => {
+    setHeight(event.target.value.trim()); 
+  };
+
+  const handleChangeWidth = (event) => {
+    setWidth(event.target.value.trim()); 
+  };
 
   return (
     <>
     <TextField
       id="outlined-uncontrolled"
       label="Width"
-      defaultValue={signData?.width}
+      defaultValue={width}
       size="small"
       sx={{ m: 1, minWidth: 70, maxWidth: 70 }}
+      onChange={handleChangeWidth}
     />
     <TextField
       id="outlined-uncontrolled"
       label="Height"
-      defaultValue={signData?.height}
+      defaultValue={height}
       size="small"
       sx={{ m: 1, minWidth: 70, maxWidth: 70 }}
+      onChange={handleChangeHeight}
     />
     </>
   )
 }
 
-export const LegacySignFormatterMenu = ({ signData }) => {
+export const LegacySignFormatterMenu = ({ name, setName, dim, setDim, width, setWidth, height,setHeight }) => {
+
+  const handleChange = (event) => {
+    setName(event.target.value.trim()); 
+  };
 
   return (
     <Stack direction="row" spacing={2} >
       <TextField
       id="outlined-uncontrolled"
       label="Sign Name"
-      defaultValue={signData?.name}
+      defaultValue={name}
+      onChange={handleChange}
       size="small"
       sx={{ m: 1, minWidth: 140, maxWidth: 140 }}
       />
-      <SignDisplayScaleItem signData={signData}/>
-      <SignDimensionMenuItem signData={signData}/>
+      <SignDisplayScaleItem dim={dim} setDim={setDim} />
+      <SignDimensionMenuItem height={height} setHeight={setHeight} width={width} setWidth={setWidth}/>
     </Stack>
   )
 }
 
-export const LegacySignFormatterContents = ({ signData }) => {
+export const LegacySignFormatterContents = ({ body, setBody }) => {
+  console.log(body)
+  const handleChange = (event) => {
+    setBody(event.target.value); 
+  };
+
   return (
     <>
     <TextField
@@ -80,22 +98,63 @@ export const LegacySignFormatterContents = ({ signData }) => {
         label="Sign Contents"
         multiline
         rows={4}
-        defaultValue={signData?.signbody}
+        defaultValue={body}
+        onChange={handleChange}
         sx={{ mt: 4 ,width: "100%"}}
       />
     </>
   )
 }
 
+export function SignEditorSave({ signData }){
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    const handleClick = async ({setError, setLoading}) => {
+        try {
+            setLoading(true);
+            const result = await useUpdateSign({ signData, loading, setLoading });
+        } catch (err) {
+            console.error("Error calling updateSign:", err);
+            setError(err)
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <>
+            <Button
+                variant="contained"
+                color="primary"
+                sx={{ mt: 3, backgroundColor: 'black', color: 'white' }}
+                onClick={handleClick}
+                disabled={loading}
+            >
+                {loading ? 'Saving...' : 'SAVE'}
+            </Button>
+
+            {error && <div style={{ color: 'red', marginTop: '10px' }}>Error: {error.message}</div>}
+        </>
+    );
+};
+
 export const LegacySignEditor = ({ signData }) => {
+
+  const [name, setName] = useState(signData?.name);
+  const [height, setHeight] = useState(signData?.height);
+  const [width, setWidth] = useState(signData?.width);
+  const [dim, setDim] = useState(signData?.dim);
+  const [body, setBody] = useState(signData?.signbody);
+
   return (
     <Box
       sx={{
         width: '100%', 
       }}
     >
-      <LegacySignFormatterMenu signData={signData} />
-      <LegacySignFormatterContents signData={signData}/>
+      <LegacySignFormatterMenu name={name} setName={setName} dim={dim} setDim={setDim} width={width} setWidth={setWidth} height={height} setHeight={setHeight} />
+      <LegacySignFormatterContents body={body} setBody={setBody}/>
       <Typography sx={{ ml: 1, mt: 1 }}>
         <Link to="https://sherpa.cs.brown.edu:3336/instructions" underline="hover" sx={{ color: 'black' }}>
           View Instructions
@@ -111,13 +170,7 @@ export const LegacySignEditor = ({ signData }) => {
                 Browse svg library
             </Link>
         </Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        sx={{ mt: 3, backgroundColor: 'black', color: 'white' }}
-      >
-        SAVE
-      </Button>
+      <SignEditorSave signData={signData} />
     <Button
         variant="contained"
         color="black"
@@ -132,6 +185,7 @@ export const LegacySignEditor = ({ signData }) => {
 
 export function LegacySignEditorPage(){
   const { signData, isLoading } = useSignData(); 
+
   if (isLoading) {
     return <div>Loading...</div>;
   } 
