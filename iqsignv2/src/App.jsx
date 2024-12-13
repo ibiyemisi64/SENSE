@@ -3,12 +3,12 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import RegistrationPage from './Auth/RegistrationPage';
 import LoginPage from './Auth/LoginPage';
 import ProfilePage from './ProfilePage';
-import Home from './HomePage';
-import {SignEditor, SignImageLink} from './Sign/Sign.jsx';
+import HomePage from './Sign/SignHome';
+import {SignEditorPage} from './Sign/Sign.jsx';
 import Gallery from "./Gallery/Gallery.jsx";
 import ForgotPassword from './Auth/ForgotPassword.jsx'
 import ResetPassword from './Auth/ResetPassword.jsx'
-import  SignEditorLegacy from './Sign/SignLegacy.jsx';
+import SignEditorLegacyPage from './Sign/SignLegacy.jsx';
 
 const App = () => {
   return (
@@ -20,12 +20,10 @@ const App = () => {
         <Route path="/resetpw" element={<ResetPassword />} />
         <Route path="/" element={<LoginPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/edit" element={<SignEditor />} />
-        <Route path="/edit-legacy" element={<SignEditorLegacy />} />
-        <Route path={"/preview"} element={<SignImageLink/>}/>
-        <Route path="/home" element={<Home />} />
+        <Route path="/edit" element={<SignEditorPage />} />
+        <Route path="/edit-legacy" element={<SignEditorLegacyPage />} />
+        <Route path="/home" element={<HomePage />} />
         <Route path={"/gallery"} element={<Gallery/>}/>
-        
       </Routes>
     </Router>
   );
