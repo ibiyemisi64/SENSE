@@ -51,7 +51,7 @@ export const useGalleryStore = create((set) => ({
         set({images: [classImg, fallImg, oooImg], names:["class","fall", "Out Of Office"]})
     },
     loadImages: async () => {
-        const url = new URL(`${serverUrl}/rest/signs`); // Replace with actual base URL
+        const url = new URL(`${serverUrl}/rest/signs`);
         url.searchParams.append("session", Cookies.get('session'));
 
         const resp = await fetch(url);
@@ -75,7 +75,7 @@ export const useGalleryStore = create((set) => ({
         set({ images: signUrls, names:names });
     },
     loadImagesNew: async () => {
-        const url = new URL(`${serverUrl}/rest/signs`); // Replace with actual base URL
+        const url = new URL(`${serverUrl}/rest/signs`);
         url.searchParams.append("session", Cookies.get('session'));
 
         const resp = await fetch(url);
@@ -96,7 +96,7 @@ export const useGalleryStore = create((set) => ({
         if (user === 0 || signId ===-1){
             throw new Error("CAN NOT CONNECT TO SERVER")
         }
-        const newUrl = new URL(`${serverUrl}/rest/namedsigns`); // Replace with actual base URL
+        const newUrl = new URL(`${serverUrl}/rest/namedsigns`);
         newUrl.searchParams.append("session", Cookies.get('session'));
         const jsonData = await (await fetch(url)).json()
         const allSigns = jsonData.data
@@ -134,7 +134,7 @@ export const useGalleryStore = create((set) => ({
         set({ signId:signId });
     },
     namedSignMock: async ()=>{
-        const url = new URL(`${serverUrl}/rest/namedsigns`); // Replace with actual base URL
+        const url = new URL(`${serverUrl}/rest/namedsigns`);
         url.searchParams.append("session", Cookies.get('session'));
         const data = await fetch(url);
         const jsonData = await data.json()
