@@ -98,7 +98,6 @@ export default function Home() {
         <>
             <TopBar />
             <Grid2 container
-                   fullWidth
                    sx={{
                        background: 'white',
                        display: 'flex',

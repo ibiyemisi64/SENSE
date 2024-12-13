@@ -10,13 +10,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Link } from 'react-router-dom';
 import { getCurrentSignData } from './hooks/getSignData.jsx'
 
-export default function Sign() {
-
-  const { signData, loadCurrentSign, signImageUrl, signPreviewUrl } = getCurrentSignData();
-
-  useEffect(()=> {
-    loadCurrentSign();
-  },[])
+const Sign = ({ signData }) => {
 
   return (
       <>
@@ -28,7 +22,7 @@ export default function Sign() {
         boxShadow: 3
       }}
       alt="User's current sign."
-      src={signImageUrl}
+      src={signData?.imageurl}
     >
 
     </Box>
@@ -117,7 +111,6 @@ export function SignTextFormatter() {
         multiline
         rows={4}
         defaultValue="Default Sign Text"
-        fullWidth
         sx={{ mt: 4 }}
       />
       <Button
@@ -145,7 +138,6 @@ export function SignEditor() {
       <TopBar></TopBar>
       <Grid2
         container
-        fullWidth
         spacing={4}  // Add some spacing between the items
         sx={{
           background: 'white',
@@ -179,3 +171,5 @@ export function SignEditor() {
     </>
   );
 }
+
+export default Sign;
