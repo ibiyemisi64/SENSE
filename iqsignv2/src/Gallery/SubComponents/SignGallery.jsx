@@ -134,11 +134,11 @@ const SignGallery = () => {
                     ...scrollStyles,
                 }}
             >
-                <Grid item xs={4} sx={{ display: 'flex', flexGrow: 1 }}>
+                <Grid item xs={4} sx={{ display: 'flex', flexDirection:'column', alignItems:'center' }}>
                     <Box
                         sx={{
-                            width: '100%',
-                            height: '200px',
+                            width: '300px',
+                            height: '150px',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -151,6 +151,16 @@ const SignGallery = () => {
                         <IconButton aria-label="add new sign">
                             <AddIcon fontSize="large" />
                         </IconButton>
+                    </Box>
+                    <Box
+                        component="span"
+                        sx={{
+                            mt: 1,
+                        }}
+                    >
+                        <Typography>
+                            Add Sign
+                        </Typography>
                     </Box>
                 </Grid>
                 {filteredImages.map((image, index) => (
@@ -168,8 +178,8 @@ const SignGallery = () => {
                                 src={image}
                                 alt={`${names[index]}`}
                                 sx={{
-                                    width: '100%',
-                                    height: '200px',
+                                    width: '300px',
+                                    height: '150px',
                                     borderRadius: 1,
                                     objectFit: 'cover',
                                     boxShadow: 3,
@@ -245,14 +255,15 @@ const SignGallery = () => {
                                     src={image}
                                     alt={`Image ${index + 1}`}
                                     sx={{
-                                        width: '50%',
-                                        height: 'auto',
+                                        width: '300px',
+                                        height: '150px',
                                         ml: 'auto',
                                         mr: 'auto',
                                         mb: 1,
                                         borderRadius: 1,
                                         objectFit: 'cover',
                                     }}
+                                    onClick={()=> navigate("/edit")}
                                 />
                             ))}
                         </Stack>

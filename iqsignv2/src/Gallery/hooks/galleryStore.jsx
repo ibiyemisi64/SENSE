@@ -103,6 +103,8 @@ export const useGalleryStore = create((set) => ({
         set({ images: signUrls, names:names });
     },
     loadImagesNew: async () => {
+        //TODO: make this work via new backend endpoints, too many api calls currently
+        // It would require changing the current sign for every saved sign a user has
         const url = new URL(`${serverUrl}/rest/signs`);
         url.searchParams.append("session", Cookies.get('session'));
 
