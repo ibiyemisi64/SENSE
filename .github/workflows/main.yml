@@ -1,5 +1,7 @@
 name: iQsign 2.0 Tests
-on: push
+on:
+  push:
+
 jobs:
   cypress-run:
     runs-on: ubuntu-24.04
@@ -7,8 +9,43 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
           start: npm run dev
           working-directory: iqsignv2
+
+  dart-tests:
+    runs-on: ubuntu-24.04
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Flutter environment
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+
+      # Step 3: Get Dependencies
+      - name: Get Flutter Dependencies
+        working-directory: ./flutter/alds
+        run: flutter pub get
+
+      # Step 4: Format Dart Code
+      - name: Format Dart Code
+        working-directory: ./flutter/alds
+        run: dart format .
+
+      # Step 5: Analyze Code
+      - name: Analyze Dart Code
+        working-directory: ./flutter/alds
+        run: |
+          flutter analyze || echo "Analysis completed with warnings"
+
+      # Step 6: Run Flutter Tests
+      - name: Run Flutter Tests
+        working-directory: ./flutter/alds
+        run: flutter test
+

@@ -1,106 +1,80 @@
 /*
- *      mainpage.dart 
- *    
- *    New Main page for displaying room
- * 
+ * mainpage.dart
+ *
+ * Purpose:
+ *   Defines the main user interface for the ALDS (Automatic Location Detection System) Flutter application.
+ *   Displays different pages such as Map, Saved Locations, and Settings.
+ *
+ * Copyright 2024 Brown University -- Micheal Tu and Kelsie Edie
+ *
+ * All Rights Reserved
+ *
+ * Permission to use, copy, modify, and distribute this software and its
+ * documentation for any purpose other than its incorporation into a
+ * commercial product is hereby granted without fee, provided that the
+ * above copyright notice appear in all copies and that both that
+ * copyright notice and this permission notice appear in supporting
+ * documentation, and that the name of Brown University not be used in
+ * advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.
+ *
+ * BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR ANY PARTICULAR PURPOSE. IN NO EVENT SHALL BROWN UNIVERSITY
+ * BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY
+ * DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+ * WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+ * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+ * OF THIS SOFTWARE.
  */
 
-import 'package:alds/mappage.dart';
-import 'package:alds/settingspage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'savedpage.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'util.dart' as util;
-import 'locator.dart';
+import 'savedpage.dart';
+import 'mappage.dart';
+import 'settingspage.dart';
+import 'providers.dart';
 
-class AldsMain extends StatelessWidget {
-  const AldsMain({super.key});
+class AldsApp extends ConsumerWidget {
+  const AldsApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeListener = ref.watch(themeProvider); // Access the theme state provider
+    ThemeMode themeMode = util.getThemeMode(themeListener.themeMode);
+
     return MaterialApp(
-      title: 'ALDS',
-      theme: util.getTheme(),
-      home: const AldsMainWidget()
-    ); // App
+      title: "ALDS Location Selector",
+      home: AldsMain(),
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: themeMode, // Default is ThemeMode.system (see providers.dart)
+    );
   }
 }
 
-class AldsMainWidget extends StatefulWidget {
-  const AldsMainWidget({super.key});
+class AldsMain extends ConsumerStatefulWidget {
+  const AldsMain({super.key});
 
   @override
-  State<AldsMainWidget> createState() => _AldsMainWidgetState();
+  ConsumerState<AldsMain> createState() => _AldsMainState();
 }
 
-class _AldsMainWidgetState extends State<AldsMainWidget> {
-  String _curLocationText = "";  // FIXME: Remove this code???
+class _AldsMainState extends ConsumerState<AldsMain> {
+  // ignore: unused_field
   Position? _curPosition;
-  late int navBarIndex; // use of the `late` keyword denotes a non-nullable variable that will be initialized later
+  late int navBarIndex; // Non-nullable variable initialized in initState
 
-  _AldsMainWidgetState();
+  _AldsMainState();
 
   @override
   void initState() {
     super.initState();
-    
-    // Initial state
     navBarIndex = 0;
-    Locator loc = Locator();
-    _curLocationText = loc.lastLocation ?? "N/A";
-    _getCurrentLocation();
-  }
-
-  _getCurrentLocation() async {  // TODO: Remove this code???
-    // Code adapted from: https://pub.dev/packages/geolocator#example
-
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Test if location services are enabled.
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      // Location services are not enabled don't continue
-      // accessing the position and request users of the 
-      // App to enable the location services.
-      return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        // Permissions are denied, next time you could try
-        // requesting permissions again (this is also where
-        // Android's shouldShowRequestPermissionRationale 
-        // returned true. According to Android guidelines
-        // your App should show an explanatory UI now.
-        return Future.error('Location permissions are denied');
-      }
-    }
-    
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately. 
-      return Future.error(
-        'Location permissions are permanently denied, we cannot request permissions.');
-    } 
-
-    // When we reach here, permissions are granted and we can
-    // continue accessing the position of the device.
-    final pos = await Geolocator.getCurrentPosition();
-    double lat = pos.latitude;
-    double long = pos.longitude;
-    util.log("CURRENT LOCATION: ($lat, $long)");
-    setState(() {
-      _curPosition = pos;
-    });
-
-    _handleUpdate();
   }
 
   @override
@@ -108,52 +82,45 @@ class _AldsMainWidgetState extends State<AldsMainWidget> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            "ALDS Location Selector",
-            style: GoogleFonts.anta(),
-          ),
+          "ALDS Location Selector",
+          style: GoogleFonts.anta(),
+        ),
       ),
       body: <Widget>[
-        const AldsMapPage(),
-        const SavedLocationsPage(),
-        const AldsSettingsWidget(),
+        const AldsMapPage(isLoading: false, currentLat: 0.0, currentLng: 0.0),
+        const AldsSavedLocationsPage(),
+        const AldsSettingsPage(),
       ][navBarIndex],
-      bottomNavigationBar: NavigationBar(  // NOTE: Code structure from demo on https://api.flutter.dev/flutter/material/NavigationBar-class.html
+      bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
-          if (index == 0) {  // mapPage index
-            _getCurrentLocation();
+          if (index == 0) { // MapPage index
+            // Update the current location name
+            ref.read(curLocationNameProvider).setLocationName();
+
+            // Update the current position
+            ref.read(curPositionProvider).setPosition();
           }
 
           setState(() => navBarIndex = index);
         },
-        indicatorColor: Colors.purpleAccent,
+        indicatorColor: const Color.fromARGB(97, 124, 77, 255),
         selectedIndex: navBarIndex,
         destinations: const <Widget>[
           NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(key: Key('selected_home_icon'), Icons.home),
+            icon: Icon(key: Key('home_icon'), Icons.home_outlined),
             label: 'Home',
           ),
           NavigationDestination(
-            icon: Icon(Icons.location_on),
+            icon: Icon(key: Key('saved_locations_icon'), Icons.location_on),
             label: 'Saved',
           ),
           NavigationDestination(
-            icon: Icon(Icons.settings),
+            icon: Icon(key: Key("settings_icon"), Icons.settings),
             label: 'Settings',
           ),
         ],
       ),
     );
-  }
-
-  void _locationSelected(String? value) {
-    util.log("SET CURRENT TO $value");
-    setState(() => _curLocationText = value ?? "");
-  }
-
-  Future<void> _handleUpdate() async {
-    Locator loc = Locator();
-    String? where = await loc.findLocation();
-    _locationSelected(where);
   }
 }

@@ -1,7 +1,27 @@
 describe("Sign Editor Component", () => {
+
   beforeEach(() => {
+
+    const serverUrl = "https://sherpa.cs.brown.edu:3336";
+
+    const mockSignData = {
+      data: [
+        {
+          imageurl: "https://sherpa.cs.brown.edu:3336/signimage/imageWjD99utE.png",
+          signurl: "https://sherpa.cs.brown.edu:3336/signimage/imageWjD99utE.png"
+        }
+      ]
+    };
+
     // Visit the sign editor page before each test
     cy.visit("/edit");
+
+    // Intercept the network request and return the mock data
+    cy.intercept("GET", `${serverUrl}/rest/signs?session=undefined`, {
+      statusCode: 200,       
+      body: mockSignData     
+    });
+   
   });
 
   describe("Component Rendering", () => {

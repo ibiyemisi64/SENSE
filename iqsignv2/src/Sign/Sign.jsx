@@ -1,15 +1,44 @@
-import React, { useState } from 'react';
+/***
+ * Sign.jsx
+ *
+ * Purpose:
+ *
+ *
+ * Copyright 2024 Brown University --
+ *
+ * All Rights Reserved
+ *
+ * Permission to use, copy, modify, and distribute this software and its
+ * documentation for any purpose other than its incorporation into a
+ * commercial product is hereby granted without fee, provided that the
+ * above copyright notice appear in all copies and that both that
+ * copyright notice and this permission notice appear in supporting
+ * documentation, and that the name of Brown University not be used in
+ * advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.
+ *
+ * BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR ANY PARTICULAR PURPOSE. IN NO EVENT SHALL BROWN UNIVERSITY
+ * BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY
+ * DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+ * WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+ * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+ * OF THIS SOFTWARE.
+ ***/
+import React, { useEffect, useState } from 'react';
 import { Grid2, Box, Button, IconButton, MenuItem, Select, InputLabel, FormControl, Typography, TextField, Stack } from '@mui/material';
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
 import FormatItalicIcon from '@mui/icons-material/FormatItalic';
 import FormatColorTextIcon from '@mui/icons-material/FormatColorText';
-import DefaultClassSign from '../assets/backgrounds/class.png';
 import TopBar from "../Topbar/TopBar.jsx";
 import EditIcon from '@mui/icons-material/Edit';
 import { Link } from 'react-router-dom';
+import { useSignData } from './hooks/getSignData.jsx'
 
-export default function Sign() {
+const Sign = ({ signData }) => {
+
   return (
       <>
     <Box
@@ -20,19 +49,13 @@ export default function Sign() {
         boxShadow: 3
       }}
       alt="User's current sign."
-      src={DefaultClassSign}
+      src={signData?.imageurl}
     >
 
     </Box>
       </>
   );
 }
-
-export const SignImageLink = () => {
-  return (
-    <Sign />
-  );
-};
 
 export function SignTextFormatterSizeMenuItem() {
   return (
@@ -94,6 +117,7 @@ export function SignTextFormatterMenu() {
     </Stack>
   )
 }
+
 export function SignTextFormatter() {
 
   return (
@@ -109,8 +133,7 @@ export function SignTextFormatter() {
         multiline
         rows={4}
         defaultValue="Default Sign Text"
-        fullWidth
-        sx={{ mt: 4 }}
+        sx={{ mt: 4, width: "100%"}}
       />
       <Button
         variant="contained"
@@ -119,18 +142,29 @@ export function SignTextFormatter() {
       >
         SAVE
       </Button>
+    <Button
+        variant="contained"
+        color="black"
+        sx={{ ml: 2, mt: 3, backgroundColor: 'green', color: 'white' }}
+    >
+        Display Sign
+    </Button>
     </Box >
   );
 
 }
 
 export function SignEditor() {
+  const { signData, isLoading } = useSignData(); 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  } 
+
   return (
     <>
       <TopBar></TopBar>
       <Grid2
         container
-        fullWidth
         spacing={4}  // Add some spacing between the items
         sx={{
           background: 'white',
@@ -147,9 +181,8 @@ export function SignEditor() {
           <SignTextFormatter />
         </Grid2>
 
-
         <Grid2 item container direction="column" alignItems="flex-start">
-          <Sign />
+          <Sign signData={signData}/>
           <Button
             variant="contained"
             color="primary"
@@ -164,3 +197,9 @@ export function SignEditor() {
     </>
   );
 }
+
+export function SignEditorPage() {
+  return SignEditor();
+}
+
+export default Sign;
