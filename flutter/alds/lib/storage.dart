@@ -106,17 +106,17 @@ String readThemePref() {
 Future<void> saveLocatorData(String json) async {
   var appbox = Hive.box('appData');
   await appbox.put("locdata", json);
-  util.log("Saving Locator Data: $json");
+  // util.log("Saving Locator Data: $json");
 }
 
 Future<String?> readLocationData() async {
   if (Hive.isBoxOpen('appData')) {
     var appbox = Hive.box('appData');
     var data = await appbox.get('locdata');
-    util.log("Read data: $data");
+    // util.log("Read data: $data");
     return data;
   } else {
-    util.log("Error readLocationData(): Hive box not open");
+    // util.log("Error readLocationData(): Hive box not open");
     return null;
   }
 }
