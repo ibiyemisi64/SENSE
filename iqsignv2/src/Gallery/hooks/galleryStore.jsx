@@ -1,10 +1,11 @@
 /***
  * galleryStore.jsx
  *
- * Purpose:
+ * Purpose: Stores all data necessary for the gallery to function, and also handles
+ * fetching the current image
  *
  *
- * Copyright 2024 Brown University --
+ * Copyright 2024 Brown University -- Jason Silva
  *
  * All Rights Reserved
  *

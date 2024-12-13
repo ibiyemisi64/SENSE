@@ -1,10 +1,11 @@
 /***
  * SignGallery.jsx
  *
- * Purpose:
+ * Purpose: Meant to show all of a users saved signs, currently
+ * doesn't work due to limitations with the backend, only showing the users current sign
  *
  *
- * Copyright 2024 Brown University --
+ * Copyright 2024 Brown University -- Jason Silva
  *
  * All Rights Reserved
  *
