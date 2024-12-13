@@ -97,14 +97,17 @@ const RegistrationPage = () => {
       const registerData = registerResponse.data;
 
       if (registerResponse.status === 200) {
+        setLoading(false);
         alert('Registration successful! Redirecting to login.');
         navigate('/login');
       } else {
         setError(registerData.message || 'Registration failed.');
+        setLoading(false);
       }
     } catch (err) {
       console.error('Registration error:', err);
       setError('An error occurred. Please try again.');
+      setLoading(false);
     }
   };
 
