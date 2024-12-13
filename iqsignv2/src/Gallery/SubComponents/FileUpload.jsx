@@ -1,10 +1,12 @@
 /***
  * FileUpload.jsx
  *
- * Purpose:
+ * Purpose: File upload functionality, allows users to upload files. Currently
+ * not working due to issues with the backend.
  *
  *
- * Copyright 2024 Brown University --
+ *
+ * Copyright 2024 Brown University -- Jason Silva
  *
  * All Rights Reserved
  *

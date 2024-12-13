@@ -1,10 +1,11 @@
 /***
  * TopBar.jsx
  *
- * Purpose:
+ * Purpose: Visual clarity with a logo, search bar functionality for potential filtering.
+ * Logo serves as a link to get back to the home page.
  *
  *
- * Copyright 2024 Brown University --
+ * Copyright 2024 Brown University -- Jason Silva
  *
  * All Rights Reserved
  *
