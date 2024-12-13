@@ -5,7 +5,7 @@ export const hasher = (value) => {
   return CryptoJS.enc.Base64.stringify(hash);
 };
 
-/***
+/**
 export const hasher = async (msg) => {
     console.log("Hasher input:", msg);
     const encoder = new TextEncoder();
@@ -39,4 +39,4 @@ function hasher(msg) {
 // Example usage
 let hashedValue = hasher("Hello, World!");
 console.log("Hashed value:", hashedValue);
-***/
+**/
