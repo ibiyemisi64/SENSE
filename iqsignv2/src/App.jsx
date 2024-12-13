@@ -22,7 +22,6 @@ const App = () => {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/edit" element={<SignEditorPage />} />
         <Route path="/edit-legacy" element={<SignEditorLegacyPage />} />
-        <Route path={"/preview"} element={<SignImageLink/>}/>
         <Route path="/home" element={<HomePage />} />
         <Route path={"/gallery"} element={<Gallery/>}/>
       </Routes>

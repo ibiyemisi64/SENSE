@@ -29,12 +29,6 @@ const Sign = ({ signData }) => {
   );
 }
 
-export const SignImageLink = () => {
-  return (
-    <Sign />
-  );
-};
-
 export function SignTextFormatterSizeMenuItem() {
   return (
     <TextField
