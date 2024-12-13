@@ -94,9 +94,9 @@ const RegistrationPage = () => {
 
       const registerData = registerResponse.data;
 
-      if (registerResponse.status === 200 && registerData.status === 'OK') {
+      if (registerResponse.status === 200) {
         alert('Registration successful! Redirecting to login.');
-        navigate('/login'); // Redirect to login page
+        navigate('/login');
       } else {
         setError(registerData.message || 'Registration failed.');
       }
