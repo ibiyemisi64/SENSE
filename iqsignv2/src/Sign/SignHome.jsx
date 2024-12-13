@@ -102,10 +102,10 @@ export default function Home() {
                     marginTop: '100px'
                 }}
             >
-                <Grid2 sx={{ alignSelf: 'flex-start' }} item>
+                <Grid2 sx={{ alignSelf: 'flex-start' }}>
                     <HomeMenu signData={signData} />
                 </Grid2>
-                <Grid2 ml={5} item>
+                <Grid2 ml={5}>
                     <Sign signData={signData} />
                 </Grid2>
 

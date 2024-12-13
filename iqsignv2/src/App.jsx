@@ -4,7 +4,7 @@ import RegistrationPage from './Auth/RegistrationPage';
 import LoginPage from './Auth/LoginPage';
 import ProfilePage from './ProfilePage';
 import HomePage from './Sign/SignHome';
-import {SignEditorPage, SignImageLink} from './Sign/Sign.jsx';
+import {SignEditorPage} from './Sign/Sign.jsx';
 import Gallery from "./Gallery/Gallery.jsx";
 import ForgotPassword from './Auth/ForgotPassword.jsx'
 import ResetPassword from './Auth/ResetPassword.jsx'
