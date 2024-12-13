@@ -14,7 +14,7 @@ import { useSignData } from './hooks/getSignData.jsx'
 export const HomeMenuHandleCopyLink = ({ signData }) => {
 
     const handleCopyClick = () => {
-        const previewLink = signData.imageurl;
+        const previewLink = signData?.imageurl;
         navigator.clipboard.writeText(previewLink);
     };
 
@@ -57,7 +57,7 @@ export const HomeMenu = ({ signData }) => {
                     </ListItemIcon>
                     <ListItemText primary="Template Gallery" />
                 </ListItemButton>
-                <ListItemButton component={Link} to={signData.signurl} >
+                <ListItemButton component={Link} to={signData?.signurl} >
                     <ListItemIcon>
                         <VisibilityIcon />
                     </ListItemIcon>
