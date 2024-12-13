@@ -30,22 +30,22 @@ jobs:
 
       # Step 3: Get Dependencies
       - name: Get Flutter Dependencies
-        working-directory: ./flutter/alds/test
+        working-directory: ./flutter/alds
         run: flutter pub get
 
       # Step 4: Format Dart Code
       - name: Format Dart Code
-        working-directory: ./flutter/alds/test
+        working-directory: ./flutter/alds
         run: dart format .
 
       # Step 5: Analyze Code
       - name: Analyze Dart Code
-        working-directory: ./flutter/alds/test
+        working-directory: ./flutter/alds
         run: |
           flutter analyze || echo "Analysis completed with warnings"
 
       # Step 6: Run Flutter Tests
       - name: Run Flutter Tests
-        working-directory: ./flutter/alds/test
+        working-directory: ./flutter/alds
         run: flutter test
 
