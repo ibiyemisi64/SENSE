@@ -24,7 +24,7 @@ const LoginPage = () => {
 
   const authenticateUser = async (username, accessToken) => {
     try {
-      // Pre-login request to get padding and session
+
       const preLoginResponse = await axios.get(`${serverUrl}/login`);
       const { code: curPadding, session: curSession } = preLoginResponse.data;
 
