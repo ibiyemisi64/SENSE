@@ -1,13 +1,8 @@
+import CryptoJS from "crypto-js";
 
-
-import sjcl from 'sjcl';
-
-export const hasher = (msg) => {
-
-    let bits = String(sjcl.hash.sha512.hash(msg));
-    console.log(typeof bits)
-    let str = String(sjcl.codec.base64.fromBits(bits));
-    return str;
+export const hasher = (value) => {
+  const hash = CryptoJS.SHA512(value);
+  return CryptoJS.enc.Base64.stringify(hash);
 };
 
 /***
