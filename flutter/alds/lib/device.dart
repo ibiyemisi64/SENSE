@@ -30,6 +30,7 @@
 ///										 *
 ///******************************************************************************
 
+library alds.device;
 
 import 'storage.dart' as storage;
 import 'dart:convert' as convert;
