@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE.
  ***/
 import React, { useState } from 'react';
-import { Container, TextField, Button, Typography, Box, Link } from '@mui/material';
+import {Container, TextField, Button, Typography, Box, Link, CircularProgress} from '@mui/material';
 import { hasher } from './utils/utils';
 import { useNavigate } from 'react-router-dom';
 //import { useEffect } from 'react';
@@ -43,8 +43,10 @@ const RegistrationPage = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const serverUrl = 'https://sherpa.cs.brown.edu:3336';
+  const [loading, setLoading] = useState(false);
 
   const handleRegister = async (event) => {
+    setLoading(true);
     event.preventDefault();
     setError('');
 
@@ -95,14 +97,17 @@ const RegistrationPage = () => {
       const registerData = registerResponse.data;
 
       if (registerResponse.status === 200) {
+        setLoading(false);
         alert('Registration successful! Redirecting to login.');
         navigate('/login');
       } else {
         setError(registerData.message || 'Registration failed.');
+        setLoading(false);
       }
     } catch (err) {
       console.error('Registration error:', err);
       setError('An error occurred. Please try again.');
+      setLoading(false);
     }
   };
 
@@ -174,7 +179,7 @@ const RegistrationPage = () => {
                 sx={{ mt: 3, backgroundColor: 'black', color: 'white' }}
                 type="submit"
             >
-              Register
+              {loading? <CircularProgress /> : 'Register'}
             </Button>
             {error && (
                 <Typography
