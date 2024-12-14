@@ -6,6 +6,7 @@ import Sign from './Sign.jsx'
 import { useSignData, useUpdateSign } from './hooks/getSignData.jsx'
 
 export const SignDisplayScaleItem = ({ dim, setDim }) => {
+  console.log("sign dim: " + {dim});
   const handleChange = (event) => {
     setDim(event.target.value);
   };
@@ -64,7 +65,6 @@ export const SignDimensionMenuItem = ({ width, setWidth, height, setHeight }) =>
 }
 
 export const LegacySignFormatterMenu = ({ name, setName, dim, setDim, width, setWidth, height,setHeight }) => {
-
   const handleChange = (event) => {
     setName(event.target.value.trim()); 
   };
@@ -86,7 +86,6 @@ export const LegacySignFormatterMenu = ({ name, setName, dim, setDim, width, set
 }
 
 export const LegacySignFormatterContents = ({ body, setBody }) => {
-  console.log(body)
   const handleChange = (event) => {
     setBody(event.target.value); 
   };
@@ -110,15 +109,11 @@ export function SignEditorSave({ signData }){
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const handleClick = async ({setError, setLoading}) => {
+    const handleClick = async ({ signData, loading, setLoading }) => {
         try {
-            setLoading(true);
             const result = await useUpdateSign({ signData, loading, setLoading });
         } catch (err) {
             console.error("Error calling updateSign:", err);
-            setError(err)
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -128,7 +123,7 @@ export function SignEditorSave({ signData }){
                 variant="contained"
                 color="primary"
                 sx={{ mt: 3, backgroundColor: 'black', color: 'white' }}
-                onClick={handleClick}
+                onClick={() => handleClick({ signData, loading, setLoading })}
                 disabled={loading}
             >
                 {loading ? 'Saving...' : 'SAVE'}
@@ -140,12 +135,12 @@ export function SignEditorSave({ signData }){
 };
 
 export const LegacySignEditor = ({ signData }) => {
-
   const [name, setName] = useState(signData?.name);
   const [height, setHeight] = useState(signData?.height);
   const [width, setWidth] = useState(signData?.width);
   const [dim, setDim] = useState(signData?.dim);
   const [body, setBody] = useState(signData?.signbody);
+
 
   return (
     <Box
@@ -206,11 +201,11 @@ export function LegacySignEditorPage(){
           marginTop: '100px'
         }}
       >
-        <Grid2 item xs={12} sm={6}>
+        <Grid2 xs={12} sm={6}>
           <LegacySignEditor signData={signData}/>
         </Grid2>
 
-        <Grid2 item container direction="column" alignItems="flex-start">
+        <Grid2 container direction="column" alignItems="flex-start">
           <Sign signData={signData} />
         </Grid2>
 

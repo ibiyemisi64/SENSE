@@ -49,8 +49,6 @@ export const getCurrentSignData = create((set) => ({
 
             if (resp.status === 200) {
                 const signData = await resp.json();
-                console.log("current signData\n" + JSON.stringify(signData?.data[0], null, 2));
-
                 if (signData?.data && signData.data[0]) {
                     set({ signData: signData.data[0], loading: false });
                 }
@@ -100,14 +98,12 @@ export const useSignData = () => {
 };
 
 export const useUpdateSign = async ({ signData, loading, setLoading }) => {
-    // const [loading, setLoading] = useState(false);
-    // const [error, setError] = useState(null);
-
     if (!signData) {
         console.error('Sign data not available');
         return;
     }
 
+    console.log('Starting sign update...');
     setLoading(true);
 
     const {
@@ -134,7 +130,7 @@ export const useUpdateSign = async ({ signData, loading, setLoading }) => {
     };
 
     try {
-        const path = "/rest/signs"
+        const path = "/rest/sign/update"
         const url = new URL(`${serverUrl}${path}`);
         url.searchParams.append("session", Cookies.get('session'));
         const resp = await fetch(url.toString(), {
@@ -146,17 +142,15 @@ export const useUpdateSign = async ({ signData, loading, setLoading }) => {
         });
 
         if (resp.status != 200) {
-            console.error(`backend API call /rest/signs failed with status: ${resp.status}`);
+            console.error(`backend API call /rest/sign/update failed with status: ${resp.status}`);
             setLoading(false);
         }
-
-        const {loadCurrentSign} = getCurrentSignData();
-        await loadCurrentSign();
-        setLoading(false);
     } catch (error) {
-        console.error("Failed to fetch data /rest/signs:", error);
+        console.log("Error fetching /rest/sign/update.");
         setLoading(false);
+        return
     }
+    console.log('Finished updating sign!');
     return
 };
 
