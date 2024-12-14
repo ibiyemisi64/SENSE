@@ -1,10 +1,10 @@
 /***
  * RegistrationPage.jsx
  *
- * Purpose:
+ * Purpose: Allows user to register for a new iqsign account.
  *
  *
- * Copyright 2024 Brown University --
+ * Copyright 2024 Brown University -- Shufan He
  *
  * All Rights Reserved
  *

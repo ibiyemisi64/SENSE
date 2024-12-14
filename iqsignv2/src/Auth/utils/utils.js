@@ -1,10 +1,10 @@
 /***
  * utils.js
  *
- * Purpose:
+ * Purpose: The hasher for registration and login.
  *
  *
- * Copyright 2024 Brown University --
+ * Copyright 2024 Brown University -- Shufan He, Jason Silva
  *
  * All Rights Reserved
  *
