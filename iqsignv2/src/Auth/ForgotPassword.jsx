@@ -1,10 +1,10 @@
 /***
  * ForgotPassword.jsx
  *
- * Purpose:
+ * Purpose: Sends user an email and redirects to reset password, currently not functional and needs the request code from original backend.
  *
  *
- * Copyright 2024 Brown University --
+ * Copyright 2024 Brown University -- Shufan He
  *
  * All Rights Reserved
  *

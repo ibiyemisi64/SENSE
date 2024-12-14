@@ -1,10 +1,10 @@
 /***
  * Gallery.jsx
  *
- * Purpose:
+ * Purpose: Combine gallery sub components, served up as a route
  *
  *
- * Copyright 2024 Brown University --
+ * Copyright 2024 Brown University -- Jason Silva
  *
  * All Rights Reserved
  *

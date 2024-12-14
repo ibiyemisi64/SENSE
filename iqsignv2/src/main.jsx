@@ -1,10 +1,10 @@
 /***
  * main.jsx
  *
- * Purpose:
+ * Purpose: Entry point for iqsign, renders the root App component.
  *
  *
- * Copyright 2024 Brown University --
+ * Copyright 2024 Brown University -- Ibiyemisi Gbenebor, Jason Silva, Shufan He
  *
  * All Rights Reserved
  *

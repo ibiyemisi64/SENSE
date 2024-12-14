@@ -1,10 +1,10 @@
 /***
  * ResetPassword.jsx
  *
- * Purpose:
+ * Purpose: Allows user to reset password, not fully implemented, needs forgot password to be implemented first.
  *
  *
- * Copyright 2024 Brown University --
+ * Copyright 2024 Brown University -- Shufan He
  *
  * All Rights Reserved
  *

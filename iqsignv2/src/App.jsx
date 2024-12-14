@@ -1,10 +1,10 @@
 /***
  * App.jsx
  *
- * Purpose:
+ * Purpose: Redirects to different pages in the iqsign app.
  *
  *
- * Copyright 2024 Brown University --
+ * Copyright 2024 Brown University -- Shufan He, Jason Silva, Ibiyemisi Gbenebor
  *
  * All Rights Reserved
  *

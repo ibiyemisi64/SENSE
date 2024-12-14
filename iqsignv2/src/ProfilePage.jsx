@@ -1,10 +1,10 @@
 /***
  * ProfilePage.jsx
  *
- * Purpose:
+ * Purpose: Lets user see and edit their information, generate login code, and log out of iqsign.
  *
  *
- * Copyright 2024 Brown University --
+ * Copyright 2024 Brown University -- Shufan He
  *
  * All Rights Reserved
  *

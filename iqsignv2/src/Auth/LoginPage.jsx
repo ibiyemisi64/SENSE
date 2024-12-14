@@ -1,10 +1,10 @@
 /***
  * LoginPage.jsx
  *
- * Purpose:
+ * Purpose: Allows user to login to their iqsign account. This is the defualt route for the app.
  *
  *
- * Copyright 2024 Brown University --
+ * Copyright 2024 Brown University -- Shufan He
  *
  * All Rights Reserved
  *
