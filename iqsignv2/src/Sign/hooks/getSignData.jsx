@@ -170,7 +170,7 @@ export const useUpdateSign = async ({ signData, loading, setLoading }) => {
         name,
         signuser,
         signkey: namekey,
-        signbody,
+        signdata: signbody,
         signname: name,
         signwidth: width,
         signheight: height,
