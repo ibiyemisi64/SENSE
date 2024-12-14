@@ -1,10 +1,10 @@
 /***
  * SignHome.jsx
  *
- * Purpose:
+ * Purpose: user's home page.
  *
  *
- * Copyright 2024 Brown University --
+ * Copyright 2024 Brown University -- Ibiyemisi Gbenebor
  *
  * All Rights Reserved
  *
@@ -26,6 +26,7 @@
  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
  * OF THIS SOFTWARE.
  ***/
+
 import React, { useEffect, useState } from 'react';
 import List from '@mui/material/List';
 import { Grid2, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';

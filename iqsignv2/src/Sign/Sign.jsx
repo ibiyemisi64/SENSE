@@ -1,10 +1,10 @@
 /***
  * Sign.jsx
  *
- * Purpose:
+ * Purpose: Main Sign Component and v2 editor created by SENSE.
  *
  *
- * Copyright 2024 Brown University --
+ * Copyright 2024 Brown University -- Ibiyemisi Gbenebor
  *
  * All Rights Reserved
  *
@@ -26,7 +26,8 @@
  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
  * OF THIS SOFTWARE.
  ***/
-import React, { useEffect, useState } from 'react';
+
+import React, { useState } from 'react';
 import { Grid2, Box, Button, IconButton, MenuItem, Select, InputLabel, FormControl, Typography, TextField, Stack } from '@mui/material';
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
@@ -123,7 +124,7 @@ export function SignTextFormatter() {
   return (
     <Box
       sx={{
-        width: '100%', // Ensure the Box takes up the full width of its container
+        width: '100%',
       }}
     >
       <SignTextFormatterMenu />
@@ -154,6 +155,7 @@ export function SignTextFormatter() {
 
 }
 
+// currently lacks backend functionality 
 export function SignEditor() {
   const { signData, isLoading } = useSignData(); 
   if (isLoading) {
@@ -165,7 +167,7 @@ export function SignEditor() {
       <TopBar></TopBar>
       <Grid2
         container
-        spacing={4}  // Add some spacing between the items
+        spacing={4}
         sx={{
           background: 'white',
           display: 'flex',
