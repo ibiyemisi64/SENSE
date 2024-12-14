@@ -34,6 +34,10 @@ describe("LoginPage Tests", () => {
   });
 
   it("logs in successfully and redirects to /home", () => {
+    cy.intercept("GET", `${serverUrl}/rest/login`, {
+      statusCode: 200,
+      body: { status: "OK", curSession: "testsession123", curPadding: "123" },
+    });
     cy.intercept("POST", `${serverUrl}/rest/login`, {
       statusCode: 200,
       body: { status: "OK", session: "testsession123" },

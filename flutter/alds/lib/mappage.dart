@@ -1,5 +1,5 @@
 /*
- * mainpage.dart
+ * mappage.dart
  *
  * Purpose:
  *   Defines the map page for the ALDS (Automatic Location Detection System) Flutter application.

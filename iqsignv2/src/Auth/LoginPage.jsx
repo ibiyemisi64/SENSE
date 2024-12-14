@@ -1,140 +1,116 @@
+/***
+ * LoginPage.jsx
+ *
+ * Purpose:
+ *
+ *
+ * Copyright 2024 Brown University --
+ *
+ * All Rights Reserved
+ *
+ * Permission to use, copy, modify, and distribute this software and its
+ * documentation for any purpose other than its incorporation into a
+ * commercial product is hereby granted without fee, provided that the
+ * above copyright notice appear in all copies and that both that
+ * copyright notice and this permission notice appear in supporting
+ * documentation, and that the name of Brown University not be used in
+ * advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.
+ *
+ * BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR ANY PARTICULAR PURPOSE. IN NO EVENT SHALL BROWN UNIVERSITY
+ * BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY
+ * DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+ * WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+ * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+ * OF THIS SOFTWARE.
+ ***/
 import React, { useState, useEffect } from 'react';
 import { Container, TextField, Button, Typography, Link, Box, Checkbox, FormControlLabel } from '@mui/material';
-//import { hasher } from './utils/utils'; // our hasher
 import axios from 'axios';
-import {useNavigate} from "react-router-dom";
-//import hasher from '../../../iqsign/web/iqsign' //original hasher
-import Cookies from 'js-cookie'
+import { useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie';
 import iqsignlogo from '../assets/icon/iqsignlogo.png';
 import useUserStore from "./hooks/userStore.js";
+import crypto from 'crypto';
+
+import CryptoJS from 'crypto-js';
+
+const hasher = (value) => {
+  const hash = CryptoJS.SHA512(value);
+  return CryptoJS.enc.Base64.stringify(hash);
+};
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const {username,setUsername} = useUserStore();
-  //const [password, setPassword] = useState('');
+  const { username, setUsername } = useUserStore();
   const [accessToken, setAccessToken] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const serverUrl = 'https://sherpa.cs.brown.edu:3336/rest';
-  //const serverUrl = 'http://csci2340.cs.brown.edu:3335'
 
-  {/**
-    const handleLogin = async (event) => {
-      event.preventDefault();
-      setError('');
+  const authenticateUser = async (username, accessToken) => {
+    try {
 
-      try {
-        // retrieve padding and session info
-        const url = new URL(`${serverUrl}/login`);
-        const preLoginResponse = await axios.get(url.toString());
+      const preLoginResponse = await axios.get(`${serverUrl}/login`);
+      const { code: curPadding, session: curSession } = preLoginResponse.data;
 
-        //if (!preLoginResponse.ok) {
-        //setError('Failed to initialize login.');
-        //return;
-        //}
+      const lowerCaseUsername = username.toLowerCase();
+      const hashedToken = hasher(accessToken);
+      const paddedHash = hasher(hashedToken + lowerCaseUsername);
+      const finalHash = hasher(paddedHash + curPadding);
 
-        const preLoginData = await preLoginResponse.data;
-        const {code: curPadding, session: curSession} = preLoginData;
+      // Authentication body
+      const body = {
+        username: lowerCaseUsername,
+        password: finalHash,
+        session: curSession,
+        padding: curPadding,
+      };
 
+      const authResponse = await axios.post(`${serverUrl}/login`, body);
+      return authResponse.data;
+    } catch (err) {
+      throw new Error('Authentication failed: ' + err.message);
+    }
+  };
 
-        // Hash credentials with padding and session
-        let lowerCaseUsername = username.toLowerCase();
-
-        let hashedPassword = hasher(password);
-        let paddedHash = hasher(hashedPassword + lowerCaseUsername);
-        let finalHash = hasher(paddedHash + curPadding);
-
-        // POST request with hashed credentials
-        const body = {
-          username: lowerCaseUsername,
-          padding: curPadding,
-          password: finalHash,
-          iqsignSession: curSession,
-        };
-
-        const loginResponse = await axios.post(`${serverUrl}/login`, body, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify(body),
-        });
-
-        const loginData = await loginResponse.data;
-
-        if (loginResponse.ok && loginData.status === 'OK') {
-
-          localStorage.setItem('iqsignSession', loginData.session);
-
-          // Redirect or display success
-          alert('Login successful!');
-          window.location.href = '/home';
-        } else if (loginData.TEMPORARY) {
-          alert('Temporary session detected. Redirecting to password reset...');
-          window.location.href = '/reset-password';
-        } else {
-          setError(loginData.error || 'Invalid login credentials.');
-        }
-      } catch (err) {
-        console.error('Login error:', err);
-        setError('An error occurred. Please try again.');
-      }
-    };
-  **/}
-
-  // Redirect to /home if session cookie exists
   useEffect(() => {
     if (Cookies.get("session")) {
-      console.log(Cookies.get("session"))
       navigate('/home');
     }
   }, []);
 
   const handleLogin = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     setError('');
+    try {
+      const authData = await authenticateUser(username, accessToken);
 
-    console.log("CALLED HANDLELOGIN")
-      try {
-        // Login request
-        const loginResponse = await fetch(`${serverUrl}/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username,
-            accesstoken: accessToken,
-          }),
+      if (authData.status === "OK") {
+        Cookies.set("session", authData.session, {
+          expires: rememberMe ? 7 : 1 / 24, // Remember Me for 7 days or 1 hour otherwise
         });
-
-        const loginData = await loginResponse.json();
-
-        if (loginData.status === "OK") {
-          Cookies.set("session", loginData.session, {
-            expires: 1 / 24, // 1 hour expiry
-          });
-
-
-          navigate('/home');
-        }else{
-          setError(loginData.error || 'Invalid login credentials.');
-        }
-      } catch (err) {
-        setError(err.message);
+        navigate('/home');
+      } else {
+        setError(authData.error || 'Invalid login credentials.');
       }
+    } catch (err) {
+      setError(err.message);
+    }
   };
+
   return (
       <Container maxWidth="sm">
         <Box sx={{ textAlign: 'center', mt: 4 }}>
-          <Typography  variant="h6" component="div" sx={{ flexGrow: 0 }}>
-              <Link to="/home" style={{textDecoration: 'none', color: 'inherit'}}>
-                  <img data-testid='topbar' src={iqsignlogo} alt="Logo" style={{height: '40px'}}/>
-              </Link>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 0 }}>
+            <Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <img data-testid='topbar' src={iqsignlogo} alt="Logo" style={{ height: '40px' }} />
+            </Link>
           </Typography>
 
-          <Box component="form"  sx={{ mt: 3 }}>
+          <Box component="form" sx={{ mt: 3 }}>
             <TextField
                 fullWidth
                 label="username"
@@ -146,14 +122,12 @@ const LoginPage = () => {
             />
             <TextField
                 fullWidth
-                //label="Password"
-                label={"access-token"}
-                type="accessToken"
+                label={"password"}
+                type="password"
                 variant="outlined"
                 margin="normal"
                 value={accessToken}
                 inputProps={{ 'data-testid': 'access-token' }}
-                //onChange={(e) => setPassword(e.target.value)}
                 onChange={(e) => setAccessToken(e.target.value)}
             />
             <FormControlLabel
@@ -177,9 +151,9 @@ const LoginPage = () => {
             )}
             <Box sx={{ mt: 2 }}>
               <Typography>
-              <Link href="/forgotpw" underline="hover" sx={{ color: 'black' }}>
-                Forgot password?
-              </Link>
+                <Link href="/forgotpw" underline="hover" sx={{ color: 'black' }}>
+                  Forgot password?
+                </Link>
               </Typography>
             </Box>
             <Box sx={{ mt: 2 }}>

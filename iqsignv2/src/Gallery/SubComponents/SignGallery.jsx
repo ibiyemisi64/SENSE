@@ -1,9 +1,72 @@
+/***
+ * SignGallery.jsx
+ *
+ * Purpose: Meant to show all of a users saved signs, currently
+ * doesn't work due to limitations with the backend, only showing the users current sign
+ *
+ *
+ * Copyright 2024 Brown University -- Jason Silva
+ *
+ * All Rights Reserved
+ *
+ * Permission to use, copy, modify, and distribute this software and its
+ * documentation for any purpose other than its incorporation into a
+ * commercial product is hereby granted without fee, provided that the
+ * above copyright notice appear in all copies and that both that
+ * copyright notice and this permission notice appear in supporting
+ * documentation, and that the name of Brown University not be used in
+ * advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.
+ *
+ * BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR ANY PARTICULAR PURPOSE. IN NO EVENT SHALL BROWN UNIVERSITY
+ * BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY
+ * DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+ * WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+ * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+ * OF THIS SOFTWARE.
+ ***/
 import React, {useEffect, useState} from 'react';
 import { Box, Grid, IconButton, Modal, Tabs, Tab, Stack, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useGalleryStore } from '../hooks/galleryStore.jsx';
 import FileUpload from './FileUpload.jsx';
 import {useNavigate} from "react-router-dom";
+
+/*
+ *      SignGallery.jsx
+ *
+ *    Main logic for the sign gallery, includes all images, logic
+ *      for creating new signs, and logic for fetching images
+ *
+ */
+/*	Copyright 2024 Brown University -- Jason S. Silva			*/
+/// *******************************************************************************
+///  Copyright 2024, Brown University, Providence, RI.				 *
+///										 *
+///			  All Rights Reserved					 *
+///										 *
+///  Permission to use, copy, modify, and distribute this software and its	 *
+///  documentation for any purpose other than its incorporation into a		 *
+///  commercial product is hereby granted without fee, provided that the 	 *
+///  above copyright notice appear in all copies and that both that		 *
+///  copyright notice and this permission notice appear in supporting		 *
+///  documentation, and that the name of Brown University not be used in 	 *
+///  advertising or publicity pertaining to distribution of the software 	 *
+///  without specific, written prior permission. 				 *
+///										 *
+///  BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS		 *
+///  SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND		 *
+///  FITNESS FOR ANY PARTICULAR PURPOSE.  IN NO EVENT SHALL BROWN UNIVERSITY	 *
+///  BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY 	 *
+///  DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,		 *
+///  WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS		 *
+///  ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 	 *
+///  OF THIS SOFTWARE.								 *
+///										 *
+///******************************************************************************
+
 
 // styles
 const scrollStyles = {
@@ -72,11 +135,11 @@ const SignGallery = () => {
                     ...scrollStyles,
                 }}
             >
-                <Grid item xs={4} sx={{ display: 'flex', flexGrow: 1 }}>
+                <Grid item xs={4} sx={{ display: 'flex', flexDirection:'column', alignItems:'center' }}>
                     <Box
                         sx={{
-                            width: '100%',
-                            height: '200px',
+                            width: '300px',
+                            height: '150px',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -89,6 +152,16 @@ const SignGallery = () => {
                         <IconButton aria-label="add new sign">
                             <AddIcon fontSize="large" />
                         </IconButton>
+                    </Box>
+                    <Box
+                        component="span"
+                        sx={{
+                            mt: 1,
+                        }}
+                    >
+                        <Typography>
+                            Add Sign
+                        </Typography>
                     </Box>
                 </Grid>
                 {filteredImages.map((image, index) => (
@@ -106,8 +179,8 @@ const SignGallery = () => {
                                 src={image}
                                 alt={`${names[index]}`}
                                 sx={{
-                                    width: '100%',
-                                    height: '200px',
+                                    width: '300px',
+                                    height: '150px',
                                     borderRadius: 1,
                                     objectFit: 'cover',
                                     boxShadow: 3,
@@ -183,14 +256,15 @@ const SignGallery = () => {
                                     src={image}
                                     alt={`Image ${index + 1}`}
                                     sx={{
-                                        width: '50%',
-                                        height: 'auto',
+                                        width: '300px',
+                                        height: '150px',
                                         ml: 'auto',
                                         mr: 'auto',
                                         mb: 1,
                                         borderRadius: 1,
                                         objectFit: 'cover',
                                     }}
+                                    onClick={()=> navigate("/edit")}
                                 />
                             ))}
                         </Stack>

@@ -1,4 +1,33 @@
-import React, { useEffect, useState } from 'react';
+/***
+ * Sign.jsx
+ *
+ * Purpose: Main Sign Component and v2 editor created by SENSE.
+ *
+ *
+ * Copyright 2024 Brown University -- Ibiyemisi Gbenebor
+ *
+ * All Rights Reserved
+ *
+ * Permission to use, copy, modify, and distribute this software and its
+ * documentation for any purpose other than its incorporation into a
+ * commercial product is hereby granted without fee, provided that the
+ * above copyright notice appear in all copies and that both that
+ * copyright notice and this permission notice appear in supporting
+ * documentation, and that the name of Brown University not be used in
+ * advertising or publicity pertaining to distribution of the software
+ * without specific, written prior permission.
+ *
+ * BROWN UNIVERSITY DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+ * SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR ANY PARTICULAR PURPOSE. IN NO EVENT SHALL BROWN UNIVERSITY
+ * BE LIABLE FOR ANY SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY
+ * DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+ * WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+ * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+ * OF THIS SOFTWARE.
+ ***/
+
+import React, { useState } from 'react';
 import { Grid2, Box, Button, IconButton, MenuItem, Select, InputLabel, FormControl, Typography, TextField, Stack } from '@mui/material';
 import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatUnderlinedIcon from '@mui/icons-material/FormatUnderlined';
@@ -95,7 +124,7 @@ export function SignTextFormatter() {
   return (
     <Box
       sx={{
-        width: '100%', // Ensure the Box takes up the full width of its container
+        width: '100%',
       }}
     >
       <SignTextFormatterMenu />
@@ -126,6 +155,7 @@ export function SignTextFormatter() {
 
 }
 
+// currently lacks backend functionality 
 export function SignEditor() {
   const { signData, isLoading } = useSignData(); 
   if (isLoading) {
@@ -137,7 +167,7 @@ export function SignEditor() {
       <TopBar></TopBar>
       <Grid2
         container
-        spacing={4}  // Add some spacing between the items
+        spacing={4}
         sx={{
           background: 'white',
           display: 'flex',
